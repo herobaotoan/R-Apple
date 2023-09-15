@@ -25,7 +25,6 @@ struct LogInView: View {
                     Color("BackgroundColor")
                         .edgesIgnoringSafeArea(.all)
                     VStack {
-                        Text("Hi")
                         Image("app-logo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
