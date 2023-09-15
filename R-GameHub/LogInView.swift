@@ -29,7 +29,6 @@ struct LogInView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 200, height: 200)
-                            .foregroundColor(.accentColor)
                         VStack(spacing: 30){
                             
                             HStack{
