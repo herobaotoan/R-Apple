@@ -24,7 +24,7 @@ struct SignUpView: View {
                 LogInView()
             } else {
                 ZStack{
-                    Color("BackgroundColor")
+                    CustomColor.primaryColor
                         .edgesIgnoringSafeArea(.all)
                     VStack {
                         Image("app-logo")
@@ -32,16 +32,16 @@ struct SignUpView: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 150, height: 150)
                         
-                        VStack(spacing: 30){
-                            
+                        VStack(spacing: 30) {
                             HStack{
-                                Button{
+                                Button {
                                     isLogin = true
                                 } label: {
                                     VStack{
                                         Text("Log in")
                                             .font(.system(size: 24))
                                             .frame(width: 150)
+                                            .foregroundColor(CustomColor.primaryColor)
                                     }
                                 }
                                 
@@ -52,9 +52,10 @@ struct SignUpView: View {
                                         Text("Sign up")
                                             .font(.system(size: 24))
                                             .frame(width: 150)
-                                            .foregroundColor(Color("DarkOrLight"))
+                                            .foregroundColor(CustomColor.secondaryColor)
                                         Rectangle()
                                             .frame(width: 150,height: 2)
+                                            .foregroundColor(CustomColor.secondaryColor)
                                     }
                                 }
                             }
@@ -62,17 +63,19 @@ struct SignUpView: View {
                             HStack{
                                 Image(systemName: "envelope.fill")
                                     .padding(10)
+                                    .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
                                     TextField("Email", text: self.$emailAddress)
                                         .font(.system(size: 20))
                                     Divider()
-                                        .background(Color("DarkOrLight"))
+                                        .background(CustomColor.secondaryColor)
                                 }
                             }
                             
                             HStack{
                                 Image(systemName: "phone.fill")
                                     .padding(10)
+                                    .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
                                     TextField("Phone Number", text: Binding(
                                         get: { "\(phoneNumber)" },
@@ -83,7 +86,7 @@ struct SignUpView: View {
                                         }
                                     ))
                                     Divider()
-                                        .background(Color("DarkOrLight"))
+                                        .background(CustomColor.secondaryColor)
                                 }
                             }
                             
@@ -91,20 +94,22 @@ struct SignUpView: View {
                             HStack{
                                 Image(systemName: "person.fill")
                                     .padding(10)
+                                    .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
                                     TextField("username", text: self.$username)
                                         .font(.system(size: 20))
                                     Divider()
-                                        .background(Color("DarkOrLight"))
+                                        .background(CustomColor.secondaryColor)
                                 }
                             }
                             
                             // Password
-                            HStack{
+                            HStack {
                                 Image(systemName: "lock.fill")
                                     .padding(10)
-                                VStack{
-                                    if isHiddenText{
+                                    .foregroundColor(CustomColor.secondaryColor)
+                                VStack {
+                                    if isHiddenText {
                                         SecureField("password", text: self.$password) // hidden text
                                             .font(.system(size: 20))
                                     } else {
@@ -112,7 +117,7 @@ struct SignUpView: View {
                                             .font(.system(size: 20))
                                     }
                                     Divider()
-                                        .background(Color("DarkOrLight"))
+                                        .background(CustomColor.secondaryColor)
                                 }
                             }.overlay(
                                 // show or hide the password
@@ -121,7 +126,7 @@ struct SignUpView: View {
                                     Button{
                                         isHiddenText.toggle()
                                     }label: {
-                                        Image(systemName: isHiddenText ? "eye.slash.fill":"eye.fill").foregroundColor(Color("DarkOrLight"))
+                                        Image(systemName: isHiddenText ? "eye.slash.fill":"eye.fill").foregroundColor(CustomColor.secondaryColor)
                                         
                                     }
                                 }
@@ -136,8 +141,8 @@ struct SignUpView: View {
                                 Text("Register")
                                     .font(.system(size: 28))
                                     .frame(width: 120, height: 60, alignment: .center)
-                                    .background(.blue)
-                                    .foregroundColor(.white)
+                                    .background(CustomColor.secondaryColor)
+                                    .foregroundColor(CustomColor.lightDarkColor)
                                     .cornerRadius(10)
                                     .shadow(color: .black, radius: 2)
                                     .padding()
@@ -149,16 +154,16 @@ struct SignUpView: View {
                         .frame(width: 350, height: 480)
                         .background()
                         .cornerRadius(20)
-                        .shadow(color: Color("shadowColor"), radius: 10)
+                        .shadow(color: CustomColor.shadowColor, radius: 10)
                         
                         //                Text("Forgotten the password")
                     }   // VStack
                     
-                    if isRegistered{
+                    if isRegistered {
                         ZStack{
-                            Color("shadowColor")
+                            CustomColor.shadowColor
                             VStack{
-                                Text("The account is created successfully !!!")
+                                Text("The account is created successfully!")
                                     .padding()
                                 
                                 Button{
@@ -167,8 +172,8 @@ struct SignUpView: View {
                                     Text("Back")
                                         .font(.system(size: 20))
                                         .frame(width: 80, height: 50, alignment: .center)
-                                        .background(.blue)
-                                        .foregroundColor(.white)
+                                        .background(CustomColor.secondaryColor)
+                                        .foregroundColor(CustomColor.lightDarkColor)
                                         .cornerRadius(10)
                                         .shadow(color: .black, radius: 2)
                                         .padding()
