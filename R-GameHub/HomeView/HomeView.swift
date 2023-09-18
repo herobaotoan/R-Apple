@@ -36,18 +36,19 @@ struct HomeView: View {
                         Text("User Name")
                     }
                     
-                    
-                    ForEach(categories, id: \.self){ category in
-                        VStack{
-                            Text(category).tag(category)
-                            
-                            // There is a need logic to display game following the category
-//                             if category == categories {
-                                 GameListRow()
-                                     .border(.black)
-//                              }
+                    ScrollView{
+                        ForEach(categories, id: \.self){ category in
+                            VStack{
+                                Text(category).tag(category)
+                                
+                                // There is a need logic to display game following the category
+                                //                             if category == categories {
+                                GameListRow()
+                                    .border(.black)
+                                //                              }
+                            }
+                            .padding()
                         }
-                        .padding()
                     }
                     
                 }   // VStack
