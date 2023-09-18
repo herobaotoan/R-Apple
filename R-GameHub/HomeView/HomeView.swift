@@ -20,8 +20,6 @@ struct HomeView: View {
     
     var body: some View {
         ZStack{
-            Text("Hi")
-            
             if loggingOut {
                 LogInView()
             } else {
