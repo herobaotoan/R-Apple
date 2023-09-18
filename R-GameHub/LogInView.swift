@@ -15,6 +15,7 @@ struct LogInView: View {
     @State var isHiddenText: Bool = true
     @State var signing: Bool = false
     @State var logging: Bool = false
+    @AppStorage("isDarkMode") private var isDark = false
     
     var body: some View {
         ZStack{
@@ -22,7 +23,7 @@ struct LogInView: View {
                 HomeView()
             } else {
                 ZStack{
-                    Color("BackgroundColor")
+                    CustomColor.primaryColor
                         .edgesIgnoringSafeArea(.all)
                     VStack {
                         Image("app-logo")
@@ -32,16 +33,17 @@ struct LogInView: View {
                         VStack(spacing: 30){
                             
                             HStack{
-                                Button{
+                                Button {
                                     
                                 } label: {
                                     VStack{
                                         Text("Log in")
                                             .font(.system(size: 24))
                                             .frame(width: 150)
-                                            .foregroundColor(Color("DarkOrLight"))
+                                            .foregroundColor(CustomColor.secondaryColor)
                                         Rectangle()
                                             .frame(width: 150,height: 2)
+                                            .foregroundColor(CustomColor.secondaryColor)
                                     }
                                 }
                                 
@@ -51,6 +53,7 @@ struct LogInView: View {
                                     Text("Sign up")
                                         .font(.system(size: 24))
                                         .frame(width: 150)
+                                        .foregroundColor(CustomColor.primaryColor)
                                 }
                             }
                             
@@ -58,11 +61,12 @@ struct LogInView: View {
                             HStack{
                                 Image(systemName: "person.fill")
                                     .padding(10)
+                                    .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
                                     TextField("username", text: self.$username)
                                         .font(.system(size: 20))
                                     Divider()
-                                        .background(Color("DarkOrLight"))
+                                        .background(CustomColor.secondaryColor)
                                 }
                             }
                             
@@ -70,6 +74,7 @@ struct LogInView: View {
                             HStack{
                                 Image(systemName: "lock.fill")
                                     .padding(10)
+                                    .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
                                     if isHiddenText{
                                         SecureField("password", text: self.$password) // hidden text
@@ -79,7 +84,7 @@ struct LogInView: View {
                                             .font(.system(size: 20))
                                     }
                                     Divider()
-                                        .background(Color("DarkOrLight"))
+                                        .background(CustomColor.secondaryColor)
                                 }
                             }
                             .overlay(
@@ -89,7 +94,7 @@ struct LogInView: View {
                                     Button{
                                         isHiddenText.toggle()
                                     }label: {
-                                        Image(systemName: isHiddenText ? "eye.slash.fill":"eye.fill").foregroundColor(Color("DarkOrLight"))
+                                        Image(systemName: isHiddenText ? "eye.slash.fill":"eye.fill").foregroundColor(CustomColor.secondaryColor)
                                         
                                     }
                                 }
@@ -103,24 +108,24 @@ struct LogInView: View {
                                 Text("Log in")
                                     .font(.system(size: 28))
                                     .frame(width: 120, height: 60, alignment: .center)
-                                    .background(.blue)
-                                    .foregroundColor(.white)
+                                    .background(CustomColor.secondaryColor)
+                                    .foregroundColor(CustomColor.lightDarkColor)
                                     .cornerRadius(10)
                                     .shadow(color: .black, radius: 2)
                                     .padding()
-                                
                             }
-                            
                         } // VStack of logging
                         .padding()
                         .frame(width: 350, height: 340)
-                        .background()
+                        .background(CustomColor.lightDarkColor)
                         .cornerRadius(20)
-                        .shadow(color: Color("shadowColor"), radius: 10)
+                        .shadow(color: CustomColor.shadowColor, radius: 10)
                         
                         //                Text("Forgotten the password")
                     }   // VStack
                 }   // ZStack
+                .environment(\.colorScheme, isDark ? .dark : .light)
+
             }
             if signing {
                 SignUpView()
