@@ -44,8 +44,7 @@
 				9C557DC32AB7FD1400871A0C /* HomeView.swift */,
 				9C557DC42AB7FD1400871A0C /* GameListRow.swift */,
 			);
-			name = HomeView;
-			path = ../../../../Downloads/DisplayGame/DisplayGame/HomeView;
+			path = HomeView;
 			sourceTree = "<group>";
 		};
 		9CCA59842AB4446300FEA993 = {
