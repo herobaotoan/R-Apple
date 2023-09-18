@@ -24,7 +24,7 @@ struct HomeView: View {
                 LogInView()
             } else {
                 ZStack{
-                    Color("first-color")
+                    CustomColor.primaryColor
                         .edgesIgnoringSafeArea(.all)
                     VStack{
                         Menu{
@@ -51,7 +51,7 @@ struct HomeView: View {
                         
                         
                         TextField("Search", text: $searchText)
-                            .foregroundColor(Color("DarkOrLight"))
+                            .foregroundColor(CustomColor.darkLightColor)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .cornerRadius(15)
                             .padding()

@@ -13,5 +13,6 @@ struct CustomColor {
     static let primaryColor = Color("first-color")
     static let secondaryColor = Color("second-color")
     static let lightDarkColor = Color("light-dark-color")
+    static let darkLightColor = Color("dark-light-color")
     static let shadowColor = Color("shadow-color")
 }
