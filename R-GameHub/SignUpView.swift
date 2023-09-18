@@ -20,7 +20,7 @@ struct SignUpView: View {
     
     var body: some View {
         ZStack{
-            if isLogin{
+            if isLogin {
                 LogInView()
             } else {
                 ZStack{

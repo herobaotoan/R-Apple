@@ -28,7 +28,7 @@ struct LogInView: View {
                         Image("app-logo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 200, height: 200)
+                            .frame(width: 150, height: 150)
                         VStack(spacing: 30){
                             
                             HStack{
@@ -121,7 +121,8 @@ struct LogInView: View {
                         //                Text("Forgotten the password")
                     }   // VStack
                 }   // ZStack
-            }; if signing{
+            }
+            if signing {
                 SignUpView()
             }
         }
