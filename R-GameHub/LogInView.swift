@@ -15,6 +15,7 @@ struct LogInView: View {
     @State var isHiddenText: Bool = true
     @State var signing: Bool = false
     @State var logging: Bool = false
+    @AppStorage("isDarkMode") private var isDark = false
     
     var body: some View {
         ZStack{
@@ -123,6 +124,8 @@ struct LogInView: View {
                         //                Text("Forgotten the password")
                     }   // VStack
                 }   // ZStack
+                .environment(\.colorScheme, isDark ? .dark : .light)
+
             }
             if signing {
                 SignUpView()

@@ -17,6 +17,7 @@ struct SignUpView: View {
     @State var isHiddenText: Bool = true
     @State var isLogin: Bool = false
     @State var isRegistered: Bool = false
+    @AppStorage("isDarkMode") private var isDark = false
     
     var body: some View {
         ZStack{
@@ -186,6 +187,8 @@ struct SignUpView: View {
                     }
                     
                 }   // ZStack
+                .environment(\.colorScheme, isDark ? .dark : .light)
+
             }
         }
     }
