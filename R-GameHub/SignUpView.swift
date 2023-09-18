@@ -27,10 +27,10 @@ struct SignUpView: View {
                     Color("BackgroundColor")
                         .edgesIgnoringSafeArea(.all)
                     VStack {
-                        Image(systemName: "globe")
-                            .imageScale(.large)
-                            .foregroundColor(.accentColor)
-                        Text("Logo")
+                        Image("app-logo")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 150, height: 150)
                         
                         VStack(spacing: 30){
                             
