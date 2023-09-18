@@ -121,7 +121,8 @@ struct LogInView: View {
                         //                Text("Forgotten the password")
                     }   // VStack
                 }   // ZStack
-            }; if signing{
+            }
+            if signing {
                 SignUpView()
             }
         }
