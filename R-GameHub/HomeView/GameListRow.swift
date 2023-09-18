@@ -20,8 +20,9 @@ struct GameListRow: View {
                     HStack{
                         ForEach(0..<4){_ in 
                             VStack{
-                                Image("Image")
+                                Image("game-product")
                                     .resizable()
+                                    .aspectRatio(contentMode: .fit)
                                     .frame(width: 120, height: 120)
                                 Text("Name Game")
                             }
