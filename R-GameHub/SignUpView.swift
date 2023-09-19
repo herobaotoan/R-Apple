@@ -6,23 +6,58 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct SignUpView: View {
     
     @State var emailAddress = ""
     @State var phoneNumber: Int = 0
     @State var username = ""
+    @State var UID = ""
     @State private var password = ""
+    
+    @State var errorMessage = ""
+    
+    @StateObject private var userViewModel = UserViewModel()
     
     @State var isHiddenText: Bool = true
     @State var isLogin: Bool = false
     @State var isRegistered: Bool = false
     @AppStorage("isDarkMode") private var isDark = false
     
+    func signUp() {
+        Auth.auth().createUser(withEmail: emailAddress, password: password) { authResult, error in
+            if error != nil {
+                errorMessage = error?.localizedDescription ?? ""
+                isRegistered = false
+            } else {
+                print("success")
+                isRegistered = true
+                login()
+            }
+        }
+    }
+    
+    
+    func login() {
+        Auth.auth().signIn(withEmail: emailAddress, password: password) { (result, error) in
+            if error != nil {
+                errorMessage = error?.localizedDescription ?? ""
+            } else {
+                errorMessage = "Login success"
+                UID = Auth.auth().currentUser!.uid
+                
+                //Add to collection
+                userViewModel.addNewUserData(id: UID, name: username, email: emailAddress, phone: String(phoneNumber), imageURL: "")
+            }
+        }
+    }
+    
     var body: some View {
         ZStack{
             if isLogin {
                 LogInView()
+//                ProfileView(UID: $UID)
             } else {
                 ZStack{
                     CustomColor.primaryColor
@@ -137,8 +172,7 @@ struct SignUpView: View {
                             // Registering button
                             Button{
                                 // Logic for information before registering
-                                
-                                isRegistered = true
+                                signUp()
                             } label: {
                                 Text("Register")
                                     .font(.system(size: 28))
@@ -158,6 +192,7 @@ struct SignUpView: View {
                         .cornerRadius(20)
                         .shadow(color: CustomColor.shadowColor, radius: 10)
                         
+                        Text(errorMessage)
                         //                Text("Forgotten the password")
                     }   // VStack
                     
