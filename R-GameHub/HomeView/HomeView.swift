@@ -9,7 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @State var categories: [String] = ["Action", "Logic", "Magic"]  // Currentlt for test | This needs a function to take data from the database
+    @State var categories: [String] = ["Action", "Logic", "Magic"]
+    // Currentlt for test | This needs a function to take data from the database
     
     @State var searchText = ""
     
