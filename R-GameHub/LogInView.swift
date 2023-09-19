@@ -6,21 +6,39 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct LogInView: View {
-    
-    @State var username = ""
+    //hello
+    @State var email = ""
     @State private var password = ""
+    @State var UID = "zhW4xMPXYya8nGiUSDNJ5AR1yiu2"
+    
+    @State var errorMessage = ""
     
     @State var isHiddenText: Bool = true
     @State var signing: Bool = false
-    @State var logging: Bool = false
+    @State var logging: Bool = true
     @AppStorage("isDarkMode") private var isDark = false
+    
+    func login() {
+        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
+            if error != nil {
+                errorMessage = error?.localizedDescription ?? ""
+                logging = false
+            } else {
+                errorMessage = "Login success"
+                logging = true
+                UID = Auth.auth().currentUser!.uid
+            }
+        }
+    }
     
     var body: some View {
         ZStack{
             if logging{
-                HomeView()
+//                HomeView()
+                ProfileView(UID: $UID)
             } else {
                 ZStack{
                     CustomColor.primaryColor
@@ -57,13 +75,13 @@ struct LogInView: View {
                                 }
                             }
                             
-                            // Username
+                            // Email
                             HStack{
                                 Image(systemName: "person.fill")
                                     .padding(10)
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
-                                    TextField("username", text: self.$username)
+                                    TextField("email", text: self.$email)
                                         .font(.system(size: 20))
                                     Divider()
                                         .background(CustomColor.secondaryColor)
@@ -102,8 +120,7 @@ struct LogInView: View {
                             
                             Button{
                                 // Logic for logging into the home page
-                                
-                                logging = true
+                                login()
                             } label: {
                                 Text("Log in")
                                     .font(.system(size: 28))
@@ -122,6 +139,7 @@ struct LogInView: View {
                         .shadow(color: CustomColor.shadowColor, radius: 10)
                         
                         //                Text("Forgotten the password")
+                        Text(errorMessage)
                     }   // VStack
                 }   // ZStack
                 .environment(\.colorScheme, isDark ? .dark : .light)
