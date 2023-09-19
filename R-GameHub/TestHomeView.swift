@@ -17,6 +17,9 @@ struct TestHomeView: View {
                 Text(game.name)
                 Text(game.developer)
                 AsyncImage(url: URL(string: game.imageURL))
+                    .scaledToFill()
+                    .frame(width: 200, height: 200)
+                    .clipped()
             }
         }
     }

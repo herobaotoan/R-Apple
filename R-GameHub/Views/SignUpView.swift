@@ -67,7 +67,7 @@ struct SignUpView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 150, height: 150)
-                        
+                            .padding(.bottom, 10)
                         VStack(spacing: 30) {
                             HStack{
                                 Button {
@@ -113,7 +113,7 @@ struct SignUpView: View {
                                     .padding(10)
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
-                                    TextField("Phone Number", text: Binding(
+                                    TextField("Phone number", text: Binding(
                                         get: { "\(phoneNumber)" },
                                         set: {
                                             if let newValue = Int($0) {
@@ -121,6 +121,7 @@ struct SignUpView: View {
                                             }
                                         }
                                     ))
+                                    .font(.system(size: 20))
                                     Divider()
                                         .background(CustomColor.secondaryColor)
                                 }
@@ -132,7 +133,7 @@ struct SignUpView: View {
                                     .padding(10)
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
-                                    TextField("username", text: self.$username)
+                                    TextField("Username", text: self.$username)
                                         .font(.system(size: 20))
                                     Divider()
                                         .background(CustomColor.secondaryColor)
@@ -146,10 +147,10 @@ struct SignUpView: View {
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack {
                                     if isHiddenText {
-                                        SecureField("password", text: self.$password) // hidden text
+                                        SecureField("Password", text: self.$password) // hidden text
                                             .font(.system(size: 20))
                                     } else {
-                                        TextField("password", text: self.$password) // shown text
+                                        TextField("Password", text: self.$password) // shown text
                                             .font(.system(size: 20))
                                     }
                                     Divider()
@@ -162,7 +163,7 @@ struct SignUpView: View {
                                     Button{
                                         isHiddenText.toggle()
                                     }label: {
-                                        Image(systemName: isHiddenText ? "eye.slash.fill":"eye.fill").foregroundColor(CustomColor.secondaryColor)
+                                        Image(systemName: isHiddenText ? "eye.slash.fill" : "eye.fill").foregroundColor(CustomColor.secondaryColor)
                                         
                                     }
                                 }
