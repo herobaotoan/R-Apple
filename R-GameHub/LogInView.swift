@@ -9,7 +9,6 @@ import SwiftUI
 import Firebase
 
 struct LogInView: View {
-    //hello
     @State var email = ""
     @State private var password = ""
     @State var UID = "zhW4xMPXYya8nGiUSDNJ5AR1yiu2"
@@ -40,7 +39,7 @@ struct LogInView: View {
 //                HomeView()
                 ProfileView(UID: $UID)
             } else {
-                ZStack{
+                ZStack {
                     CustomColor.primaryColor
                         .edgesIgnoringSafeArea(.all)
                     VStack {
@@ -48,9 +47,9 @@ struct LogInView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 150, height: 150)
-                        VStack(spacing: 30){
-                            
-                            HStack{
+                            .padding(.bottom, 10)
+                        VStack(spacing: 30) {
+                            HStack {
                                 Button {
                                     
                                 } label: {
@@ -65,7 +64,7 @@ struct LogInView: View {
                                     }
                                 }
                                 
-                                Button{
+                                Button {
                                     signing = true
                                 } label: {
                                     Text("Sign up")
@@ -75,13 +74,13 @@ struct LogInView: View {
                                 }
                             }
                             
-                            // Email
-                            HStack{
-                                Image(systemName: "person.fill")
+                            // Username
+                            HStack {
+                                Image(systemName: "envelope.fill")
                                     .padding(10)
                                     .foregroundColor(CustomColor.secondaryColor)
-                                VStack{
-                                    TextField("email", text: self.$email)
+                                VStack {
+                                    TextField("Email", text: self.$email)
                                         .font(.system(size: 20))
                                     Divider()
                                         .background(CustomColor.secondaryColor)
@@ -94,11 +93,11 @@ struct LogInView: View {
                                     .padding(10)
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
-                                    if isHiddenText{
-                                        SecureField("password", text: self.$password) // hidden text
+                                    if isHiddenText {
+                                        SecureField("Password", text: self.$password) // hidden text
                                             .font(.system(size: 20))
                                     } else {
-                                        TextField("password", text: self.$password) // shown text
+                                        TextField("Password", text: self.$password) // shown text
                                             .font(.system(size: 20))
                                     }
                                     Divider()
@@ -107,18 +106,18 @@ struct LogInView: View {
                             }
                             .overlay(
                                 // show or hide the password
-                                HStack{
+                                HStack {
                                     Spacer()
-                                    Button{
+                                    Button {
                                         isHiddenText.toggle()
-                                    }label: {
-                                        Image(systemName: isHiddenText ? "eye.slash.fill":"eye.fill").foregroundColor(CustomColor.secondaryColor)
+                                    } label: {
+                                        Image(systemName: isHiddenText ? "eye.slash.fill" : "eye.fill").foregroundColor(CustomColor.secondaryColor)
                                         
                                     }
                                 }
                             )
                             
-                            Button{
+                            Button {
                                 // Logic for logging into the home page
                                 login()
                             } label: {
