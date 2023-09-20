@@ -13,6 +13,7 @@ struct HomeView: View {
     // Currentlt for test | This needs a function to take data from the database
     
     @State var searchText = ""
+    @State private var showGameDetailView = false
     
     @AppStorage("isDarkMode") private var isDark = false
     @State var loggingOut: Bool = false
@@ -27,29 +28,34 @@ struct HomeView: View {
                 ZStack{
                     CustomColor.primaryColor
                         .edgesIgnoringSafeArea(.all)
-                    VStack{
-                        Menu{
-                            Button{
+                    VStack {
+                        Menu {
+                            Button {
                                 // Something
                             } label: {
                                 Text("Something")
                             }
                             
-                            Button{
+                            Button {
                                 isDark.toggle()
                             } label: {
                                 isDark ? Label("Dark", systemImage: "lightbulb.fill") : Label("Light", systemImage: "lightbulb")
                             }
                             
-                            Button{
+                            Button {
                                 loggingOut = true
                             } label: {
                                 Text("Log out")
                             }
-                        }label: {
+                        } label: {
                             Text("User Name") //
                         }
                         
+                        Button {
+                            showGameDetailView.toggle()
+                        } label: {
+                            Text("Test")
+                        }
                         
                         TextField("Search", text: $searchText)
                             .foregroundColor(CustomColor.darkLightColor)
@@ -57,16 +63,16 @@ struct HomeView: View {
                             .cornerRadius(15)
                             .padding()
                             .overlay(
-                                HStack{
+                                HStack {
                                   Image(systemName: "magnifyingglass")
                                         .padding(.trailing, 25)
                                         .frame(maxWidth: .infinity, alignment: .trailing)
                                 }
                             )
                         
-                        ScrollView{
-                            ForEach(categories, id: \.self){ category in
-                                VStack{
+                        ScrollView {
+                            ForEach(categories, id: \.self) {category in
+                                VStack {
                                     Text(category).tag(category)
                                     
                                     // There is a need logic to display game following the category
@@ -83,6 +89,9 @@ struct HomeView: View {
                     
                 }
                 .environment(\.colorScheme, isDark ? .dark : .light)
+                .sheet(isPresented: $showGameDetailView) {
+                    GameDetailView(game: Game(name: "Elden Ring", platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"))
+                }
             }
         }   // ZStack
     }

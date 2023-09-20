@@ -9,6 +9,8 @@ import SwiftUI
 
 struct RatingsView: View {
     var rating: Double
+    var color: Color
+    var width: CGFloat
     
     var body: some View {
         let stars = HStack(spacing: 0) {
@@ -25,17 +27,18 @@ struct RatingsView: View {
                 ZStack(alignment: .leading) {
                     Rectangle()
                         .frame(width: width)
-                        .foregroundColor(CustomColor.secondaryColor)
+                        .foregroundColor(color)
                 }
             }
             .mask(stars)
         )
-        .foregroundColor(CustomColor.secondaryColor.opacity(0.3))
+        .foregroundColor(color.opacity(0.3))
+        .frame(width: width)
     }
 }
 
 struct RatingsView_Previews: PreviewProvider {
     static var previews: some View {
-        RatingsView(rating: 3.5)
+        RatingsView(rating: 3.5, color: CustomColor.secondaryColor, width: 150)
     }
 }
