@@ -34,7 +34,7 @@ struct GameItemView: View {
                 }
             }
             Text(game.developer)
-                ScrollView(.horizontal){
+                ScrollView(.horizontal) {
                     LazyHStack{
                         ForEach(game.genre, id:\.self) { item in
                             Text(item)
