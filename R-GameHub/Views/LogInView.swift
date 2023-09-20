@@ -38,6 +38,7 @@ struct LogInView: View {
             if logging{
 //                HomeView()
                 ProfileView(UID: $UID)
+//                TestHomeView()
             } else {
                 ZStack {
                     CustomColor.primaryColor

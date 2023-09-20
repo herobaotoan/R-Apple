@@ -42,7 +42,6 @@ struct GameDetailView: View {
 //                            .frame(width: 150)
 //                    }
 //                }
-                Spacer()
             }
         }
     }
