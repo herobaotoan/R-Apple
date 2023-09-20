@@ -42,6 +42,17 @@ struct GameDetailView: View {
 //                            .frame(width: 150)
 //                    }
 //                }
+                HStack {
+                    Text("Great execution.")
+                    RatingsView(rating: 4.1)
+                        .frame(width: 125)
+                }
+                HStack {
+                    Text("Great execution.")
+                    RatingsView(rating: 4.7)
+                        .frame(width: 125)
+                }
+                Spacer()
             }
         }
     }
