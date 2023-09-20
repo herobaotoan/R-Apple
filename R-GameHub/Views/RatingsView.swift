@@ -30,7 +30,7 @@ struct RatingsView: View {
             }
             .mask(stars)
         )
-        .foregroundColor(.white.opacity(0.3))
+        .foregroundColor(CustomColor.secondaryColor.opacity(0.3))
     }
 }
 
