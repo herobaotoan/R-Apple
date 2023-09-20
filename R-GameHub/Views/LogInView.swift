@@ -11,13 +11,13 @@ import Firebase
 struct LogInView: View {
     @State var email = ""
     @State private var password = ""
-    @State var UID = "zhW4xMPXYya8nGiUSDNJ5AR1yiu2"
+    @State var UID = ""
     
     @State var errorMessage = ""
     
     @State var isHiddenText: Bool = true
     @State var signing: Bool = false
-    @State var logging: Bool = true
+    @State var logging: Bool = false
     @AppStorage("isDarkMode") private var isDark = false
     
     func login() {
@@ -37,7 +37,8 @@ struct LogInView: View {
         ZStack{
             if logging{
 //                HomeView()
-                ProfileView(UID: $UID)
+//                ProfileView(UID: $UID)
+                TestHomeView()
             } else {
                 ZStack {
                     CustomColor.primaryColor
