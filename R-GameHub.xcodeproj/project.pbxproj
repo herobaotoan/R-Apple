@@ -127,8 +127,8 @@
 			isa = PBXGroup;
 			children = (
 				9CCA59902AB4446300FEA993 /* R_GameHubApp.swift */,
-				9C557DC22AB7FD1400871A0C /* Views */,
 				EAE0E24F2AB97DD300371C7B /* Models */,
+				9C557DC22AB7FD1400871A0C /* Views */,
 				9C59ECEE2AB9C7130000D2FA /* Helpers */,
 				EAE0E25C2AB99AF000371C7B /* TestHomeView.swift */,
 				EAC946B02ABABFB700DE2BE3 /* GameItemView.swift */,

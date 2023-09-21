@@ -23,13 +23,15 @@ import Firebase
              self.games = documents.map { (queryDocumentSnapshot) -> Game in
                  let data = queryDocumentSnapshot.data()
                  let name = data["name"] as? String ?? ""
+                 let description = data["description"] as? String ?? ""
+                 let price = data["price"] as? Double ?? 0
                  let platform = data["platform"] as? [String] ?? [""]
                  let genre = data["genre"] as? [String] ?? [""]
                  let developer = data["developer"] as? String ?? ""
                  let rating = data["rating"] as? [Int] ?? [0]
                  let imageURL = data["imageURL"] as? String ?? ""
                  let userID = data["userID"] as? String ?? ""
-                 return Game(name: name, platform: platform, genre: genre, developer: developer, rating: rating, imageURL: imageURL, userID: userID, documentID: queryDocumentSnapshot.documentID)
+                 return Game(name: name, description: description, price: price, platform: platform, genre: genre, developer: developer, rating: rating, imageURL: imageURL, userID: userID, documentID: queryDocumentSnapshot.documentID)
              }
          }
      }

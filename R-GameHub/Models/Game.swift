@@ -10,6 +10,8 @@ import Foundation
  struct Game: Codable, Identifiable {
      var id: String = UUID().uuidString
      var name: String
+     var description: String
+     var price: Double
      var platform: [String]
      var genre: [String]
      var developer: String
