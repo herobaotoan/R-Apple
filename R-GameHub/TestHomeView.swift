@@ -12,6 +12,7 @@ import FirebaseStorage
 struct TestHomeView: View {
     let storage: Storage = Storage.storage()
     @StateObject var gameViewModel = GameViewModel()
+    @StateObject var cartViewModel = CartViewModel()
     @State var name = ""
     @State var dev = ""
     @State var des = ""
@@ -26,6 +27,10 @@ struct TestHomeView: View {
     @State var image: UIImage?
     @State var shouldShowImagePicker = false
     @State var loginStatusMessage = ""
+    //Binding this UID
+    @State var UID = "zhW4xMPXYya8nGiUSDNJ5AR1yiu2"
+    
+    @State var cart: [String] = [""]
     
     @State private var showGameDetailView = false
     @State var selectedGame: Game = Game(name: "", description: "", price: 0, platform: [""], genre: [""], developer: "", rating: [0], imageURL: "", userID: "")
@@ -57,6 +62,10 @@ struct TestHomeView: View {
         }
     }
     
+    func getCart(gamelist: [String]) {
+        cart = gamelist
+    }
+    
     var body: some View {
         VStack {
             Text(loginStatusMessage)
@@ -78,7 +87,7 @@ struct TestHomeView: View {
                     }
                 }
                 .overlay(RoundedRectangle(cornerRadius: 64)
-                            .stroke(Color.black, lineWidth: 3)
+                    .stroke(Color.black, lineWidth: 3)
                 )
             }
             TextField("Name: ", text: $name)
@@ -114,7 +123,7 @@ struct TestHomeView: View {
                         selectedGame = game
                         showGameDetailView.toggle()
                     } label: {
-                        GameItemView(game: game)
+                        GameItemView(game: game, UID: UID)
                     }
                 }
             }

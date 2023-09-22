@@ -17,6 +17,7 @@ struct GameDetailView: View {
     
     @State var game: Game
     @StateObject var gameViewModel = GameViewModel()
+    @State private var itemCount: Int = 1
     
     func checkUIDAndDelete () {
         let uid = Auth.auth().currentUser!.uid
@@ -27,33 +28,9 @@ struct GameDetailView: View {
     
     var body: some View {
         let rating = Double(game.rating.reduce(0, +)) / Double(game.rating.count)
+        let totalPrice = round(game.price * Double(itemCount) * 100) / 100.0
+        
         ZStack(alignment: .top) {
-            // Game image
-            CustomColor.primaryColor
-                .edgesIgnoringSafeArea(.bottom)
-            AsyncImage(url: URL(string: game.imageURL)) {image in
-                image
-                    .resizable()
-                    .scaledToFill()
-            } placeholder: {
-                CustomColor.secondaryColor.opacity(0.3)
-            }
-                .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: 400, alignment: .top)
-                .clipShape(
-                    .rect(
-                    topLeadingRadius: 0,
-                    bottomLeadingRadius: 20,
-                    bottomTrailingRadius: 20,
-                    topTrailingRadius: 0
-                    )
-                )
-                .overlay(
-                    RatingsView(rating: rating, color: .yellow, width: 200)
-                        .frame(maxHeight: .infinity, alignment: .bottom)
-                        .padding(.bottom, 20)
-                )
-                .zIndex(1)
-            
             // Test only (admin)
             ZStack {
                 Button {
@@ -63,22 +40,102 @@ struct GameDetailView: View {
                 }
             }
             .zIndex(2)
+            CustomColor.primaryColor
+                .edgesIgnoringSafeArea(.bottom)
+            // Game image
+            AsyncImage(url: URL(string: game.imageURL)) {image in
+                image
+                    .resizable()
+                    .scaledToFill()
+            } placeholder: {
+                CustomColor.secondaryColor.opacity(0.3)
+            }
+                .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: 400, alignment: .top)
+                .overlay(
+                    RatingsView(rating: rating, color: .yellow, width: 200)
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                        .padding(.bottom, 20)
+                )
+                .zIndex(1)
+            
+            ZStack {
+                // Game price and buy
+                ZStack {
+                    CustomColor.secondaryColor
+                    HStack {
+                        // Game price
+                        Text("$\(totalPrice, specifier: "%.2f")")
+                            .font(.system(size: 26))
+                            .multilineTextAlignment(.leading)
+                            .italic()
+                            .foregroundColor(CustomColor.lightDarkColor)
+                            .padding(.leading, 30)
+                        
+                        Spacer()
+                        
+                        // Buy button
+                        Button {
+                            
+                        } label: {
+                            Text("Buy")
+                                .font(.system(size: 20))
+                                .fontWeight(.medium)
+                        }
+                        .frame(width: 80, height: 40, alignment: .center)
+                        .background(CustomColor.primaryColor)
+                        .foregroundColor(CustomColor.darkLightColor)
+                        .cornerRadius(10)
+                        .padding(.trailing, 30)
+                    }
+                    .overlay(
+                        // Game item number adjust
+                        HStack {
+                            Button {
+                                if itemCount > 1 {
+                                    itemCount -= 1
+                                }
+                            } label: {
+                                Text("-")
+                                    .foregroundColor(CustomColor.darkLightColor)
+                            }
+                            .frame(width: 30, height: 30, alignment: .center)
+                            .background(CustomColor.primaryColor)
+                            .foregroundColor(CustomColor.darkLightColor)
+                            .cornerRadius(10)
+                            Text("\(itemCount)")
+                                .font(.system(size: 26))
+                                .foregroundColor(CustomColor.lightDarkColor)
+                                .padding([.leading, .trailing], 5)
+                            Button {
+                                itemCount += 1
+                            } label: {
+                                Text("+")
+                                    .foregroundColor(CustomColor.darkLightColor)
+                            }
+                            .frame(width: 30, height: 30, alignment: .center)
+                            .background(CustomColor.primaryColor)
+                            .foregroundColor(CustomColor.darkLightColor)
+                            .cornerRadius(10)
+                        }
+                    )
+                }
+                .frame(height: 80)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
+                
+            }
+            .frame(maxHeight: .infinity, alignment: .bottom)
+            .ignoresSafeArea()
+            .zIndex(2)
             ScrollView {
                 VStack {
                     // Game name
                     Text(game.name)
                         .foregroundColor(CustomColor.secondaryColor)
                         .font(.system(size: 24))
-                        .multilineTextAlignment(.center)
+                        .multilineTextAlignment(.leading)
                         .fontWeight(.heavy)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.top, 15)
-                        .padding(.bottom, 5)
-                    
-                    // Game price
-                    Text("$19.99")
-                        .font(.system(size: 22))
-                        .multilineTextAlignment(.center)
-                        .italic()
                         .padding(.bottom, 5)
                     VStack {
                         // Game description
@@ -87,9 +144,11 @@ struct GameDetailView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .font(.system(size: 20))
                             .fontWeight(.bold)
-                        Text("Investigate murders, search for clues and talk to your classmates to prepare for trial. There, you'll engage in deadly wordplay, going back and forth with suspects. Dissect their statements and fire their words back at them to expose their lies! There's only one way to survive—pull the trigger.")
+                        Text(game.description)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .multilineTextAlignment(.leading)
                             .font(.system(size: 18))
+                            .padding(.top, 1)
                     }
                     .padding(.bottom, 15)
                     VStack {
@@ -211,17 +270,17 @@ struct GameDetailView: View {
                 .padding([.leading, .trailing, .bottom])
             }
             .padding(.top, 400)
+            .padding(.bottom, 30)
         }
         .overlay (
-          
           // MARK: - DISMISS GAME DETAIL BUTTON
             Button(action: {
                 dismiss()
             }) {
-                Image(systemName: "xmark.circle")
+                Image(systemName: "xmark.circle.fill")
                     .font(isCompact ? .title : .largeTitle)
             }
-              .foregroundColor(CustomColor.secondaryColor)
+              .foregroundColor(CustomColor.primaryColor)
               .padding([.top, .trailing], isCompact ? 20 : 30), alignment: .topTrailing
         )
         .interactiveDismissDisabled()
@@ -231,6 +290,6 @@ struct GameDetailView: View {
 
 struct GameDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        GameDetailView(game: Game(name: "Elden Ring", description: "", price: 0 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"))
+        GameDetailView(game: Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"))
     }
 }

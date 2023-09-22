@@ -38,7 +38,19 @@ import Firebase
         }
      }
      
-    
+     func updateGamelist(documentID: String, gamelist: [String]) {
+         db.collection("cart").document(documentID).updateData(["gameID" : gamelist])
+     }
+     
+     func addToCart(uid: String, gamelist: [String]) {
+         db.collection("cart").whereField("uid", isEqualTo: uid).getDocuments { (result, error) in
+             if error == nil {
+                 for document in result!.documents {
+                     self.db.collection("cart").document(document.documentID).updateData(["gameID" : gamelist])
+                 }
+             }
+         }
+     }
 //     func removeGameData(documentID: String) {
 //         db.collection("game").document(documentID).delete { (error) in
 //             if let error = error {
