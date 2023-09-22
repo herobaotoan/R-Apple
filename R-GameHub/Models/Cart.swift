@@ -6,11 +6,10 @@
 //
 
 import Foundation
-import FirebaseFirestoreSwift
 
 struct Cart: Codable, Identifiable {
     var id: String = UUID().uuidString
     var uid: String
     var gameID: [String]
-    @DocumentID var documentID: String?
+    var documentID: String?
 }

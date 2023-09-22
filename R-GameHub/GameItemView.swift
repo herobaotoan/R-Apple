@@ -33,7 +33,11 @@ struct GameItemView: View {
                     Text("Delete")
                 }
             }
-            Text(game.developer)
+            Text(game.description)
+            HStack{
+                Text(game.developer)
+                Text(String(game.price))
+            }
                 ScrollView(.horizontal) {
                     LazyHStack{
                         ForEach(game.genre, id:\.self) { item in
