@@ -14,6 +14,9 @@ struct TestHomeView: View {
     @StateObject var gameViewModel = GameViewModel()
     @State var name = ""
     @State var dev = ""
+    @State var des = ""
+    @State var priceString = ""
+    @State var price: Double = 0.0
     @State var genreText = ""
     @State var platformText = ""
     @State var imageURL = ""
@@ -23,6 +26,9 @@ struct TestHomeView: View {
     @State var image: UIImage?
     @State var shouldShowImagePicker = false
     @State var loginStatusMessage = ""
+    
+    @State private var showGameDetailView = false
+    @State var selectedGame: Game = Game(name: "", description: "", price: 0, platform: [""], genre: [""], developer: "", rating: [0], imageURL: "", userID: "")
     
     func upload(){
         persistImageToStorage()
@@ -44,7 +50,8 @@ struct TestHomeView: View {
                     return
                 }
                 imageURL = url?.absoluteString ?? ""
-                gameViewModel.addNewGameData(newGame: Game(name: name, platform: platforms, genre: genres, developer: dev, rating: [5], imageURL: imageURL, userID: uid))
+                price = Double(priceString)!
+                gameViewModel.addNewGameData(newGame: Game(name: name, description: des, price: price, platform: platforms, genre: genres, developer: dev, rating: [5], imageURL: imageURL, userID: uid))
                     self.loginStatusMessage = "Successfully Added Game"
             }
         }
@@ -76,10 +83,13 @@ struct TestHomeView: View {
             }
             TextField("Name: ", text: $name)
             TextField("Dev: ", text: $dev)
+            TextField("Description: ", text: $des)
+            TextField("Price: ", text: $priceString).keyboardType(.decimalPad)
             HStack{
                 TextField("Genre: ", text: $genreText)
                 Button {
                     genres.append(genreText)
+                    genreText = ""
                 } label: {
                     Text("Add")
                 }
@@ -87,7 +97,8 @@ struct TestHomeView: View {
             HStack{
                 TextField("Platfrom: ", text: $platformText)
                 Button {
-                    platforms.append(genreText)
+                    platforms.append(platformText)
+                    platformText = ""
                 } label: {
                     Text("Add")
                 }
@@ -99,9 +110,17 @@ struct TestHomeView: View {
             }
             ScrollView{
                 ForEach(gameViewModel.games, id: \.id) { game in
-                    GameItemView(game: game)
+                    Button{
+                        selectedGame = game
+                        showGameDetailView.toggle()
+                    } label: {
+                        GameItemView(game: game)
+                    }
                 }
             }
+        }
+        .sheet(isPresented: $showGameDetailView) {
+            GameDetailView(game: selectedGame)
         }
         .fullScreenCover(isPresented: $shouldShowImagePicker, onDismiss: nil) {
             ImagePicker(image: $image)

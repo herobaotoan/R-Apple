@@ -17,7 +17,7 @@ struct LogInView: View {
     
     @State var isHiddenText: Bool = true
     @State var signing: Bool = false
-    @State var logging: Bool = true
+    @State var logging: Bool = false
     @AppStorage("isDarkMode") private var isDark = false
     
     func login() {
@@ -35,10 +35,11 @@ struct LogInView: View {
     
     var body: some View {
         ZStack{
-            if logging{
+            if logging {
 //                HomeView()
-                ProfileView(UID: $UID)
+//                ProfileView(UID: $UID)
 //                TestHomeView()
+                CartView()
             } else {
                 ZStack {
                     CustomColor.primaryColor

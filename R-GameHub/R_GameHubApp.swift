@@ -16,7 +16,7 @@ struct R_GameHubApp: App {
     }
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            LogInView()
         }
     }
 }
