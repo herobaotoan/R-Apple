@@ -13,7 +13,6 @@ struct HomeView: View {
     // Currentlt for test | This needs a function to take data from the database
     
     @State var searchText = ""
-    @State private var showGameDetailView = false
     
     @AppStorage("isDarkMode") private var isDark = false
     @State var loggingOut: Bool = false
@@ -25,73 +24,72 @@ struct HomeView: View {
             if loggingOut {
                 LogInView()
             } else {
-                ZStack{
-                    CustomColor.primaryColor
-                        .edgesIgnoringSafeArea(.all)
-                    VStack {
-                        Menu {
-                            Button {
-                                // Something
-                            } label: {
-                                Text("Something")
-                            }
-                            
-                            Button {
-                                isDark.toggle()
-                            } label: {
-                                isDark ? Label("Dark", systemImage: "lightbulb.fill") : Label("Light", systemImage: "lightbulb")
-                            }
-                            
-                            Button {
-                                loggingOut = true
-                            } label: {
-                                Text("Log out")
-                            }
-                        } label: {
-                            Text("User Name") //
-                        }
-                        
-                        Button {
-                            showGameDetailView.toggle()
-                        } label: {
-                            Text("Test")
-                        }
-                        
-                        TextField("Search", text: $searchText)
-                            .foregroundColor(CustomColor.darkLightColor)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .cornerRadius(15)
-                            .padding()
-                            .overlay(
-                                HStack {
-                                  Image(systemName: "magnifyingglass")
-                                        .padding(.trailing, 25)
-                                        .frame(maxWidth: .infinity, alignment: .trailing)
+                NavigationView {
+                    ZStack {
+                        CustomColor.primaryColor
+                            .edgesIgnoringSafeArea(.all)
+                        VStack {
+                            Menu {
+                                Button {
+                                    // Something
+                                } label: {
+                                    Text("Something")
                                 }
-                            )
-                        
-                        ScrollView {
-                            ForEach(categories, id: \.self) {category in
-                                VStack {
-                                    Text(category).tag(category)
-                                    
-                                    // There is a need logic to display game following the category
-//                                    if category == categories {
-                                    GameListRow()
-                                        .border(.black)
-//                                    }
+                                
+                                Button {
+                                    isDark.toggle()
+                                } label: {
+                                    isDark ? Label("Dark", systemImage: "lightbulb.fill") : Label("Light", systemImage: "lightbulb")
                                 }
+                                
+                                Button {
+                                    loggingOut = true
+                                } label: {
+                                    Text("Log out")
+                                }
+                            } label: {
+                                Text("User Name") //
+                            }
+                            NavigationLink {
+                                GameDetailView(game: Game(name: "Elden Ring", description: "", price: 0 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"))
+                                    .navigationBarHidden(true)
+                            } label: {
+                                Text("Test")
+                            }
+                            TextField("Search", text: $searchText)
+                                .foregroundColor(CustomColor.darkLightColor)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .cornerRadius(15)
                                 .padding()
+                                .overlay(
+                                    HStack {
+                                        Image(systemName: "magnifyingglass")
+                                            .padding(.trailing, 25)
+                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                    }
+                                )
+                            
+                            ScrollView {
+                                ForEach(categories, id: \.self) {category in
+                                    VStack {
+                                        Text(category).tag(category)
+                                        
+                                        // There is a need logic to display game following the category
+                                        //                                    if category == categories {
+                                        GameListRow()
+                                            .border(.black)
+                                        //                                    }
+                                    }
+                                    .padding()
+                                }
                             }
-                        }
+                            
+                        }   // VStack
                         
-                    }   // VStack
-                    
+                    }
                 }
                 .environment(\.colorScheme, isDark ? .dark : .light)
-                .sheet(isPresented: $showGameDetailView) {
-                    GameDetailView(game: Game(name: "Elden Ring", description: "", price: 0 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"))
-                }
+                    
             }
         }   // ZStack
     }

@@ -34,7 +34,7 @@ struct LogInView: View {
     }
     
     var body: some View {
-        ZStack{
+        ZStack {
             if logging {
 //                HomeView()
 //                ProfileView(UID: $UID)

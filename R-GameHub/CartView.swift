@@ -12,52 +12,38 @@ struct CartView: View {
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var cartViewModel = CartViewModel()
     @State var uid = ""
-    @State var cart: [Cart] = [Cart(uid: "", gameID: [""])]
-    @State var cartItem: [String] = []
+    @State var gameArray = [""]
     @State var selectedGame: Game = Game(name: "", description: "", price: 0, platform: [""], genre: [""], developer: "", rating: [0], imageURL: "", userID: "")
-    func GetCartItem(a : [Game]) {
-        uid = Auth.auth().currentUser!.uid
-        cart = cartViewModel.carts
-//        ForEach(cartViewModel.carts, id: \.id) { cart in
-//            if cart.uid == uid {
-//
-//            }
-//        }
-//        cartItem.append(a[0].name)
-//        for cart in 0 ..< a.count + 1{
-//            if cartViewModel.carts[cart].uid == uid {
-//                cartItem.append(contentsOf: cartViewModel.carts[cart].gameID)
-//            }
-//            print(cart)
-//            cartItem.append(a[cart].name)
-//        }
+    
+    func removeFromCart(documentID: String?, gameID: String){
+        let index = gameArray.firstIndex(of: gameID) ?? 0
+        gameArray.remove(at: index)
+        cartViewModel.updateGamelist(documentID: documentID ?? "", gamelist: gameArray)
     }
-    func test() {
-        cartItem.append("")
-    }
+    
     var body: some View {
-        let cart = cartViewModel.carts
-        let carts = gameViewModel.games
         VStack{
-            Text("Cart: \(uid)")
-                .onAppear() {
-                    GetCartItem(a: carts)
-                }
-            ForEach(cartItem, id: \.self) { item in
-                Text(item)
-            }
-
+            Text("Cart:")
             ScrollView{
                 ForEach(gameViewModel.games, id: \.id) { game in
                     ForEach(cartViewModel.carts, id: \.id) { cart in
                         ForEach(cart.gameID, id: \.self) { item in
                             if item == game.documentID {
-                                GameItemView(game: game)
+                                GameItemView(game: game, UID: uid)
+                                Button {
+                                    gameArray = cart.gameID
+                                    removeFromCart(documentID: cart.documentID,gameID: item)
+                                } label: {
+                                    Text("REMOVE")
+                                }
                             }
                         }
                     }
                 }
             }
+//            ForEach(gameArray, id: \.self) { item in
+//                Text(item)
+//            }
         }
     }
 }
