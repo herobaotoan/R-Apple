@@ -15,9 +15,18 @@ struct GameDetailView: View {
     
     @AppStorage("isDarkMode") private var isDark = false
     
-    @State var game: Game
+    @State var buy: Bool = false
+    @Binding var game: Game
+    @State var gamelist: [String] = [""]
+    @State var UID: String
+    @State var cart: [String] = [""]
     @StateObject var gameViewModel = GameViewModel()
-    @State private var itemCount: Int = 1
+    @StateObject var cartViewModel = CartViewModel()
+    @State private var isFavorite: Bool = false
+    
+    func getCart(gamelist: [String]) {
+        cart = gamelist
+    }
     
     func checkUIDAndDelete () {
         let uid = Auth.auth().currentUser!.uid
@@ -25,271 +34,274 @@ struct GameDetailView: View {
             gameViewModel.removeGameData(documentID: game.documentID ?? "")
         }
     }
+    func addToCart (id: String?) {
+        let uid = Auth.auth().currentUser!.uid
+        gamelist.append(id ?? "")
+        cartViewModel.addToCart(uid: uid, gamelist: gamelist)
+    }
     
     var body: some View {
         let rating = Double(game.rating.reduce(0, +)) / Double(game.rating.count)
-        let totalPrice = round(game.price * Double(itemCount) * 100) / 100.0
-        
-        ZStack(alignment: .top) {
-            // Test only (admin)
-            ZStack {
-                Button {
-                    checkUIDAndDelete()
-                } label: {
-                    Text("Delete")
-                }
-            }
-            .zIndex(2)
-            CustomColor.primaryColor
-                .edgesIgnoringSafeArea(.bottom)
-            // Game image
-            AsyncImage(url: URL(string: game.imageURL)) {image in
-                image
-                    .resizable()
-                    .scaledToFill()
-            } placeholder: {
-                CustomColor.secondaryColor.opacity(0.3)
-            }
-                .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: 400, alignment: .top)
-                .overlay(
-                    RatingsView(rating: rating, color: .yellow, width: 200)
-                        .frame(maxHeight: .infinity, alignment: .bottom)
-                        .padding(.bottom, 20)
-                )
-                .zIndex(1)
-            
-            ZStack {
-                // Game price and buy
-                ZStack {
-                    CustomColor.secondaryColor
-                    HStack {
-                        // Game price
-                        Text("$\(totalPrice, specifier: "%.2f")")
-                            .font(.system(size: 26))
-                            .multilineTextAlignment(.leading)
-                            .italic()
-                            .foregroundColor(CustomColor.lightDarkColor)
-                            .padding(.leading, 30)
-                        
-                        Spacer()
-                        
-                        // Buy button
+        if buy {
+            CartView()
+        } else {
+            NavigationView {
+                ZStack(alignment: .top) {
+                    // Test only (admin)
+                    ZStack {
                         Button {
-                            
+                            checkUIDAndDelete()
                         } label: {
-                            Text("Buy")
-                                .font(.system(size: 20))
-                                .fontWeight(.medium)
+                            Text("Delete")
                         }
-                        .frame(width: 80, height: 40, alignment: .center)
-                        .background(CustomColor.primaryColor)
-                        .foregroundColor(CustomColor.darkLightColor)
-                        .cornerRadius(10)
-                        .padding(.trailing, 30)
                     }
+                    .zIndex(2)
+                    CustomColor.primaryColor
+                        .edgesIgnoringSafeArea(.all)
+                    // Game image
+                    AsyncImage(url: URL(string: game.imageURL)) {image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        CustomColor.secondaryColor.opacity(0.3)
+                    }
+                    .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: 300, alignment: .top)
+                    .clipped()
                     .overlay(
-                        // Game item number adjust
-                        HStack {
-                            Button {
-                                if itemCount > 1 {
-                                    itemCount -= 1
-                                }
-                            } label: {
-                                Text("-")
-                                    .foregroundColor(CustomColor.darkLightColor)
-                            }
-                            .frame(width: 30, height: 30, alignment: .center)
-                            .background(CustomColor.primaryColor)
-                            .foregroundColor(CustomColor.darkLightColor)
-                            .cornerRadius(10)
-                            Text("\(itemCount)")
-                                .font(.system(size: 26))
-                                .foregroundColor(CustomColor.lightDarkColor)
-                                .padding([.leading, .trailing], 5)
-                            Button {
-                                itemCount += 1
-                            } label: {
-                                Text("+")
-                                    .foregroundColor(CustomColor.darkLightColor)
-                            }
-                            .frame(width: 30, height: 30, alignment: .center)
-                            .background(CustomColor.primaryColor)
-                            .foregroundColor(CustomColor.darkLightColor)
-                            .cornerRadius(10)
-                        }
+                        RatingsView(rating: rating, color: CustomColor.starColor, width: 200)
+                            .frame(maxHeight: .infinity, alignment: .bottom)
+                            .padding(.bottom, 20)
                     )
-                }
-                .frame(height: 80)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
-                
-            }
-            .frame(maxHeight: .infinity, alignment: .bottom)
-            .ignoresSafeArea()
-            .zIndex(2)
-            ScrollView {
-                VStack {
-                    // Game name
-                    Text(game.name)
-                        .foregroundColor(CustomColor.secondaryColor)
-                        .font(.system(size: 24))
-                        .multilineTextAlignment(.leading)
-                        .fontWeight(.heavy)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, 15)
-                        .padding(.bottom, 5)
-                    VStack {
-                        // Game description
-                        Text("Description")
-                            .foregroundColor(CustomColor.secondaryColor)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.system(size: 20))
-                            .fontWeight(.bold)
-                        Text(game.description)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .multilineTextAlignment(.leading)
+                    .zIndex(1)
+                    ZStack {
+                        // Game price and buy
+                        ZStack {
+                            CustomColor.secondaryColor
+                            VStack {
+                                HStack {
+                                    // Game price
+                                    Text("$\(game.price, specifier: "%.2f")")
+                                        .font(.system(size: 26))
+                                        .multilineTextAlignment(.leading)
+                                        .italic()
+                                        .foregroundColor(CustomColor.lightDarkColor)
+                                        .padding(.leading, 30)
+                                    
+                                    Spacer()
+                                    
+                                    // Buy button
+                                    ForEach(cartViewModel.carts, id: \.id) { cart in
+                                        if cart.uid == UID {
+                                            Button {
+                                                self.buy.toggle()
+                                                getCart(gamelist: cart.gameID)
+                                                addToCart(id: game.documentID)
+                                            } label: {
+                                                Text("Buy")
+                                                    .font(.system(size: 20))
+                                                    .fontWeight(.medium)
+                                                
+                                            }
+                                            
+                                        }
+                                    }
+                                    .frame(width: 80, height: 40, alignment: .center)
+                                    .background(CustomColor.primaryColor)
+                                    .foregroundColor(CustomColor.darkLightColor)
+                                    .cornerRadius(10)
+                                    .padding(.trailing, 30)
+                                }
+                            }
+                            .padding(.bottom, 15)
+                        }
+                        .frame(height: 90)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        
+                    }
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                    .ignoresSafeArea()
+                    .zIndex(2)
+                    ScrollView {
+                        VStack {
+                            // Game name
+                            HStack(alignment: .top) {
+                                Text(game.name)
+                                    .foregroundColor(CustomColor.secondaryColor)
+                                    .font(.system(size: 24))
+                                    .multilineTextAlignment(.leading)
+                                    .fontWeight(.heavy)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                Button {
+                                    isFavorite.toggle()
+                                } label: {
+                                    if isFavorite {
+                                        Image(systemName: "heart.fill")
+                                            .font(isCompact ? .title : .largeTitle)
+                                            .foregroundColor(CustomColor.heartColor)
+                                    } else {
+                                        Image(systemName: "heart")
+                                            .font(isCompact ? .title : .largeTitle)
+                                            .foregroundColor(CustomColor.heartColor)
+                                    }
+                                }
+                            }
+                            .padding(.top, 15)
+                            .padding(.bottom, 5)
+                            VStack {
+                                // Game description
+                                Text("Description")
+                                    .foregroundColor(CustomColor.secondaryColor)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size: 20))
+                                    .fontWeight(.bold)
+                                Text(game.description)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .multilineTextAlignment(.leading)
+                                    .font(.system(size: 18))
+                                    .padding(.top, 1)
+                            }
+                            .padding(.bottom, 15)
+                            VStack {
+                                // Game publisher
+                                HStack(alignment: .top) {
+                                    Text("Developer")
+                                        .foregroundColor(CustomColor.secondaryColor)
+                                        .fontWeight(.medium)
+                                        .frame(width: UIScreen.main.bounds.width / 4, alignment: .leading)
+                                    Text(game.developer)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                                .padding(.bottom, 5)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                
+                                // Game genre
+                                HStack(alignment: .top) {
+                                    if game.genre.count < 2 {
+                                        Text("Genre")
+                                            .foregroundColor(CustomColor.secondaryColor)
+                                            .fontWeight(.medium)
+                                            .frame(width: UIScreen.main.bounds.width / 4, alignment: .leading)
+                                    } else {
+                                        Text("Genres")
+                                            .foregroundColor(CustomColor.secondaryColor)
+                                            .fontWeight(.medium)
+                                            .frame(width: UIScreen.main.bounds.width / 4, alignment: .leading)
+                                    }
+                                    Text(game.genre.joined(separator: ", "))
+                                    
+                                }
+                                .padding(.bottom, 5)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                
+                                // Game platform
+                                HStack(alignment: .top) {
+                                    if game.platform.count < 2 {
+                                        Text("Platform")
+                                            .foregroundColor(CustomColor.secondaryColor)
+                                            .fontWeight(.medium)
+                                            .frame(width: UIScreen.main.bounds.width / 4, alignment: .leading)
+                                    } else {
+                                        Text("Platforms")
+                                            .foregroundColor(CustomColor.secondaryColor)
+                                            .fontWeight(.medium)
+                                            .frame(width: UIScreen.main.bounds.width / 4, alignment: .leading)
+                                    }
+                                    Text(game.platform.joined(separator: ", "))
+                                    
+                                }
+                                .padding(.bottom, 5)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                
+                            }
                             .font(.system(size: 18))
-                            .padding(.top, 1)
-                    }
-                    .padding(.bottom, 15)
-                    VStack {
-                        // Game publisher
-                        HStack(alignment: .top) {
-                            Text("Developer")
-                                .foregroundColor(CustomColor.secondaryColor)
-                                .fontWeight(.medium)
-                                .frame(width: UIScreen.main.bounds.width / 4, alignment: .leading)
-                            Text(game.developer)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .padding(.bottom, 5)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        // Game genre
-                        HStack(alignment: .top) {
-                            if game.genre.count < 2 {
-                                Text("Genre")
+                            .multilineTextAlignment(.leading)
+                            .padding(.bottom, 15)
+                            VStack {
+                                // Review list
+                                Text("Reviews")
                                     .foregroundColor(CustomColor.secondaryColor)
-                                    .fontWeight(.medium)
-                                    .frame(width: UIScreen.main.bounds.width / 4, alignment: .leading)
-                            } else {
-                                Text("Genres")
-                                    .foregroundColor(CustomColor.secondaryColor)
-                                    .fontWeight(.medium)
-                                    .frame(width: UIScreen.main.bounds.width / 4, alignment: .leading)
-                            }
-                            Text(game.genre.joined(separator: ", "))
-                            
-                        }
-                        .padding(.bottom, 5)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                        // Game platform
-                        HStack(alignment: .top) {
-                            if game.platform.count < 2 {
-                                Text("Platform")
-                                    .foregroundColor(CustomColor.secondaryColor)
-                                    .fontWeight(.medium)
-                                    .frame(width: UIScreen.main.bounds.width / 4, alignment: .leading)
-                            } else {
-                                Text("Platforms")
-                                    .foregroundColor(CustomColor.secondaryColor)
-                                    .fontWeight(.medium)
-                                    .frame(width: UIScreen.main.bounds.width / 4, alignment: .leading)
-                            }
-                            Text(game.platform.joined(separator: ", "))
-                            
-                        }
-                        .padding(.bottom, 5)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                    }
-                    .font(.system(size: 18))
-                    .multilineTextAlignment(.leading)
-                    .padding(.bottom, 15)
-                    VStack {
-                        // Review list
-                        Text("Reviews")
-                            .foregroundColor(CustomColor.secondaryColor)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .font(.system(size: 20))
-                            .fontWeight(.bold)
-                        
-                        // Review
-                        VStack {
-                            HStack(alignment: .center) {
-                                Image("ava")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .clipShape(Circle())
-                                    .frame(width: 50)
-                                    .padding(.trailing, 20)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .font(.system(size: 20))
+                                    .fontWeight(.bold)
+                                
+                                // Review
                                 VStack {
-                                    Text("Monokuma")
-                                        .fontWeight(.semibold)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    RatingsView(rating: 4, color: CustomColor.secondaryColor, width: 125)
+                                    HStack {
+                                        Image("ava")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .clipShape(Circle())
+                                            .frame(width: 50)
+                                            .padding(.trailing, 20)
+                                        VStack {
+                                            Text("Monokuma")
+                                                .fontWeight(.semibold)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            RatingsView(rating: 4, color: CustomColor.secondaryColor, width: 125)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                    }
+                                    .padding(.bottom, 10)
+                                    Text("Great execution.")
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
-                            }
-                            .padding(.bottom, 10)
-                            Text("Great execution.")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                        .padding()
-                        .background(CustomColor.secondaryColor.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .padding(.bottom, 10)
-                        VStack {
-                            HStack(alignment: .center) {
-                                Image("ava")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .clipShape(Circle())
-                                    .frame(width: 50)
-                                    .padding(.trailing, 20)
+                                .padding()
+                                .background(CustomColor.secondaryColor.opacity(isDark ? 0.3 : 0.2))
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .padding(.bottom, 10)
                                 VStack {
-                                    Text("Monokuma")
-                                        .fontWeight(.semibold)
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    RatingsView(rating: 4, color: CustomColor.secondaryColor, width: 125)
+                                    HStack {
+                                        Image("ava")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .clipShape(Circle())
+                                            .frame(width: 50)
+                                            .padding(.trailing, 20)
+                                        VStack {
+                                            Text("Monokuma")
+                                                .fontWeight(.semibold)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                            RatingsView(rating: 4, color: CustomColor.secondaryColor, width: 125)
+                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                        }
+                                    }
+                                    .padding(.bottom, 10)
+                                    Text("Great execution.")
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
+                                .padding()
+                                .background(CustomColor.secondaryColor.opacity(isDark ? 0.3 : 0.2))
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                .padding(.bottom, 10)
                             }
-                            .padding(.bottom, 10)
-                            Text("Great execution.")
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                            .font(.system(size: 18))
+                            .multilineTextAlignment(.leading)
                         }
-                        .padding()
-                        .background(CustomColor.secondaryColor.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .padding(.bottom, 10)
+                        .padding([.leading, .trailing, .bottom])
                     }
-                    .font(.system(size: 18))
-                    .multilineTextAlignment(.leading)
+                    .padding(.top, 300)
+                    .padding(.bottom, 40)
                 }
-                .padding([.leading, .trailing, .bottom])
+                .overlay (
+                    // MARK: - DISMISS GAME DETAIL BUTTON
+                    Button(action: {
+                        dismiss()
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(isCompact ? .title : .largeTitle)
+                    }
+                        .foregroundColor(CustomColor.primaryColor)
+                        .padding([.top, .leading], isCompact ? 20 : 30), alignment: .topLeading
+                )
             }
-            .padding(.top, 400)
-            .padding(.bottom, 30)
+            .environment(\.colorScheme, isDark ? .dark : .light)
         }
-        .overlay (
-          // MARK: - DISMISS GAME DETAIL BUTTON
-            Button(action: {
-                dismiss()
-            }) {
-                Image(systemName: "xmark.circle.fill")
-                    .font(isCompact ? .title : .largeTitle)
-            }
-              .foregroundColor(CustomColor.primaryColor)
-              .padding([.top, .trailing], isCompact ? 20 : 30), alignment: .topTrailing
-        )
-        .interactiveDismissDisabled()
-        .environment(\.colorScheme, isDark ? .dark : .light)
     }
 }
 
 struct GameDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        GameDetailView(game: Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"))
+        GameDetailView(game: .constant(Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456")), UID: "zhW4xMPXYya8nGiUSDNJ5AR1yiu2")
     }
 }
