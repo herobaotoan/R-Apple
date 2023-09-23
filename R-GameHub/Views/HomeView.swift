@@ -31,6 +31,7 @@ struct HomeView: View {
                 LogInView()
             } else {
                 NavigationView {
+                    let _ = loadGenre()
                     ZStack {
                         CustomColor.primaryColor
                             .edgesIgnoringSafeArea(.all)
@@ -116,7 +117,7 @@ struct HomeView: View {
                         }   // VStack
                     }
                     .onAppear(perform: {
-                        self.loadGenre()
+                        loadGenre()
                     })
                 }
                 .environment(\.colorScheme, isDark ? .dark : .light)

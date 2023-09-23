@@ -113,12 +113,12 @@ struct CartView: View {
                 Button(action: {
                     dismiss()
                 }) {
-                    Image(systemName: "chevron.left.circle.fill")
+                    Image(systemName: "house.circle.fill")
                         .font(isCompact ? .title : .largeTitle)
                 }
                     .foregroundColor(CustomColor.primaryColor)
                     .padding(.leading, isCompact ? 20 : 30)
-                    .padding(.top, 1)
+                    .padding(.top, 2)
                 , alignment: .topLeading
             )
         }
