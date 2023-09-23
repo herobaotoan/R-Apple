@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct HomeView: View {
     
@@ -13,15 +14,19 @@ struct HomeView: View {
     // Currentlt for test | This needs a function to take data from the database
     
     @State var searchText = ""
+    @Binding var game: Game
+
     
     @AppStorage("isDarkMode") private var isDark = false
     @State var loggingOut: Bool = false
-    
+    @State var isProfileView: Bool = false
     // Function for searching
     
     var body: some View {
         ZStack{
-            if loggingOut {
+            if isProfileView{
+                ProfileView(UID: Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"), userViewModel: "zhW4xMPXYya8nGiUSDNJ5AR1yiu2")
+            } else if loggingOut {
                 LogInView()
             } else {
                 NavigationView {
@@ -29,11 +34,12 @@ struct HomeView: View {
                         CustomColor.primaryColor
                             .edgesIgnoringSafeArea(.all)
                         VStack {
+                            
                             Menu {
                                 Button {
-                                    // Something
+                                    isProfileView = true
                                 } label: {
-                                    Text("Something")
+                                    Text("Profile")
                                 }
                                 
                                 Button {
@@ -48,14 +54,10 @@ struct HomeView: View {
                                     Text("Log out")
                                 }
                             } label: {
-                                Text("User Name") //
+                                Text("User Name") // adding data
                             }
-                            NavigationLink {
-                                GameDetailView(game: Game(name: "Elden Ring", description: "", price: 0 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"), UID: "zhW4xMPXYya8nGiUSDNJ5AR1yiu2")
-                                    .navigationBarHidden(true)
-                            } label: {
-                                Text("Test")
-                            }
+                            
+                            //  Search bar
                             TextField("Search", text: $searchText)
                                 .foregroundColor(CustomColor.darkLightColor)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -76,7 +78,19 @@ struct HomeView: View {
                                         
                                         // There is a need logic to display game following the category
                                         //                                    if category == categories {
-                                        GameListRow()
+                                        ZStack{
+                                            ScrollView(.horizontal, showsIndicators: false){
+                                                HStack{
+                                                    NavigationLink {
+                                                        GameDetailView(game: Game(name: "Elden Ring", description: "", price: 0 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"), UID: "zhW4xMPXYya8nGiUSDNJ5AR1yiu2")
+                                                            .navigationBarHidden(true)
+                                                    }label: {
+                                                        GameListRow()// adding data
+                                                    }
+                                                }
+                                            }
+                                        }
+
                                             .border(.black)
                                         //                                    }
                                     }

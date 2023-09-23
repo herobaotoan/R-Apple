@@ -6,35 +6,28 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct GameListRow: View {
     
     // There is a need var to take data game from the database
     
     var body: some View {
-        ZStack{
-            Button{
-                // Game information
-            }label: {
-                ScrollView(.horizontal, showsIndicators: false){
-                    HStack{
-                        ForEach(0..<4){_ in 
-                            VStack{
-                                Image("game-product")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 120, height: 120)
-                                Text("Name Game")
-                            }
-                            .frame(width: 120, height: 150)
-                            .background(.green)
-                            .border(.black)
-                            .cornerRadius(10)
-                        }
-                    }
-                }
-            }
+        VStack{
+            Image("game-product") // adding data from database
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 120, height: 120)
+            RatingsView(rating: 4, color: CustomColor.secondaryColor, width: 125)
+            // adding data from database
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            Text("Name Game") // // adding data from database
         }
+        .frame(width: 120, height: 170)
+        .background()
+        .border(.black)
+        .cornerRadius(10)
     }
 }
 
