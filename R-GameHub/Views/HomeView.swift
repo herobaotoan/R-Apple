@@ -10,24 +10,23 @@ import Firebase
 
 struct HomeView: View {
     
-    @State var categories: [String] = ["Action", "Logic", "Magic"]
     // Currentlt for test | This needs a function to take data from the database
-    @State var genres: [String] = ["Home","Installed", "Favoriou"]
-    @State private var selectedGenre: String = "Home"
+    @State var selections: [String] = ["Home", "Wishlist"]
+    @State private var selected = "Home"
+    @State var genres: [String] = []
     
     @State var searchText = ""
-//    @State var game: Game
-
+    @StateObject var gameViewModel = GameViewModel()
+    @Binding var UID: String
     
     @AppStorage("isDarkMode") private var isDark = false
     @State var loggingOut: Bool = false
     @State var isProfileView: Bool = false
     // Function for searching
-    
     var body: some View {
-        ZStack{
-            if isProfileView{
-//                ProfileView()
+        ZStack {
+            if isProfileView {
+                ProfileView(UID: $UID)
             } else if loggingOut {
                 LogInView()
             } else {
@@ -36,7 +35,11 @@ struct HomeView: View {
                         CustomColor.primaryColor
                             .edgesIgnoringSafeArea(.all)
                         VStack {
-                            
+                            Button {
+                                loadGenre()
+                            } label: {
+                                Text("Genre")
+                            }
                             Menu {
                                 Button {
                                     isProfileView = true
@@ -74,54 +77,68 @@ struct HomeView: View {
                                 )
                             
                             // Genres
-                            Picker("genres" ,selection: $selectedGenre) {
-                                ForEach(genres, id: \.self) { genre in
-                                    Text(genre).tag(genre)
+                            Picker("genres" ,selection: $selected) {
+                                ForEach(selections, id: \.self) {selection in
+                                    Text(selection)
                                 }
                             }
                             .pickerStyle(SegmentedPickerStyle())
                             .padding(.horizontal)
                             
                             ScrollView {
-                                ForEach(categories, id: \.self) {category in
-                                    VStack {
-                                        Text(category).tag(category)
-                                        
-                                        // There is a need logic to display game following the category
-                                        //                                    if category == categories {
-                                        ZStack{
-                                            ScrollView(.horizontal, showsIndicators: false){
-                                                HStack{
+                                ForEach(genres, id: \.self) {genre in
+                                    Text(genre)
+                                        .font(.system(size: 26))
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(CustomColor.secondaryColor)
+                                        .padding(.top, 10)
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        LazyHStack {
+                                            ForEach(gameViewModel.games, id: \.id) {game in
+                                                if game.genre.contains(genre) {
                                                     NavigationLink {
-                                                        GameDetailView(game: Game(name: "Elden Ring", description: "", price: 0 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"), UID: "zhW4xMPXYya8nGiUSDNJ5AR1yiu2")
+                                                        GameDetailView(game: .constant(game), UID: UID)
                                                             .navigationBarHidden(true)
-                                                    }label: {
-                                                        GameListRow()// adding data
+                                                    } 
+                                                    label: {
+                                                        GameListRow(game: game)// adding data
                                                     }
+                                                    .background(CustomColor.secondaryColor)
+                                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                                                    .padding([.leading, .trailing], 10)
                                                 }
                                             }
                                         }
-
-                                            .border(.black)
-                                        //                                    }
                                     }
-                                    .padding()
                                 }
+                                .frame(maxWidth: .infinity)
                             }
-                            
                         }   // VStack
-                        
                     }
+                    .onAppear(perform: {
+                        self.loadGenre()
+                    })
                 }
                 .environment(\.colorScheme, isDark ? .dark : .light)
-                    
             }
-        }   // ZStack
+        }
+        .onAppear(perform: {
+            self.loadGenre()
+        })
+    }
+    func loadGenre() {
+        for game in gameViewModel.games {
+            for genre in game.genre {
+                if !genres.contains(genre) {
+                    genres.append(genre)
+                }
+            }
+        }
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        HomeView(UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"))
     }
 }
