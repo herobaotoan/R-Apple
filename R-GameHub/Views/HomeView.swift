@@ -6,99 +6,140 @@
 //
 
 import SwiftUI
+import Firebase
 
 struct HomeView: View {
     
-    @State var categories: [String] = ["Action", "Logic", "Magic"]
     // Currentlt for test | This needs a function to take data from the database
+    @State var selections: [String] = ["Home", "Wishlist"]
+    @State private var selected = "Home"
+    @State var genres: [String] = []
     
     @State var searchText = ""
-    @State private var showGameDetailView = false
+    @StateObject var gameViewModel = GameViewModel()
+    @Binding var UID: String
     
     @AppStorage("isDarkMode") private var isDark = false
     @State var loggingOut: Bool = false
-    
+    @State var isProfileView: Bool = false
     // Function for searching
-    
     var body: some View {
-        ZStack{
-            if loggingOut {
+        ZStack {
+            if isProfileView {
+                ProfileView(UID: $UID)
+            } else if loggingOut {
                 LogInView()
             } else {
-                ZStack{
-                    CustomColor.primaryColor
-                        .edgesIgnoringSafeArea(.all)
-                    VStack {
-                        Menu {
+                NavigationView {
+                    let _ = loadGenre()
+                    ZStack {
+                        CustomColor.primaryColor
+                            .edgesIgnoringSafeArea(.all)
+                        VStack {
                             Button {
-                                // Something
+                                loadGenre()
                             } label: {
-                                Text("Something")
+                                Text("Genre")
+                            }
+                            Menu {
+                                Button {
+                                    isProfileView = true
+                                } label: {
+                                    Text("Profile")
+                                }
+                                
+                                Button {
+                                    isDark.toggle()
+                                } label: {
+                                    isDark ? Label("Dark", systemImage: "lightbulb.fill") : Label("Light", systemImage: "lightbulb")
+                                }
+                                
+                                Button {
+                                    loggingOut = true
+                                } label: {
+                                    Text("Log out")
+                                }
+                            } label: {
+                                Text("User Name") // adding data
                             }
                             
-                            Button {
-                                isDark.toggle()
-                            } label: {
-                                isDark ? Label("Dark", systemImage: "lightbulb.fill") : Label("Light", systemImage: "lightbulb")
-                            }
-                            
-                            Button {
-                                loggingOut = true
-                            } label: {
-                                Text("Log out")
-                            }
-                        } label: {
-                            Text("User Name") //
-                        }
-                        
-                        Button {
-                            showGameDetailView.toggle()
-                        } label: {
-                            Text("Test")
-                        }
-                        
-                        TextField("Search", text: $searchText)
-                            .foregroundColor(CustomColor.darkLightColor)
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .cornerRadius(15)
-                            .padding()
-                            .overlay(
-                                HStack {
-                                  Image(systemName: "magnifyingglass")
-                                        .padding(.trailing, 25)
-                                        .frame(maxWidth: .infinity, alignment: .trailing)
-                                }
-                            )
-                        
-                        ScrollView {
-                            ForEach(categories, id: \.self) {category in
-                                VStack {
-                                    Text(category).tag(category)
-                                    
-                                    // There is a need logic to display game following the category
-//                                    if category == categories {
-                                    GameListRow()
-                                        .border(.black)
-//                                    }
-                                }
+                            //  Search bar
+                            TextField("Search", text: $searchText)
+                                .foregroundColor(CustomColor.darkLightColor)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .cornerRadius(15)
                                 .padding()
+                                .overlay(
+                                    HStack {
+                                        Image(systemName: "magnifyingglass")
+                                            .padding(.trailing, 25)
+                                            .frame(maxWidth: .infinity, alignment: .trailing)
+                                    }
+                                )
+                            
+                            // Genres
+                            Picker("genres" ,selection: $selected) {
+                                ForEach(selections, id: \.self) {selection in
+                                    Text(selection)
+                                }
                             }
-                        }
-                        
-                    }   // VStack
-                    
+                            .pickerStyle(SegmentedPickerStyle())
+                            .padding(.horizontal)
+                            
+                            ScrollView {
+                                ForEach(genres, id: \.self) {genre in
+                                    Text(genre)
+                                        .font(.system(size: 26))
+                                        .fontWeight(.semibold)
+                                        .foregroundColor(CustomColor.secondaryColor)
+                                        .padding(.top, 10)
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        LazyHStack {
+                                            ForEach(gameViewModel.games, id: \.id) {game in
+                                                if game.genre.contains(genre) {
+                                                    NavigationLink {
+                                                        GameDetailView(game: .constant(game), UID: UID)
+                                                            .navigationBarHidden(true)
+                                                    } 
+                                                    label: {
+                                                        GameListRow(game: game)// adding data
+                                                    }
+                                                    .background(CustomColor.secondaryColor)
+                                                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                                                    .padding([.leading, .trailing], 10)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                        }   // VStack
+                    }
+                    .onAppear(perform: {
+                        loadGenre()
+                    })
                 }
                 .environment(\.colorScheme, isDark ? .dark : .light)
-                .sheet(isPresented: $showGameDetailView) {
-                    GameDetailView(game: Game(name: "Elden Ring", description: "", price: 0 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"))
+            }
+        }
+        .onAppear(perform: {
+            self.loadGenre()
+        })
+    }
+    func loadGenre() {
+        for game in gameViewModel.games {
+            for genre in game.genre {
+                if !genres.contains(genre) {
+                    genres.append(genre)
                 }
             }
-        }   // ZStack
+        }
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        HomeView(UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"))
     }
 }

@@ -11,7 +11,7 @@ import Firebase
 struct LogInView: View {
     @State var email = ""
     @State private var password = ""
-    @State var UID = "zhW4xMPXYya8nGiUSDNJ5AR1yiu2"
+    @State var UID = "" /*"zhW4xMPXYya8nGiUSDNJ5AR1yiu2"*/
     
     @State var errorMessage = ""
     
@@ -34,12 +34,12 @@ struct LogInView: View {
     }
     
     var body: some View {
-        ZStack{
+        ZStack {
             if logging {
-//                HomeView()
+                HomeView(UID: $UID)
 //                ProfileView(UID: $UID)
 //                TestHomeView()
-                CartView()
+//                CartView()
             } else {
                 ZStack {
                     CustomColor.primaryColor
