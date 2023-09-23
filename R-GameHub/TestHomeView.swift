@@ -128,9 +128,6 @@ struct TestHomeView: View {
                 }
             }
         }
-        .sheet(isPresented: $showGameDetailView) {
-            GameDetailView(game: selectedGame)
-        }
         .fullScreenCover(isPresented: $shouldShowImagePicker, onDismiss: nil) {
             ImagePicker(image: $image)
         }

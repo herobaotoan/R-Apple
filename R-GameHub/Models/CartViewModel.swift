@@ -29,6 +29,32 @@ import Firebase
          }
      }
      
+     //DO cartViewModel.getUserCartData(uid: //put uid in here)
+     func getUserCartData(uid: String) {
+         db.collection("cart").whereField("uid", isEqualTo: uid).getDocuments { (result, error) in
+             if error == nil {
+                 for document in result!.documents {
+                     self.db.collection("cart").addSnapshotListener { (querySnapshot, error) in
+                         guard let documents = querySnapshot?.documents else {
+                             print("No documents")
+                             return
+                         }
+                         self.carts = documents.map { (queryDocumentSnapshot) -> Cart in
+                             var uid = ""
+                             var gameID: [String] = [""]
+                             if queryDocumentSnapshot.documentID == document.documentID {
+                                 let data = queryDocumentSnapshot.data()
+                                 uid = data["uid"] as? String ?? ""
+                                 gameID = data["gameID"] as? [String] ?? [""]
+                             }
+                             return Cart(uid: uid, gameID: gameID, documentID: queryDocumentSnapshot.documentID)
+                         }
+                     }
+                 }
+             }
+         }
+     }
+     
      func addNewCartData(newCart: Cart) {
         do {
             let _ = try db.collection("cart").addDocument(from: newCart)
