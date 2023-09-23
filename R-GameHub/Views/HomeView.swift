@@ -12,9 +12,11 @@ struct HomeView: View {
     
     @State var categories: [String] = ["Action", "Logic", "Magic"]
     // Currentlt for test | This needs a function to take data from the database
+    @State var genres: [String] = ["Home","Installed", "Favoriou"]
+    @State private var selectedGenre: String = "Home"
     
     @State var searchText = ""
-    @Binding var game: Game
+//    @State var game: Game
 
     
     @AppStorage("isDarkMode") private var isDark = false
@@ -25,7 +27,7 @@ struct HomeView: View {
     var body: some View {
         ZStack{
             if isProfileView{
-                ProfileView(UID: Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"), userViewModel: "zhW4xMPXYya8nGiUSDNJ5AR1yiu2")
+//                ProfileView()
             } else if loggingOut {
                 LogInView()
             } else {
@@ -70,6 +72,14 @@ struct HomeView: View {
                                             .frame(maxWidth: .infinity, alignment: .trailing)
                                     }
                                 )
+                            
+                            Picker("genres" ,selection: $selectedGenre) {
+                                ForEach(genres, id: \.self) { genre in
+                                    Text(genre).tag(genre)
+                                }
+                            }
+                            .pickerStyle(SegmentedPickerStyle())
+                            .padding(.horizontal)
                             
                             ScrollView {
                                 ForEach(categories, id: \.self) {category in
