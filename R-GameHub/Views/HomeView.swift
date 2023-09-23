@@ -73,6 +73,7 @@ struct HomeView: View {
                                     }
                                 )
                             
+                            // Genres
                             Picker("genres" ,selection: $selectedGenre) {
                                 ForEach(genres, id: \.self) { genre in
                                     Text(genre).tag(genre)
