@@ -22,7 +22,6 @@ struct GameDetailView: View {
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var cartViewModel = CartViewModel()
     @State private var isFavorite: Bool = false
-    @State private var itemCount: Int = 1
     
     func getCart(gamelist: [String]) {
         cart = gamelist
@@ -42,7 +41,6 @@ struct GameDetailView: View {
     
     var body: some View {
         let rating = Double(game.rating.reduce(0, +)) / Double(game.rating.count)
-        let totalPrice = round(game.price * Double(itemCount) * 100) / 100.0
         NavigationView {
             ZStack(alignment: .top) {
                 // Test only (admin)
@@ -71,7 +69,6 @@ struct GameDetailView: View {
                         .padding(.bottom, 20)
                 )
                 .zIndex(1)
-                
                 ZStack {
                     // Game price and buy
                     ZStack {
@@ -79,7 +76,7 @@ struct GameDetailView: View {
                         VStack {
                             HStack {
                                 // Game price
-                                Text("$\(totalPrice, specifier: "%.2f")")
+                                Text("$\(game.price, specifier: "%.2f")")
                                     .font(.system(size: 26))
                                     .multilineTextAlignment(.leading)
                                     .italic()
@@ -103,37 +100,6 @@ struct GameDetailView: View {
                                 .cornerRadius(10)
                                 .padding(.trailing, 30)
                             }
-                            .overlay(
-                                // Game item number adjust
-                                HStack {
-                                    Button {
-                                        if itemCount > 1 {
-                                            itemCount -= 1
-                                        }
-                                    } label: {
-                                        Text("-")
-                                            .foregroundColor(CustomColor.darkLightColor)
-                                    }
-                                    .frame(width: 30, height: 30, alignment: .center)
-                                    .background(CustomColor.primaryColor)
-                                    .foregroundColor(CustomColor.darkLightColor)
-                                    .cornerRadius(10)
-                                    Text("\(itemCount)")
-                                        .font(.system(size: 26))
-                                        .foregroundColor(CustomColor.lightDarkColor)
-                                        .padding([.leading, .trailing], 5)
-                                    Button {
-                                        itemCount += 1
-                                    } label: {
-                                        Text("+")
-                                            .foregroundColor(CustomColor.darkLightColor)
-                                    }
-                                    .frame(width: 30, height: 30, alignment: .center)
-                                    .background(CustomColor.primaryColor)
-                                    .foregroundColor(CustomColor.darkLightColor)
-                                    .cornerRadius(10)
-                                }
-                            )
                         }
                         .padding(.bottom, 15)
                     }
@@ -249,7 +215,7 @@ struct GameDetailView: View {
                             
                             // Review
                             VStack {
-                                HStack(alignment: .center) {
+                                HStack {
                                     Image("ava")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
@@ -273,7 +239,7 @@ struct GameDetailView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .padding(.bottom, 10)
                             VStack {
-                                HStack(alignment: .center) {
+                                HStack {
                                     Image("ava")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
@@ -317,8 +283,8 @@ struct GameDetailView: View {
                     .padding([.top, .leading], isCompact ? 20 : 30), alignment: .topLeading
             )
             .interactiveDismissDisabled()
-            .environment(\.colorScheme, isDark ? .dark : .light)
         }
+        .environment(\.colorScheme, isDark ? .dark : .light)
     }
 }
 
