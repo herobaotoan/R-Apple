@@ -18,7 +18,7 @@ struct GameDetailView: View {
     @State var buy: Bool = false
     @Binding var game: Game
     @State var UID: String
-    @Binding var gamelist: [String]
+    @Binding var gameList: [String]
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var cartViewModel = CartViewModel()
     @State private var isFavorite: Bool = false
@@ -31,8 +31,8 @@ struct GameDetailView: View {
     }
     func addToCart (id: String?) {
         let uid = Auth.auth().currentUser!.uid
-        gamelist.append(id ?? "")
-        cartViewModel.addToCart(uid: uid, gamelist: gamelist)
+        gameList.append(id ?? "")
+        cartViewModel.addToCart(uid: uid, gamelist: gameList)
     }
     
     var body: some View {
@@ -85,7 +85,6 @@ struct GameDetailView: View {
                                     
                                     Spacer()
                                     
-                                    // Buy button
 //                                    ForEach(cartViewModel.carts, id: \.id) { cart in
 //                                        if cart.uid == UID {
 //                                            Button {
@@ -101,6 +100,8 @@ struct GameDetailView: View {
 //
 //                                        }
 //                                    }
+                                    
+                                    // Buy button
                                     Button {
                                         self.buy.toggle()
                                         addToCart(id: game.documentID)
@@ -303,10 +304,10 @@ struct GameDetailView: View {
     }
 }
 
-//DISABLE CUZ OF BINDING
 
-//struct GameDetailView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        GameDetailView(game: .constant(Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456")), UID: "zhW4xMPXYya8nGiUSDNJ5AR1yiu2")
-//    }
-//}
+struct GameDetailView_Previews: PreviewProvider {
+    static var previews: some View {
+        GameDetailView(game: .constant(Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456")), UID: "zhW4xMPXYya8nGiUSDNJ5AR1yiu2", gameList: .constant([
+            "lVPwTATDwI14LyfnHvDO"]))
+    }
+}
