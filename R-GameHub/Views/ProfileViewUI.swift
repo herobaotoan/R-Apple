@@ -8,52 +8,62 @@
 import SwiftUI
 
 struct ProfileViewUI: View {
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    var isCompact: Bool {horizontalSizeClass == .compact}
     
+    @Binding var UID: String
+    @StateObject var userViewModel = UserViewModel()
+    @State var name = ""
+    @State var email = ""
     
-    
+    func show() {
+        self.userViewModel.getUserData(UID: UID)
+    }
     var body: some View {
-        ZStack{
+        ZStack {
+            let _ =  DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                show()
+            }
             CustomColor.primaryColor
                 .edgesIgnoringSafeArea(.all)
             VStack {
-                
-                HStack{
-                    Button{
+                HStack {
+                    Button {
                         
-                    }label: {
-                        Image(systemName: "arrow.backward")
-                            .font(.system(size: 25))
-                            .foregroundColor(CustomColor.darkLightColor)
+                    } label: {
+                        Image(systemName: "house.circle.fill")
+                            .font(isCompact ? .title : .largeTitle)
+                            .foregroundColor(CustomColor.secondaryColor)
                     }
                     
                     Spacer()
                     
                     // setting for the user
-                    Menu{
+                    Menu {
                         
                         Button {
                             
-                        }label: {
+                        } label: {
                             Text("Edit profile")
                         }
                         
                         Button{
                             
-                        }label: {
+                        } label: {
                             Text("Change password")
                         }
                         
                         
-                    }label: {
+                    } label: {
                         Image(systemName: "gearshape.fill")
-                            .font(.system(size: 30))
+                            .font(isCompact ? .title : .largeTitle)
                             .foregroundColor(CustomColor.secondaryColor)
                     }
                 }
                 .padding()
                 
-                ScrollView{
-                    
+                ScrollView {
                     Image("ava")    // adding data from databaase
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -124,6 +134,6 @@ struct ProfileViewUI: View {
 
 struct ProfileViewUI_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileViewUI()
+        ProfileViewUI(UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"))
     }
 }
