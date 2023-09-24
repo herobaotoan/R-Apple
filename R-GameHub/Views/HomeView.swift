@@ -21,9 +21,15 @@ struct HomeView: View {
     @State var searchText = ""
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var userViewModel = UserViewModel()
+    @StateObject var cartViewModel = CartViewModel()
     @Binding var UID: String
-    @State var loggingOut: Bool = false
     @State var isProfileView: Bool = false
+    
+    @State var cart: [String] = [""]
+    func getCart(item: Cart){
+        cart = item.gameID
+    }
+    
     var filteredGame: [Game] {
         if searchText.isEmpty {
             return gameViewModel.games
@@ -49,9 +55,7 @@ struct HomeView: View {
     var body: some View {
         ZStack {
             if isProfileView {
-                ProfileView(UID: $UID)
-            } else if loggingOut {
-                LogInView()
+                ProfileViewUI(UID: $UID)
             } else {
                 let _ =  DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     loadGenre()
@@ -76,13 +80,6 @@ struct HomeView: View {
                                 } label: {
                                     isDark ? Label("Dark", systemImage: "lightbulb.fill") : Label("Light", systemImage: "lightbulb")
                                 }
-                                
-                                Button {
-                                    loggingOut = true
-                                } label: {
-                                    Label("Log out", systemImage: "minus.circle")
-                                }
-                                .tint(.red)
                             } label: {
                                 Image(systemName: "person.fill")
                                     .foregroundColor(CustomColor.secondaryColor)
@@ -132,7 +129,7 @@ struct HomeView: View {
                                                     ForEach(gameViewModel.games, id: \.id) {game in
                                                         if game.genre.contains(genre) {
                                                             NavigationLink {
-                                                                GameDetailView(game: .constant(game), UID: UID)
+                                                                GameDetailView(game: .constant(game), UID: UID, gamelist: $cart)
                                                                     .navigationBarHidden(true)
                                                             }
                                                             label: {
@@ -156,7 +153,7 @@ struct HomeView: View {
                                                     GridItem(.flexible(), spacing: 15)]) {
                                     ForEach(filteredGame, id: \.id) {game in
                                         NavigationLink {
-                                            GameDetailView(game: .constant(game), UID: UID)
+                                            GameDetailView(game: .constant(game), UID: UID, gamelist: $cart)
                                                 .navigationBarHidden(true)
                                         }
                                         label: {
@@ -164,6 +161,12 @@ struct HomeView: View {
                                         }
                                         .background(CustomColor.secondaryColor)
                                         .clipShape(RoundedRectangle(cornerRadius: 15))
+                                    }
+                                    ForEach(cartViewModel.carts, id: \.id) { carts in
+                                        Text("")
+                                            .onAppear() {
+                                                getCart(item: carts)
+                                            }
                                     }
                                 }
                                 Spacer()

@@ -24,19 +24,24 @@ struct TestHomeView: View {
     @State var genres : [String] = []
     @State var platforms : [String] = []
     
+    @State var cart: [String] = []
+    
     @State var image: UIImage?
     @State var shouldShowImagePicker = false
     @State var loginStatusMessage = ""
     //Binding this UID
     @State var UID = "zhW4xMPXYya8nGiUSDNJ5AR1yiu2"
     
-    @State var cart: [String] = [""]
+//    @State var cart: [String] = [""]
     
     @State private var showGameDetailView = false
     @State var selectedGame: Game = Game(name: "", description: "", price: 0, platform: [""], genre: [""], developer: "", rating: [0], imageURL: "", userID: "")
     
     func upload(){
         persistImageToStorage()
+    }
+    func getCart(item: Cart){
+        cart = item.gameID
     }
     
     private func persistImageToStorage() {
@@ -62,9 +67,9 @@ struct TestHomeView: View {
         }
     }
     
-    func getCart(gamelist: [String]) {
-        cart = gamelist
-    }
+//    func getCart(gamelist: [String]) {
+//        cart = gamelist
+//    }
     
     var body: some View {
         VStack {
@@ -119,14 +124,18 @@ struct TestHomeView: View {
             }
             ScrollView{
                 ForEach(gameViewModel.games, id: \.id) { game in
-                    Button{
-                        selectedGame = game
-                        showGameDetailView.toggle()
-                    } label: {
-                        GameItemView(game: game, UID: UID)
-                    }
+                    GameItemView(game: game, gamelist: $cart, UID: UID)
+                }
+                ForEach(cartViewModel.carts, id: \.id) { carts in
+                    Text("")
+                        .onAppear() {
+                            getCart(item: carts)
+                        }
                 }
             }
+        }
+        .onAppear() {
+            cartViewModel.getUserCartData(uid: UID)
         }
         .fullScreenCover(isPresented: $shouldShowImagePicker, onDismiss: nil) {
             ImagePicker(image: $image)

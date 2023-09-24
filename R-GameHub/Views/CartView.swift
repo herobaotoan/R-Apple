@@ -17,7 +17,7 @@ struct CartView: View {
     
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var cartViewModel = CartViewModel()
-    @State var uid = ""
+    @State var uid = "zhW4xMPXYya8nGiUSDNJ5AR1yiu2"
     @State var gameArray = [""]
     @State var selectedGame: Game = Game(name: "", description: "", price: 0, platform: [""], genre: [""], developer: "", rating: [0], imageURL: "", userID: "")
     @State private var totalPrice: Double = 0
@@ -108,7 +108,7 @@ struct CartView: View {
 //            }
             }
             .overlay (
-                // MARK: - DISMISS GAME DETAIL BUTTON
+                // MARK: - DISMISS CART VIEW BUTTON
                 Button(action: {
                     dismiss()
                 }) {
@@ -120,6 +120,9 @@ struct CartView: View {
                     .padding(.top, 2)
                 , alignment: .topLeading
             )
+        }
+        .onAppear() {
+            cartViewModel.getUserCartData(uid: uid)
         }
         .environment(\.colorScheme, isDark ? .dark : .light)
     }
