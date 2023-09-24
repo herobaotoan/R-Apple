@@ -12,8 +12,11 @@ struct GameItemView: View {
     @State var game: Game
     @Binding var gamelist: [String]
     @State var UID: String
+    @State var rev = ""
+    @State var rat = ""
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var cartViewModel = CartViewModel()
+    @StateObject var reviewViewModel = ReviewViewModel()
     
     func checkUIDAndDelete () {
         let uid = Auth.auth().currentUser!.uid
@@ -21,6 +24,12 @@ struct GameItemView: View {
             gameViewModel.removeGameData(documentID: game.documentID ?? "")
         }
     }
+    //REVIEW
+    func addReview() {
+        let uid = Auth.auth().currentUser!.uid
+        reviewViewModel.addNewReviewData(newReview: Review(description: rev, rating: Int(rat) ?? 0, userID: uid, gameID: game.documentID ?? ""))
+    }
+    
     func addToCart (id: String?) {
         let uid = Auth.auth().currentUser!.uid
         gamelist.append(id ?? "")
@@ -64,11 +73,25 @@ struct GameItemView: View {
                     .frame(width: 200, height: 200)
                     .clipped()
             Text("Rating: \(rating)")
-            Button {
-                addToCart(id: game.documentID)
-            } label: {
-                Text("ADD TO CART")
+            
+            // REVIEW
+            ForEach(reviewViewModel.reviews, id:\.id) { review in
+                Text(String(review.rating))
+                Text(review.description)
+                Text(review.userID)
             }
+            HStack{
+                TextField("Review: ", text: $rev)
+                TextField("Rate: ", text: $rat)
+                Button {
+                    addReview()
+                } label: {
+                    Text("Add review")
+                }
+            }
+        }
+        .onAppear() {
+            reviewViewModel.getGameReviewData(uid: game.documentID ?? "")
         }
     }
 }
