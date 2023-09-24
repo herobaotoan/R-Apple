@@ -9,19 +9,21 @@ import SwiftUI
 
 struct ProfileView: View {
     @Binding var UID: String
-    @StateObject var userViewModel = UserViewModel()
+//    @StateObject var userViewModel = UserViewModel()
     @State var name = ""
     @State var email = ""
-    func show() {
-        self.userViewModel.getUserData(UID: UID)
-    }
+    @EnvironmentObject var userViewModel: UserViewModel
+    
+//    func show() {
+//        self.userViewModel.getUserData(UID: UID)
+//    }
     var body: some View {
         
         VStack {
             Text("WELCOME!!")
-                .onAppear() {
-                    show()
-                }
+//                .onAppear() {
+//                    show()
+//                }
             ForEach(userViewModel.user, id: \.uid) {user in
                 Text(user.name)
                 Text(user.email)
