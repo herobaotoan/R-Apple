@@ -12,6 +12,7 @@ struct Review: Codable, Identifiable {
     var description: String
     var rating: Int
     var userID: String
+    var gameID: String
     var documentID: String?
 }
 
