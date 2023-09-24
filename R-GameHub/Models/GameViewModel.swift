@@ -44,6 +44,9 @@ import Firebase
             print(error)
         }
      }
+     func updateGameRatinglist(documentID: String, ratingList: [Int]) {
+         db.collection("game").document(documentID).updateData(["rating" : ratingList])
+     }
     
      func removeGameData(documentID: String) {
          db.collection("game").document(documentID).delete { (error) in

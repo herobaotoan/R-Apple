@@ -27,7 +27,10 @@ struct GameItemView: View {
     //REVIEW
     func addReview() {
         let uid = Auth.auth().currentUser!.uid
+        var ratingList = game.rating
+        ratingList.append(Int(rat) ?? 0)
         reviewViewModel.addNewReviewData(newReview: Review(description: rev, rating: Int(rat) ?? 0, userID: uid, gameID: game.documentID ?? ""))
+        gameViewModel.updateGameRatinglist(documentID: game.documentID ?? "", ratingList: ratingList)
     }
     
     func addToCart (id: String?) {
@@ -76,9 +79,11 @@ struct GameItemView: View {
             
             // REVIEW
             ForEach(reviewViewModel.reviews, id:\.id) { review in
-                Text(String(review.rating))
-                Text(review.description)
-                Text(review.userID)
+                if review.gameID == game.documentID {
+                    Text(String(review.rating))
+                    Text(review.description)
+                    Text(review.userID)
+                }
             }
             HStack{
                 TextField("Review: ", text: $rev)
@@ -90,9 +95,10 @@ struct GameItemView: View {
                 }
             }
         }
-        .onAppear() {
-            reviewViewModel.getGameReviewData(uid: game.documentID ?? "")
-        }
+//        .onAppear() {
+//            reviewViewModel.getGameReviewData(uid: game.documentID ?? "")
+//
+//        }
     }
 }
 

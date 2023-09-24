@@ -11,53 +11,56 @@ import Firebase
  class ReviewViewModel: ObservableObject {
      @Published var reviews = [Review]()
      private var db = Firestore.firestore()
-//     init() {
-//         getAllCartData()
-//     }
-//     func getAllCartData() {
-//         db.collection("cart").addSnapshotListener { (querySnapshot, error) in
-//             guard let documents = querySnapshot?.documents else {
-//                 print("No documents")
-//                 return
-//             }
-//             self.carts = documents.map { (queryDocumentSnapshot) -> Cart in
-//                 let data = queryDocumentSnapshot.data()
-//                 let uid = data["uid"] as? String ?? ""
-//                 let gameID = data["gameID"] as? [String] ?? [""]
-//                 return Cart(uid: uid, gameID: gameID, documentID: queryDocumentSnapshot.documentID)
-//             }
-//         }
-//     }
-     
-     //DO cartViewModel.getUserCartData(uid: //put uid in here)
-     func getGameReviewData(uid: String) {
-         db.collection("review").whereField("gameID", isEqualTo: uid).getDocuments { (result, error) in
-             if error == nil {
-                 for document in result!.documents {
-                     self.db.collection("review").addSnapshotListener { (querySnapshot, error) in
-                         guard let documents = querySnapshot?.documents else {
-                             print("No documents")
-                             return
-                         }
-                         self.reviews = documents.map { (queryDocumentSnapshot) -> Review in
-                             var description = ""
-                             var rating = 0
-                             var userID = ""
-                             var gameID = ""
-                             if queryDocumentSnapshot.documentID == document.documentID {
-                                 let data = queryDocumentSnapshot.data()
-                                 description = data["description"] as? String ?? ""
-                                 rating = data["rating"] as? Int ?? 0
-                                 userID = data["userID"] as? String ?? ""
-                                 gameID = data["gameID"] as? String ?? ""
-                             }
-                             return Review(description: description, rating: rating, userID: userID, gameID: gameID, documentID: document.documentID)
-                         }
-                     }
-                 }
+     init() {
+         getAllCartData()
+     }
+     func getAllCartData() {
+         db.collection("review").addSnapshotListener { (querySnapshot, error) in
+             guard let documents = querySnapshot?.documents else {
+                 print("No documents")
+                 return
+             }
+             self.reviews = documents.map { (queryDocumentSnapshot) -> Review in
+                 let data = queryDocumentSnapshot.data()
+                 let description = data["description"] as? String ?? ""
+                   let rating = data["rating"] as? Int ?? 0
+                     let userID = data["userID"] as? String ?? ""
+                     let gameID = data["gameID"] as? String ?? ""
+                  
+                  return Review(description: description, rating: rating, userID: userID, gameID: gameID, documentID: queryDocumentSnapshot.documentID)
              }
          }
      }
+     
+     //DO cartViewModel.getUserCartData(uid: //put uid in here)
+//     func getGameReviewData(uid: String) {
+//         db.collection("review").whereField("gameID", isEqualTo: uid).getDocuments { (result, error) in
+//             if error == nil {
+//                 for document in result!.documents {
+//                     self.db.collection("review").addSnapshotListener { (querySnapshot, error) in
+//                         guard let documents = querySnapshot?.documents else {
+//                             print("No documents")
+//                             return
+//                         }
+//                         self.reviews = documents.map { (queryDocumentSnapshot) -> Review in
+//                             var description = ""
+//                             var rating = 0
+//                             var userID = ""
+//                             var gameID = ""
+//                             if queryDocumentSnapshot.documentID == document.documentID {
+//                                 let data = queryDocumentSnapshot.data()
+//                                 description = data["description"] as? String ?? ""
+//                                 rating = data["rating"] as? Int ?? 0
+//                                 userID = data["userID"] as? String ?? ""
+//                                 gameID = data["gameID"] as? String ?? ""
+//                             }
+//                             return Review(description: description, rating: rating, userID: userID, gameID: gameID, documentID: document.documentID)
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
      
      func addNewReviewData(newReview: Review) {
         do {
