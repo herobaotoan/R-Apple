@@ -16,12 +16,13 @@ struct ProfileView: View {
         self.userViewModel.getUserData(UID: UID)
     }
     var body: some View {
+        
         VStack {
             Text("WELCOME!!")
                 .onAppear() {
                     show()
                 }
-            ForEach(userViewModel.user, id: \.uid) { user in
+            ForEach(userViewModel.user, id: \.uid) {user in
                 Text(user.name)
                 Text(user.email)
                 Text(user.phone)

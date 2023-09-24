@@ -23,7 +23,6 @@ struct HomeView: View {
     @StateObject var userViewModel = UserViewModel()
     @StateObject var cartViewModel = CartViewModel()
     @Binding var UID: String
-    @State var loggingOut: Bool = false
     @State var isProfileView: Bool = false
     
     @State var cart: [String] = [""]
@@ -56,9 +55,7 @@ struct HomeView: View {
     var body: some View {
         ZStack {
             if isProfileView {
-                ProfileView(UID: $UID)
-            } else if loggingOut {
-                LogInView()
+                ProfileViewUI(UID: $UID)
             } else {
                 let _ =  DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     loadGenre()
@@ -83,13 +80,6 @@ struct HomeView: View {
                                 } label: {
                                     isDark ? Label("Dark", systemImage: "lightbulb.fill") : Label("Light", systemImage: "lightbulb")
                                 }
-                                
-                                Button {
-                                    loggingOut = true
-                                } label: {
-                                    Label("Log out", systemImage: "minus.circle")
-                                }
-                                .tint(.red)
                             } label: {
                                 Image(systemName: "person.fill")
                                     .foregroundColor(CustomColor.secondaryColor)
