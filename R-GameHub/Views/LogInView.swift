@@ -9,16 +9,20 @@ import SwiftUI
 import Firebase
 
 struct LogInView: View {
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    var isCompact: Bool {horizontalSizeClass == .compact}
+    
+    @AppStorage("isDarkMode") private var isDark = false
+    
     @State var email = ""
     @State private var password = ""
-    @State var UID = "" /*"zhW4xMPXYya8nGiUSDNJ5AR1yiu2"*/
+    @State var UID = ""
     
     @State var errorMessage = ""
     
     @State var isHiddenText: Bool = true
     @State var signing: Bool = false
     @State var logging: Bool = false
-    @AppStorage("isDarkMode") private var isDark = false
     
     func login() {
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
@@ -48,20 +52,21 @@ struct LogInView: View {
                         Image("app-logo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 150, height: 150)
-                            .padding(.bottom, 10)
-                        VStack(spacing: 30) {
+                            .frame(width: isCompact ? 150 : 250, height: isCompact ? 150 : 250)
+                            .padding(.bottom, isCompact ? 10 : 20)
+                        VStack(spacing: isCompact ? 30 : 50) {
                             HStack {
                                 Button {
                                     
                                 } label: {
                                     VStack{
                                         Text("Log in")
-                                            .font(.system(size: 24))
-                                            .frame(width: 150)
+                                            .font(.system(size: isCompact ? 24 : 40))
+                                            .fontWeight(.medium)
+                                            .frame(width: isCompact ? 150 : 250)
                                             .foregroundColor(CustomColor.secondaryColor)
                                         Rectangle()
-                                            .frame(width: 150,height: 2)
+                                            .frame(width: isCompact ? 150 : 250, height: isCompact ? 2 : 4)
                                             .foregroundColor(CustomColor.secondaryColor)
                                     }
                                 }
@@ -70,20 +75,22 @@ struct LogInView: View {
                                     signing = true
                                 } label: {
                                     Text("Sign up")
-                                        .font(.system(size: 24))
-                                        .frame(width: 150)
+                                        .font(.system(size: isCompact ? 24 : 40))
+                                        .frame(width: isCompact ? 150 : 250)
                                         .foregroundColor(CustomColor.primaryColor)
                                 }
                             }
+                            .padding(.bottom, isCompact ? 0 : 10)
                             
                             // Username
                             HStack {
                                 Image(systemName: "envelope.fill")
-                                    .padding(10)
+                                    .font(isCompact ? .title2 : .largeTitle)
+                                    .padding(isCompact ? 10 : 20)
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack {
                                     TextField("Email", text: self.$email)
-                                        .font(.system(size: 20))
+                                        .font(.system(size: isCompact ? 20 : 34))
                                     Divider()
                                         .background(CustomColor.secondaryColor)
                                 }
@@ -92,15 +99,16 @@ struct LogInView: View {
                             // Password
                             HStack{
                                 Image(systemName: "lock.fill")
-                                    .padding(10)
+                                    .font(isCompact ? .title2 : .largeTitle)
+                                    .padding(isCompact ? 10 : 20)
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
                                     if isHiddenText {
                                         SecureField("Password", text: self.$password) // hidden text
-                                            .font(.system(size: 20))
+                                            .font(.system(size: isCompact ? 20 : 34))
                                     } else {
                                         TextField("Password", text: self.$password) // shown text
-                                            .font(.system(size: 20))
+                                            .font(.system(size: isCompact ? 20 : 34))
                                     }
                                     Divider()
                                         .background(CustomColor.secondaryColor)
@@ -113,36 +121,41 @@ struct LogInView: View {
                                     Button {
                                         isHiddenText.toggle()
                                     } label: {
-                                        Image(systemName: isHiddenText ? "eye.slash.fill" : "eye.fill").foregroundColor(CustomColor.secondaryColor)
+                                        Image(systemName: isHiddenText ? "eye.slash.fill" : "eye.fill")
+                                            .foregroundColor(CustomColor.secondaryColor)
+                                            .font(isCompact ? .title2 : .largeTitle)
+                                            .padding([.trailing, .bottom], isCompact ? 5 : 10)
                                         
                                     }
                                 }
                             )
+                            .padding(.bottom, isCompact ? 0 : 10)
                             
                             Button {
                                 // Logic for logging into the home page
                                 login()
                             } label: {
                                 Text("Log in")
-                                    .font(.system(size: 28))
-                                    .frame(width: 120, height: 60, alignment: .center)
+                                    .fontWeight(.medium)
+                                    .font(.system(size: isCompact ? 28 : 50))
+                                    .frame(width: isCompact ? 120 : 180, height: isCompact ? 60 : 100, alignment: .center)
                                     .background(CustomColor.secondaryColor)
                                     .foregroundColor(CustomColor.lightDarkColor)
-                                    .cornerRadius(10)
-                                    .shadow(color: .black, radius: 2)
-                                    .padding()
+                                    .cornerRadius(isCompact ? 10 : 20)
+                                    .shadow(color: .black, radius: isCompact ? 2 : 4)
+                                    .padding(isCompact ? 20 : 30)
                             }
                         } // VStack of logging
-                        .padding()
-                        .frame(width: 350, height: 340)
+                        .padding(isCompact ? 20 : 30)
+                        .frame(width: isCompact ? 350 : 650, height: isCompact ? 330 : 600)
                         .background(CustomColor.lightDarkColor)
-                        .cornerRadius(20)
-                        .shadow(color: CustomColor.shadowColor, radius: 10)
+                        .cornerRadius(isCompact ? 20 : 30)
+                        .shadow(color: CustomColor.shadowColor, radius: isCompact ? 10 : 20)
                         
                         //                Text("Forgotten the password")
                         Text(errorMessage)
-                    }   // VStack
-                }   // ZStack
+                    }
+                }
                 .environment(\.colorScheme, isDark ? .dark : .light)
 
             }

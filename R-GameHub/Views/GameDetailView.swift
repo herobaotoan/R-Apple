@@ -23,13 +23,13 @@ struct GameDetailView: View {
     @StateObject var cartViewModel = CartViewModel()
     @State private var isFavorite: Bool = false
     
-    func checkUIDAndDelete () {
+    func checkUIDAndDelete() {
         let uid = Auth.auth().currentUser!.uid
         if game.userID == uid {
             gameViewModel.removeGameData(documentID: game.documentID ?? "")
         }
     }
-    func addToCart (id: String?) {
+    func addToCart(id: String?) {
         let uid = Auth.auth().currentUser!.uid
         gameList.append(id ?? "")
         cartViewModel.addToCart(uid: uid, gamelist: gameList)
@@ -42,15 +42,6 @@ struct GameDetailView: View {
         } else {
             NavigationView {
                 ZStack(alignment: .top) {
-                    // Test only (admin)
-                    ZStack {
-                        Button {
-                            checkUIDAndDelete()
-                        } label: {
-                            Text("Delete")
-                        }
-                    }
-                    .zIndex(2)
                     CustomColor.primaryColor
                         .edgesIgnoringSafeArea(.all)
                     // Game image
@@ -61,12 +52,12 @@ struct GameDetailView: View {
                     } placeholder: {
                         CustomColor.secondaryColor.opacity(0.3)
                     }
-                    .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: 300, alignment: .top)
+                    .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: isCompact ? 300 : 450, alignment: .top)
                     .clipped()
                     .overlay(
-                        RatingsView(rating: rating, color: CustomColor.starColor, width: 200)
+                        RatingsView(rating: rating, color: CustomColor.starColor, width: isCompact ? 200 : 300)
                             .frame(maxHeight: .infinity, alignment: .bottom)
-                            .padding(.bottom, 20)
+                            .padding(.bottom, isCompact ? 20 : 30)
                     )
                     .zIndex(1)
                     ZStack {
@@ -74,32 +65,16 @@ struct GameDetailView: View {
                         ZStack {
                             CustomColor.secondaryColor
                             VStack {
-                                HStack {
+                                HStack(alignment: .center) {
                                     // Game price
                                     Text("$\(game.price, specifier: "%.2f")")
-                                        .font(.system(size: 26))
+                                        .font(.system(size: isCompact ? 26 : 44))
                                         .multilineTextAlignment(.leading)
                                         .italic()
                                         .foregroundColor(CustomColor.lightDarkColor)
-                                        .padding(.leading, 30)
+                                        .padding(.leading, isCompact ? 30 : 50)
                                     
                                     Spacer()
-                                    
-//                                    ForEach(cartViewModel.carts, id: \.id) { cart in
-//                                        if cart.uid == UID {
-//                                            Button {
-//                                                self.buy.toggle()
-//                                                getCart(gamelist: cart.gameID)
-//                                                addToCart(id: game.documentID)
-//                                            } label: {
-//                                                Text("Buy")
-//                                                    .font(.system(size: 20))
-//                                                    .fontWeight(.medium)
-//
-//                                            }
-//
-//                                        }
-//                                    }
                                     
                                     // Buy button
                                     Button {
@@ -107,20 +82,20 @@ struct GameDetailView: View {
                                         addToCart(id: game.documentID)
                                     } label: {
                                         Text("Buy")
-                                            .font(.system(size: 20))
+                                            .font(.system(size: isCompact ? 20 : 34))
                                             .fontWeight(.medium)
                                     }
-                                    .frame(width: 80, height: 40, alignment: .center)
+                                    .frame(width: isCompact ? 80 : 120, height: isCompact ? 40 : 60, alignment: .center)
                                     .background(CustomColor.primaryColor)
                                     .foregroundColor(CustomColor.darkLightColor)
-                                    .cornerRadius(10)
-                                    .padding(.trailing, 30)
+                                    .cornerRadius(isCompact ? 10 : 20)
+                                    .padding(.trailing, isCompact ? 30 : 50)
                                 }
                             }
-                            .padding(.bottom, 15)
+                            .padding(.bottom, isCompact ? 15 : 20)
                         }
-                        .frame(height: 90)
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .frame(height: isCompact ? 90 : 120)
+                        .clipShape(RoundedRectangle(cornerRadius: isCompact ? 20 : 30))
                         
                     }
                     .frame(maxHeight: .infinity, alignment: .bottom)
@@ -132,7 +107,7 @@ struct GameDetailView: View {
                             HStack(alignment: .top) {
                                 Text(game.name)
                                     .foregroundColor(CustomColor.secondaryColor)
-                                    .font(.system(size: 24))
+                                    .font(.system(size: isCompact ? 24 : 40))
                                     .multilineTextAlignment(.leading)
                                     .fontWeight(.heavy)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -150,22 +125,22 @@ struct GameDetailView: View {
                                     }
                                 }
                             }
-                            .padding(.top, 15)
-                            .padding(.bottom, 5)
+                            .padding(.top, isCompact ? 15 : 30)
+                            .padding(.bottom, isCompact ? 5 : 10)
                             VStack {
                                 // Game description
                                 Text("Description")
                                     .foregroundColor(CustomColor.secondaryColor)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size: 20))
+                                    .font(.system(size: isCompact ? 20 : 34))
                                     .fontWeight(.bold)
                                 Text(game.description)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .multilineTextAlignment(.leading)
-                                    .font(.system(size: 18))
+                                    .font(.system(size: isCompact ? 18 : 30))
                                     .padding(.top, 1)
                             }
-                            .padding(.bottom, 15)
+                            .padding(.bottom, isCompact ? 15 : 30)
                             VStack {
                                 // Game publisher
                                 HStack(alignment: .top) {
@@ -195,7 +170,7 @@ struct GameDetailView: View {
                                     Text(game.genre.joined(separator: ", "))
                                     
                                 }
-                                .padding(.bottom, 5)
+                                .padding(.bottom, isCompact ? 5 : 10)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 
                                 // Game platform
@@ -214,19 +189,19 @@ struct GameDetailView: View {
                                     Text(game.platform.joined(separator: ", "))
                                     
                                 }
-                                .padding(.bottom, 5)
+                                .padding(.bottom, isCompact ? 5 : 10)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 
                             }
-                            .font(.system(size: 18))
+                            .font(.system(size: isCompact ? 18 : 30))
                             .multilineTextAlignment(.leading)
-                            .padding(.bottom, 15)
+                            .padding(.bottom, isCompact ? 15 : 30)
                             VStack {
                                 // Review list
                                 Text("Reviews")
                                     .foregroundColor(CustomColor.secondaryColor)
                                     .frame(maxWidth: .infinity, alignment: .leading)
-                                    .font(.system(size: 20))
+                                    .font(.system(size: isCompact ? 20 : 34))
                                     .fontWeight(.bold)
                                 
                                 // Review
@@ -236,56 +211,32 @@ struct GameDetailView: View {
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .clipShape(Circle())
-                                            .frame(width: 50)
-                                            .padding(.trailing, 20)
+                                            .frame(width: isCompact ? 50 : 100)
+                                            .padding(.trailing, isCompact ? 20 : 30)
                                         VStack {
                                             Text("Monokuma")
                                                 .fontWeight(.semibold)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                            RatingsView(rating: 4, color: CustomColor.secondaryColor, width: 125)
+                                            RatingsView(rating: 4, color: CustomColor.secondaryColor, width: isCompact ? 125 : 175)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                         }
                                     }
-                                    .padding(.bottom, 10)
+                                    .padding(.bottom, isCompact ? 10 : 20)
                                     Text("Great execution.")
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                 }
-                                .padding()
+                                .padding(isCompact ? 20 : 30)
                                 .background(CustomColor.secondaryColor.opacity(isDark ? 0.3 : 0.2))
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .padding(.bottom, 10)
-                                VStack {
-                                    HStack {
-                                        Image("ava")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .clipShape(Circle())
-                                            .frame(width: 50)
-                                            .padding(.trailing, 20)
-                                        VStack {
-                                            Text("Monokuma")
-                                                .fontWeight(.semibold)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                            RatingsView(rating: 4, color: CustomColor.secondaryColor, width: 125)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                        }
-                                    }
-                                    .padding(.bottom, 10)
-                                    Text("Great execution.")
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                }
-                                .padding()
-                                .background(CustomColor.secondaryColor.opacity(isDark ? 0.3 : 0.2))
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .padding(.bottom, 10)
+                                .clipShape(RoundedRectangle(cornerRadius: isCompact ? 10 : 20))
+                                .padding(.bottom, isCompact ? 10 : 20)
                             }
-                            .font(.system(size: 18))
+                            .font(.system(size: isCompact ? 18 : 30))
                             .multilineTextAlignment(.leading)
                         }
-                        .padding([.leading, .trailing, .bottom])
+                        .padding([.leading, .trailing, .bottom], isCompact ? 20 : 30)
                     }
-                    .padding(.top, 300)
-                    .padding(.bottom, 40)
+                    .padding(.top, isCompact ? 300 : 450)
+                    .padding(.bottom, isCompact ? 40 : 90)
                 }
                 .overlay (
                     // MARK: - DISMISS GAME DETAIL BUTTON
@@ -298,7 +249,19 @@ struct GameDetailView: View {
                         .foregroundColor(CustomColor.primaryColor)
                         .padding([.top, .leading], isCompact ? 20 : 30), alignment: .topLeading
                 )
+                .overlay (
+                    // MARK: - DELETE GAME BUTTON
+                    Button(action: {
+                        checkUIDAndDelete()
+                    }) {
+                        Image(systemName: "minus.circle.fill")
+                            .font(isCompact ? .title : .largeTitle)
+                    }
+                        .foregroundColor(CustomColor.heartColor)
+                        .padding([.top, .trailing], isCompact ? 20 : 30), alignment: .topTrailing
+                )
             }
+            .navigationViewStyle(StackNavigationViewStyle())
             .environment(\.colorScheme, isDark ? .dark : .light)
         }
     }
