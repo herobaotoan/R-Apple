@@ -14,7 +14,7 @@ struct RatingsView: View {
     
     var body: some View {
         let stars = HStack(spacing: 0) {
-            ForEach(0..<5/* 5 stars */, id: \.self) {_ in
+            ForEach(1...5/* 5 stars */, id: \.self) {_ in
                 Image(systemName: "star.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -39,6 +39,6 @@ struct RatingsView: View {
 
 struct RatingsView_Previews: PreviewProvider {
     static var previews: some View {
-        RatingsView(rating: 3.5, color: CustomColor.secondaryColor, width: 150)
+        RatingsView(rating: 3.5, color: CustomColor.secondaryColor, width: 175)
     }
 }

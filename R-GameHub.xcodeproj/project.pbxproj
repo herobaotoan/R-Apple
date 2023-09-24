@@ -13,6 +13,7 @@
 		9C59ECE42AB9848F0000D2FA /* GameDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C59ECE32AB9848F0000D2FA /* GameDetailView.swift */; };
 		9C59ECE62AB989F60000D2FA /* RatingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C59ECE52AB989F60000D2FA /* RatingsView.swift */; };
 		9C71E5312ABEAE2C0096F7FE /* CartItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C71E5302ABEAE2C0096F7FE /* CartItemView.swift */; };
+		9C861FBC2AC0648500115048 /* SelectionRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C861FBB2AC0648500115048 /* SelectionRatingView.swift */; };
 		9CB170E02AB808D200FDD4DB /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB170DF2AB808D200FDD4DB /* CustomColor.swift */; };
 		9CCA59912AB4446300FEA993 /* R_GameHubApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCA59902AB4446300FEA993 /* R_GameHubApp.swift */; };
 		9CCA59952AB4446500FEA993 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CCA59942AB4446500FEA993 /* Assets.xcassets */; };
@@ -49,6 +50,7 @@
 		9C59ECE32AB9848F0000D2FA /* GameDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailView.swift; sourceTree = "<group>"; };
 		9C59ECE52AB989F60000D2FA /* RatingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingsView.swift; sourceTree = "<group>"; };
 		9C71E5302ABEAE2C0096F7FE /* CartItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemView.swift; sourceTree = "<group>"; };
+		9C861FBB2AC0648500115048 /* SelectionRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionRatingView.swift; sourceTree = "<group>"; };
 		9CB170DF2AB808D200FDD4DB /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
 		9CCA598D2AB4446300FEA993 /* R-GameHub.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "R-GameHub.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9CCA59902AB4446300FEA993 /* R_GameHubApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = R_GameHubApp.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 				9CCA599E2AB4449800FEA993 /* LogInView.swift */,
 				9CCA59A02AB444B200FEA993 /* SignUpView.swift */,
 				9C59ECE52AB989F60000D2FA /* RatingsView.swift */,
+				9C861FBB2AC0648500115048 /* SelectionRatingView.swift */,
 				9C557DC42AB7FD1400871A0C /* GameListCard.swift */,
 				EAE0E2542AB98A6C00371C7B /* ProfileView.swift */,
 				9C557DC32AB7FD1400871A0C /* HomeView.swift */,
@@ -263,6 +266,7 @@
 				EAE0E2572AB9970100371C7B /* Game.swift in Sources */,
 				EAE0E2552AB98A6C00371C7B /* ProfileView.swift in Sources */,
 				EAE0E2532AB97E4D00371C7B /* UserViewModel.swift in Sources */,
+				9C861FBC2AC0648500115048 /* SelectionRatingView.swift in Sources */,
 				9CCA599F2AB4449800FEA993 /* LogInView.swift in Sources */,
 				EA5F87F42ABD5E4E009F9FB4 /* CartView.swift in Sources */,
 				9CB170E02AB808D200FDD4DB /* CustomColor.swift in Sources */,
