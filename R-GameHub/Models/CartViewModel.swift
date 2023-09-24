@@ -11,23 +11,23 @@ import Firebase
  class CartViewModel: ObservableObject {
      @Published var carts = [Cart]()
      private var db = Firestore.firestore()
-     init() {
-         getAllCartData()
-     }
-     func getAllCartData() {
-         db.collection("cart").addSnapshotListener { (querySnapshot, error) in
-             guard let documents = querySnapshot?.documents else {
-                 print("No documents")
-                 return
-             }
-             self.carts = documents.map { (queryDocumentSnapshot) -> Cart in
-                 let data = queryDocumentSnapshot.data()
-                 let uid = data["uid"] as? String ?? ""
-                 let gameID = data["gameID"] as? [String] ?? [""]
-                 return Cart(uid: uid, gameID: gameID, documentID: queryDocumentSnapshot.documentID)
-             }
-         }
-     }
+//     init() {
+//         getAllCartData()
+//     }
+//     func getAllCartData() {
+//         db.collection("cart").addSnapshotListener { (querySnapshot, error) in
+//             guard let documents = querySnapshot?.documents else {
+//                 print("No documents")
+//                 return
+//             }
+//             self.carts = documents.map { (queryDocumentSnapshot) -> Cart in
+//                 let data = queryDocumentSnapshot.data()
+//                 let uid = data["uid"] as? String ?? ""
+//                 let gameID = data["gameID"] as? [String] ?? [""]
+//                 return Cart(uid: uid, gameID: gameID, documentID: queryDocumentSnapshot.documentID)
+//             }
+//         }
+//     }
      
      //DO cartViewModel.getUserCartData(uid: //put uid in here)
      func getUserCartData(uid: String) {

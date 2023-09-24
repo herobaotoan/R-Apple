@@ -17,16 +17,11 @@ struct GameDetailView: View {
     
     @State var buy: Bool = false
     @Binding var game: Game
-    @State var gamelist: [String] = [""]
     @State var UID: String
-    @State var cart: [String] = [""]
+    @Binding var gamelist: [String]
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var cartViewModel = CartViewModel()
     @State private var isFavorite: Bool = false
-    
-    func getCart(gamelist: [String]) {
-        cart = gamelist
-    }
     
     func checkUIDAndDelete () {
         let uid = Auth.auth().currentUser!.uid
@@ -91,20 +86,28 @@ struct GameDetailView: View {
                                     Spacer()
                                     
                                     // Buy button
-                                    ForEach(cartViewModel.carts, id: \.id) { cart in
-                                        if cart.uid == UID {
-                                            Button {
-                                                self.buy.toggle()
-                                                getCart(gamelist: cart.gameID)
-                                                addToCart(id: game.documentID)
-                                            } label: {
-                                                Text("Buy")
-                                                    .font(.system(size: 20))
-                                                    .fontWeight(.medium)
-                                                
-                                            }
-                                            
-                                        }
+//                                    ForEach(cartViewModel.carts, id: \.id) { cart in
+//                                        if cart.uid == UID {
+//                                            Button {
+//                                                self.buy.toggle()
+//                                                getCart(gamelist: cart.gameID)
+//                                                addToCart(id: game.documentID)
+//                                            } label: {
+//                                                Text("Buy")
+//                                                    .font(.system(size: 20))
+//                                                    .fontWeight(.medium)
+//
+//                                            }
+//
+//                                        }
+//                                    }
+                                    Button {
+                                        self.buy.toggle()
+                                        addToCart(id: game.documentID)
+                                    } label: {
+                                        Text("Buy")
+                                            .font(.system(size: 20))
+                                            .fontWeight(.medium)
                                     }
                                     .frame(width: 80, height: 40, alignment: .center)
                                     .background(CustomColor.primaryColor)
@@ -300,8 +303,10 @@ struct GameDetailView: View {
     }
 }
 
-struct GameDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        GameDetailView(game: .constant(Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456")), UID: "zhW4xMPXYya8nGiUSDNJ5AR1yiu2")
-    }
-}
+//DISABLE CUZ OF BINDING
+
+//struct GameDetailView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        GameDetailView(game: .constant(Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456")), UID: "zhW4xMPXYya8nGiUSDNJ5AR1yiu2")
+//    }
+//}
