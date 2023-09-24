@@ -9,6 +9,10 @@ import SwiftUI
 import Firebase
 
 struct SignUpView: View {
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    var isCompact: Bool {horizontalSizeClass == .compact}
+    
+    @AppStorage("isDarkMode") private var isDark = false
     
     @State var emailAddress = ""
     @State var phoneNumber: Int = 0
@@ -19,11 +23,11 @@ struct SignUpView: View {
     @State var errorMessage = ""
     
     @StateObject private var userViewModel = UserViewModel()
+    @StateObject private var cartViewModel = CartViewModel()
     
     @State var isHiddenText: Bool = true
     @State var isLogin: Bool = false
     @State var isRegistered: Bool = false
-    @AppStorage("isDarkMode") private var isDark = false
     
     func signUp() {
         Auth.auth().createUser(withEmail: emailAddress, password: password) { authResult, error in
@@ -49,6 +53,7 @@ struct SignUpView: View {
                 
                 //Add to collection
                 userViewModel.addNewUserData(id: UID, name: username, email: emailAddress, phone: String(phoneNumber), imageURL: "")
+                cartViewModel.addNewCartData(newCart: Cart(uid: UID, gameID: [""]))
             }
         }
     }
@@ -66,17 +71,17 @@ struct SignUpView: View {
                         Image("app-logo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 150, height: 150)
-                            .padding(.bottom, 10)
-                        VStack(spacing: 30) {
-                            HStack{
+                            .frame(width: isCompact ? 150 : 250, height: isCompact ? 150 : 250)
+                            .padding(.bottom, isCompact ? 10 : 20)
+                        VStack(spacing: isCompact ? 30 : 50) {
+                            HStack {
                                 Button {
                                     isLogin = true
                                 } label: {
                                     VStack{
                                         Text("Log in")
-                                            .font(.system(size: 24))
-                                            .frame(width: 150)
+                                            .font(.system(size: isCompact ? 24 : 40))
+                                            .frame(width: isCompact ? 150 : 250)
                                             .foregroundColor(CustomColor.primaryColor)
                                     }
                                 }
@@ -84,25 +89,27 @@ struct SignUpView: View {
                                 Button{
                                     // Nothing, because the page is signup page
                                 } label: {
-                                    VStack{
+                                    VStack {
                                         Text("Sign up")
-                                            .font(.system(size: 24))
-                                            .frame(width: 150)
+                                            .font(.system(size: isCompact ? 24 : 40))
+                                            .fontWeight(.medium)
+                                            .frame(width: isCompact ? 150 : 250)
                                             .foregroundColor(CustomColor.secondaryColor)
                                         Rectangle()
-                                            .frame(width: 150,height: 2)
+                                            .frame(width: isCompact ? 150 : 250, height: isCompact ? 2 : 4)
                                             .foregroundColor(CustomColor.secondaryColor)
                                     }
                                 }
                             }
                             
-                            HStack{
+                            HStack {
                                 Image(systemName: "envelope.fill")
-                                    .padding(10)
+                                    .font(isCompact ? .title2 : .largeTitle)
+                                    .padding(isCompact ? 10 : 20)
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
                                     TextField("Email", text: self.$emailAddress)
-                                        .font(.system(size: 20))
+                                        .font(.system(size: isCompact ? 20 : 34))
                                     Divider()
                                         .background(CustomColor.secondaryColor)
                                 }
@@ -110,7 +117,8 @@ struct SignUpView: View {
                             
                             HStack{
                                 Image(systemName: "phone.fill")
-                                    .padding(10)
+                                    .font(isCompact ? .title2 : .largeTitle)
+                                    .padding(isCompact ? 10 : 20)
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
                                     TextField("Phone number", text: Binding(
@@ -121,7 +129,7 @@ struct SignUpView: View {
                                             }
                                         }
                                     ))
-                                    .font(.system(size: 20))
+                                    .font(.system(size: isCompact ? 20 : 34))
                                     Divider()
                                         .background(CustomColor.secondaryColor)
                                 }
@@ -130,11 +138,12 @@ struct SignUpView: View {
                             // Username
                             HStack{
                                 Image(systemName: "person.fill")
-                                    .padding(10)
+                                    .font(isCompact ? .title2 : .largeTitle)
+                                    .padding(isCompact ? 10 : 20)
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
                                     TextField("Username", text: self.$username)
-                                        .font(.system(size: 20))
+                                        .font(.system(size: isCompact ? 20 : 34))
                                     Divider()
                                         .background(CustomColor.secondaryColor)
                                 }
@@ -143,86 +152,88 @@ struct SignUpView: View {
                             // Password
                             HStack {
                                 Image(systemName: "lock.fill")
-                                    .padding(10)
+                                    .font(isCompact ? .title2 : .largeTitle)
+                                    .padding(isCompact ? 10 : 20)
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack {
                                     if isHiddenText {
                                         SecureField("Password", text: self.$password) // hidden text
-                                            .font(.system(size: 20))
+                                            .font(.system(size: isCompact ? 20 : 34))
                                     } else {
                                         TextField("Password", text: self.$password) // shown text
-                                            .font(.system(size: 20))
+                                            .font(.system(size: isCompact ? 20 : 34))
                                     }
                                     Divider()
                                         .background(CustomColor.secondaryColor)
                                 }
-                            }.overlay(
+                            }
+                            .overlay(
                                 // show or hide the password
                                 HStack{
                                     Spacer()
                                     Button{
                                         isHiddenText.toggle()
-                                    }label: {
-                                        Image(systemName: isHiddenText ? "eye.slash.fill" : "eye.fill").foregroundColor(CustomColor.secondaryColor)
+                                    } label: {
+                                        Image(systemName: isHiddenText ? "eye.slash.fill" : "eye.fill")
+                                            .foregroundColor(CustomColor.secondaryColor)
+                                            .font(isCompact ? .title2 : .largeTitle)
+                                            .padding([.trailing, .bottom], isCompact ? 5 : 10)
                                         
                                     }
                                 }
                             )
                             
                             // Registering button
-                            Button{
-                                // Logic for information before registering
+                            Button {
                                 signUp()
                             } label: {
                                 Text("Register")
-                                    .font(.system(size: 28))
-                                    .frame(width: 120, height: 60, alignment: .center)
+                                    .font(.system(size: isCompact ? 28 : 50))
+                                    .frame(width: isCompact ? 120 : 220, height: isCompact ? 60 : 100, alignment: .center)
                                     .background(CustomColor.secondaryColor)
                                     .foregroundColor(CustomColor.lightDarkColor)
-                                    .cornerRadius(10)
-                                    .shadow(color: .black, radius: 2)
-                                    .padding()
+                                    .cornerRadius(isCompact ? 10 : 20)
+                                    .shadow(color: .black, radius: isCompact ? 2 : 4)
+                                    .padding(isCompact ? 20 : 30)
                                 
                             }
                             
-                        } // VStack of logging
-                        .padding()
-                        .frame(width: 350, height: 480)
+                        }
+                        .padding(isCompact ? 20 : 30)
+                        .frame(width: isCompact ? 350 : 650, height: isCompact ? 480 : 850)
                         .background()
-                        .cornerRadius(20)
-                        .shadow(color: CustomColor.shadowColor, radius: 10)
-                        
+                        .cornerRadius(isCompact ? 20 : 30)
+                        .shadow(color: CustomColor.shadowColor, radius: isCompact ? 10 : 20)
                         Text(errorMessage)
-                        //                Text("Forgotten the password")
-                    }   // VStack
-                    
+                    }
                     if isRegistered {
-                        ZStack{
+                        ZStack {
                             CustomColor.shadowColor
-                            VStack{
+                                .edgesIgnoringSafeArea(.all)
+                            VStack {
                                 Text("The account is created successfully!")
-                                    .padding()
+                                    .font(.system(size: isCompact ? 18 : 32))
+                                    .padding(isCompact ? 15 : 25)
                                 
-                                Button{
+                                Button {
                                     isLogin = true
-                                }label: {
+                                } label: {
                                     Text("Back")
-                                        .font(.system(size: 20))
-                                        .frame(width: 80, height: 50, alignment: .center)
+                                        .font(.system(size: isCompact ? 20 : 34))
+                                        .frame(width: isCompact ? 80 : 120, height: isCompact ? 50 : 80, alignment: .center)
                                         .background(CustomColor.secondaryColor)
                                         .foregroundColor(CustomColor.lightDarkColor)
-                                        .cornerRadius(10)
-                                        .shadow(color: .black, radius: 2)
-                                        .padding()
+                                        .cornerRadius(isCompact ? 10 : 20)
+                                        .shadow(color: .black, radius: isCompact ? 2 : 4)
+                                        .padding(isCompact ? 15 : 25)
                                 }
                             }
-                            .frame(width: 350, height: 200)
+                            .frame(width: isCompact ? 350 : 650, height: isCompact  ? 180 : 300)
                             .background()
-                            .cornerRadius(15)
+                            .cornerRadius(isCompact ? 15 : 30)
                         }
                     }
-                    
-                }   // ZStack
+                }
                 .environment(\.colorScheme, isDark ? .dark : .light)
 
             }

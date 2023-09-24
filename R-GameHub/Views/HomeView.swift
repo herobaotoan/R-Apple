@@ -59,12 +59,17 @@ struct HomeView: View {
             } else {
                 let _ =  DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     loadGenre()
-                    show()
                 }
                 NavigationView {
                     ZStack {
                         CustomColor.primaryColor
                             .edgesIgnoringSafeArea(.all)
+                        ForEach(cartViewModel.carts, id: \.id) {carts in
+                            Text(carts.gameID[0])
+                                .onAppear() {
+                                    getCart(item: carts)
+                                }
+                        }
                         VStack {
                             Menu {
                                 Button {
@@ -87,23 +92,23 @@ struct HomeView: View {
                                     .fontWeight(.bold)
                             }
                             .frame(maxWidth: .infinity, alignment: .trailing)
-                            .padding(.trailing, 20)
+                            .padding(.trailing, isCompact ? 20 : 30)
                             .overlay(
                                 Text("R-GameHub")
                                     .foregroundColor(CustomColor.secondaryColor)
-                                    .font(.system(size: 24))
+                                    .font(.system(size: isCompact ? 24 : 40))
                                     .fontWeight(.bold)
                             )
                             //  Search bar
                             TextField("Search", text: $searchText)
                                 .foregroundColor(CustomColor.darkLightColor)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .cornerRadius(15)
-                                .padding()
+                                .cornerRadius(isCompact ? 15 : 25)
+                                .padding(isCompact ? 20 : 30)
                                 .overlay(
                                     HStack {
                                         Image(systemName: "magnifyingglass")
-                                            .padding(.trailing, 25)
+                                            .padding(.trailing, isCompact ? 25 : 40)
                                             .frame(maxWidth: .infinity, alignment: .trailing)
                                     }
                                 )
@@ -120,10 +125,10 @@ struct HomeView: View {
                                     if selected == "Home" {
                                         ForEach(genres, id: \.self) {genre in
                                             Text(genre)
-                                                .font(.system(size: 26))
+                                                .font(.system(size: isCompact ? 26 : 44))
                                                 .fontWeight(.medium)
                                                 .foregroundColor(CustomColor.secondaryColor)
-                                                .padding(.top, 10)
+                                                .padding(.top, isCompact ? 10 : 20)
                                             ScrollView(.horizontal, showsIndicators: false) {
                                                 LazyHStack {
                                                     ForEach(gameViewModel.games, id: \.id) {game in
@@ -133,11 +138,11 @@ struct HomeView: View {
                                                                     .navigationBarHidden(true)
                                                             }
                                                             label: {
-                                                                GameListRow(game: game, width: 200, height: 300)
+                                                                GameListCard(game: game, width: isCompact ? 200 : 300, height: isCompact ? 300 : 400)
                                                             }
                                                             .background(CustomColor.secondaryColor)
-                                                            .clipShape(RoundedRectangle(cornerRadius: 15))
-                                                            .padding([.leading, .trailing], 10)
+                                                            .clipShape(RoundedRectangle(cornerRadius: isCompact ? 15 : 30))
+                                                            .padding([.leading, .trailing], isCompact ? 10 : 20)
                                                         }
                                                     }
                                                 }
@@ -149,24 +154,18 @@ struct HomeView: View {
                                     }
                                 }
                             } else {
-                                LazyVGrid(columns: [GridItem(.flexible(), spacing: 15),
-                                                    GridItem(.flexible(), spacing: 15)]) {
+                                LazyVGrid(columns: [GridItem(.flexible(), spacing: isCompact ? 15 : 30),
+                                                    GridItem(.flexible(), spacing: isCompact ? 15 : 30)]) {
                                     ForEach(filteredGame, id: \.id) {game in
                                         NavigationLink {
                                             GameDetailView(game: .constant(game), UID: UID, gameList: $cart)
                                                 .navigationBarHidden(true)
                                         }
                                         label: {
-                                            GameListRow(game: game, width: 175, height: 250)
+                                            GameListCard(game: game, width: isCompact ? 175 : 325, height: isCompact ? 250 : 450)
                                         }
                                         .background(CustomColor.secondaryColor)
-                                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                                    }
-                                    ForEach(cartViewModel.carts, id: \.id) { carts in
-                                        Text("")
-                                            .onAppear() {
-                                                getCart(item: carts)
-                                            }
+                                        .clipShape(RoundedRectangle(cornerRadius: isCompact ? 15 : 30))
                                     }
                                 }
                                 Spacer()
@@ -174,8 +173,13 @@ struct HomeView: View {
                         }
                     }
                 }
+                .navigationViewStyle(StackNavigationViewStyle())
                 .environment(\.colorScheme, isDark ? .dark : .light)
             }
+        }
+        .onAppear {
+            show()
+            cartViewModel.getUserCartData(uid: UID)
         }
     }
 }
