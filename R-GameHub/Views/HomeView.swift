@@ -25,9 +25,11 @@ struct HomeView: View {
     @Binding var UID: String
     @State var isProfileView: Bool = false
     
-    @State var cart: [String] = [""]
-    func getCart(item: Cart){
-        cart = item.gameID
+    @State var cart: [String] = []
+    func getCart(item: Cart) {
+        if item.gameID.count >= cart.count {
+            cart = item.gameID
+        }
     }
     
     var filteredGame: [Game] {
