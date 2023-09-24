@@ -16,119 +16,124 @@ struct ProfileViewUI: View {
     @StateObject var userViewModel = UserViewModel()
     @State var name = ""
     @State var email = ""
+    @State var isHomeView: Bool = false
+    @State var loggingOut: Bool = false
     
     func show() {
         self.userViewModel.getUserData(UID: UID)
     }
     var body: some View {
-        ZStack {
-            let _ =  DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                show()
-            }
-            CustomColor.primaryColor
-                .edgesIgnoringSafeArea(.all)
-            VStack {
-                HStack {
-                    Button {
-                        
-                    } label: {
-                        Image(systemName: "house.circle.fill")
-                            .font(isCompact ? .title : .largeTitle)
-                            .foregroundColor(CustomColor.secondaryColor)
-                    }
-                    
-                    Spacer()
-                    
-                    // setting for the user
-                    Menu {
-                        
+        if isHomeView {
+            HomeView(UID: $UID)
+        } else if loggingOut {
+            LogInView()
+        } else {
+            ZStack {
+                let _ =  DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    show()
+                }
+                CustomColor.primaryColor
+                    .edgesIgnoringSafeArea(.all)
+                VStack {
+                    HStack {
                         Button {
-                            
+                            isHomeView = true
                         } label: {
-                            Text("Edit profile")
+                            Image(systemName: "house.circle.fill")
+                                .font(isCompact ? .title : .largeTitle)
+                                .foregroundColor(CustomColor.secondaryColor)
                         }
                         
-                        Button{
-                            
+                        Spacer()
+                        
+                        // setting for the user
+                        Menu {
+                            Button {
+                                
+                            } label: {
+                                Label("Edit profile", systemImage: "person.fill")
+                            }
+
+                            Button(role: .destructive) {
+                                loggingOut = true
+                            } label: {
+                                Label("Log out", systemImage: "minus.circle")
+                            }
                         } label: {
-                            Text("Change password")
+                            Image(systemName: "gearshape.fill")
+                                .font(isCompact ? .title : .largeTitle)
+                                .foregroundColor(CustomColor.secondaryColor)
                         }
+                    }
+                    .padding()
+                    
+                    ScrollView {
+                        Image("ava")    // adding data from databaase
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .clipShape(Circle())
+                            .frame(width: 170)
+                            .padding()
                         
+                        Text("User Name")   // adding data from databaase
+                            .font(.system(size: 26))
+                            .foregroundColor(CustomColor.darkLightColor)
                         
-                    } label: {
-                        Image(systemName: "gearshape.fill")
-                            .font(isCompact ? .title : .largeTitle)
-                            .foregroundColor(CustomColor.secondaryColor)
+                        HStack{
+                            VStack{
+                                HStack{
+                                    Image(systemName: "star.fill")
+                                        .foregroundColor(.yellow)
+                                    Text("Current Ledge")
+                                        .foregroundColor(CustomColor.darkLightColor)
+                                }
+                                Text("Gold")    // Adding from database
+                                    .font(.system(size: 24))
+                                    .bold()
+                            }
+                            .padding()
+                            .frame(width: 180)
+                            .border(CustomColor.secondaryColor)
+                            .cornerRadius(3)
+                            
+                            VStack{
+                                HStack{
+                                    Image(systemName: "dollarsign.circle.fill")
+                                        .foregroundColor(.yellow)
+                                    Text("Total coins")
+                                        .foregroundColor(CustomColor.darkLightColor)
+                                }
+                                Text("1.6 $")    // Adding from database
+                                    .font(.system(size: 24))
+                                    .bold()
+                            }
+                            .padding()
+                            .frame(width: 180)
+                            .border(CustomColor.secondaryColor)
+                            .cornerRadius(3)
+                            
+                        }.padding()
+                        
+                        HStack{
+                            Text("Bought")
+                                .bold()
+                                .font(.system(size: 28))
+                                .offset(y:15)
+                            Spacer()
+                        }.padding(.horizontal)
+                        
+                        Divider()
+                            .background(CustomColor.secondaryColor)
+                            .padding(.horizontal)
+                        
+                        VStack{
+                            
+                        }.padding()
+                        
                     }
                 }
-                .padding()
-                
-                ScrollView {
-                    Image("ava")    // adding data from databaase
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .clipShape(Circle())
-                        .frame(width: 170)
-                        .padding()
-                    
-                    Text("User Name")   // adding data from databaase
-                        .font(.system(size: 26))
-                        .foregroundColor(CustomColor.darkLightColor)
-                    
-                    HStack{
-                        VStack{
-                            HStack{
-                                Image(systemName: "star.fill")
-                                    .foregroundColor(.yellow)
-                                Text("Current Ledge")
-                                    .foregroundColor(CustomColor.darkLightColor)
-                            }
-                            Text("Gold")    // Adding from database
-                                .font(.system(size: 24))
-                                .bold()
-                        }
-                        .padding()
-                        .frame(width: 180)
-                        .border(CustomColor.secondaryColor)
-                        .cornerRadius(3)
-                        
-                        VStack{
-                            HStack{
-                                Image(systemName: "dollarsign.circle.fill")
-                                    .foregroundColor(.yellow)
-                                Text("Total coins")
-                                    .foregroundColor(CustomColor.darkLightColor)
-                            }
-                            Text("1.6 $")    // Adding from database
-                                .font(.system(size: 24))
-                                .bold()
-                        }
-                        .padding()
-                        .frame(width: 180)
-                        .border(CustomColor.secondaryColor)
-                        .cornerRadius(3)
-                        
-                    }.padding()
-                    
-                    HStack{
-                        Text("Bought")
-                            .bold()
-                            .font(.system(size: 28))
-                            .offset(y:15)
-                        Spacer()
-                    }.padding(.horizontal)
-                    
-                    Divider()
-                        .background(CustomColor.secondaryColor)
-                        .padding(.horizontal)
-                    
-                    VStack{
-                        
-                    }.padding()
-                    
-                } // Scrollview
             }
-        }   // ZStack
+        }
     }
 }
 

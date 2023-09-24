@@ -108,7 +108,7 @@ struct CartView: View {
 //            }
             }
             .overlay (
-                // MARK: - DISMISS GAME DETAIL BUTTON
+                // MARK: - DISMISS CART VIEW BUTTON
                 Button(action: {
                     dismiss()
                 }) {
