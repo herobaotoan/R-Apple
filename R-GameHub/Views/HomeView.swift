@@ -134,7 +134,7 @@ struct HomeView: View {
                                                     ForEach(gameViewModel.games, id: \.id) {game in
                                                         if game.genre.contains(genre) {
                                                             NavigationLink {
-                                                                GameDetailView(game: .constant(game), UID: UID, gameList: $cart)
+                                                                GameDetailView(game: .constant(game), UID: $UID, gameList: $cart)
                                                                     .navigationBarHidden(true)
                                                             }
                                                             label: {
@@ -158,7 +158,7 @@ struct HomeView: View {
                                                     GridItem(.flexible(), spacing: isCompact ? 15 : 30)]) {
                                     ForEach(filteredGame, id: \.id) {game in
                                         NavigationLink {
-                                            GameDetailView(game: .constant(game), UID: UID, gameList: $cart)
+                                            GameDetailView(game: .constant(game), UID: $UID, gameList: $cart)
                                                 .navigationBarHidden(true)
                                         }
                                         label: {
