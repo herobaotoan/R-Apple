@@ -14,14 +14,28 @@ struct GameDetailView: View {
     var isCompact: Bool {horizontalSizeClass == .compact}
     
     @AppStorage("isDarkMode") private var isDark = false
-    
+    @State var back: Bool = false
     @State var buy: Bool = false
+    @State var isAddingReview: Bool = false
     @Binding var game: Game
     @Binding var UID: String
     @Binding var gameList: [String]
+    @State var review = ""
+    @State var rating: Int = 0
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var cartViewModel = CartViewModel()
+    @StateObject var reviewViewModel = ReviewViewModel()
     @State private var isFavorite: Bool = false
+    let unselected = Image(systemName: "star")
+    let selected = Image(systemName: "star.fill")
+    
+    func showStar(for number: Int) -> Image {
+        if number > rating {
+            return unselected
+        } else {
+            return selected
+        }
+    }
     
     func checkUIDAndDelete() {
         let uid = Auth.auth().currentUser!.uid
@@ -29,16 +43,27 @@ struct GameDetailView: View {
             gameViewModel.removeGameData(documentID: game.documentID ?? "")
         }
     }
+    
     func addToCart(id: String?) {
         let uid = Auth.auth().currentUser!.uid
         gameList.append(id ?? "")
         cartViewModel.addToCart(uid: uid, gamelist: gameList)
     }
     
+    func addReview() {
+        let uid = Auth.auth().currentUser!.uid
+        var ratingList = game.rating
+        ratingList.append(Int(rating))
+        reviewViewModel.addNewReviewData(newReview: Review(description: review, rating: Int(rating) , userID: uid, gameID: game.documentID ?? ""))
+        gameViewModel.updateGameRatinglist(documentID: game.documentID ?? "", ratingList: ratingList)
+    }
+    
     var body: some View {
-        let rating = Double(game.rating.reduce(0, +)) / Double(game.rating.count)
+        let totalRating = Double(game.rating.reduce(0, +)) / Double(game.rating.count)
         if buy {
             CartView(UID: $UID)
+        } else if back {
+            HomeView(UID: $UID)
         } else {
             NavigationView {
                 ZStack(alignment: .top) {
@@ -55,7 +80,7 @@ struct GameDetailView: View {
                     .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: isCompact ? 300 : 450, alignment: .top)
                     .clipped()
                     .overlay(
-                        RatingsView(rating: rating, color: CustomColor.starColor, width: isCompact ? 200 : 300)
+                        RatingsView(rating: totalRating, color: CustomColor.starColor, width: isCompact ? 200 : 300)
                             .frame(maxHeight: .infinity, alignment: .bottom)
                             .padding(.bottom, isCompact ? 20 : 30)
                     )
@@ -203,32 +228,45 @@ struct GameDetailView: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .font(.system(size: isCompact ? 20 : 34))
                                     .fontWeight(.bold)
+                                    .overlay(
+                                        Button(action: {
+                                            isAddingReview = true
+                                        }) {
+                                            Image(systemName: "plus.circle.fill")
+                                                .font(isCompact ? .title : .largeTitle)
+                                        }
+                                            .foregroundColor(CustomColor.secondaryColor), alignment: .trailing
+                                    )
                                 
                                 // Review
-                                VStack {
-                                    HStack {
-                                        Image("ava")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .clipShape(Circle())
-                                            .frame(width: isCompact ? 50 : 100)
-                                            .padding(.trailing, isCompact ? 20 : 30)
+                                ForEach(reviewViewModel.reviews, id:\.id) {review in
+                                    if review.gameID == game.documentID {
                                         VStack {
-                                            Text("Monokuma")
-                                                .fontWeight(.semibold)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
-                                            RatingsView(rating: 4, color: CustomColor.secondaryColor, width: isCompact ? 125 : 175)
+                                            HStack {
+                                                Image("ava") // User ava
+                                                    .resizable()
+                                                    .aspectRatio(contentMode: .fit)
+                                                    .clipShape(Circle())
+                                                    .frame(width: isCompact ? 50 : 100)
+                                                    .padding(.trailing, isCompact ? 20 : 30)
+                                                VStack {
+                                                    Text("Monokuma") // User name
+                                                        .fontWeight(.semibold)
+                                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                                    RatingsView(rating: Double(review.rating), color: CustomColor.secondaryColor, width: isCompact ? 125 : 175)
+                                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                                }
+                                            }
+                                            .padding(.bottom, isCompact ? 10 : 20)
+                                            Text(review.description)
                                                 .frame(maxWidth: .infinity, alignment: .leading)
                                         }
+                                        .padding(isCompact ? 20 : 30)
+                                        .background(CustomColor.secondaryColor.opacity(isDark ? 0.3 : 0.2))
+                                        .clipShape(RoundedRectangle(cornerRadius: isCompact ? 10 : 20))
+                                        .padding(.bottom, isCompact ? 10 : 20)
                                     }
-                                    .padding(.bottom, isCompact ? 10 : 20)
-                                    Text("Great execution.")
-                                        .frame(maxWidth: .infinity, alignment: .leading)
                                 }
-                                .padding(isCompact ? 20 : 30)
-                                .background(CustomColor.secondaryColor.opacity(isDark ? 0.3 : 0.2))
-                                .clipShape(RoundedRectangle(cornerRadius: isCompact ? 10 : 20))
-                                .padding(.bottom, isCompact ? 10 : 20)
                             }
                             .font(.system(size: isCompact ? 18 : 30))
                             .multilineTextAlignment(.leading)
@@ -237,6 +275,63 @@ struct GameDetailView: View {
                     }
                     .padding(.top, isCompact ? 300 : 450)
                     .padding(.bottom, isCompact ? 40 : 90)
+                    
+                    if isAddingReview {
+                        let color = CustomColor.secondaryColor
+                        ZStack {
+                            CustomColor.shadowColor
+                                .edgesIgnoringSafeArea(.all)
+                            VStack {
+                                Text("Add Review")
+                                    .font(.system(size: isCompact ? 24 : 40))
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(CustomColor.secondaryColor)
+                                HStack {
+                                    ForEach(1...5, id: \.self) {number in
+                                        showStar(for: number)
+                                            .foregroundColor(number <= rating ? color : color.opacity(0.3))
+                                            .onTapGesture {
+                                                rating = number
+                                            }
+                                    }
+                                    .font(.system(size: isCompact ? 30: 60))
+                                }
+                                .padding([.top, .bottom], isCompact ? 20 : 30)
+                                HStack {
+                                    Image(systemName: "pencil.line")
+                                        .font(isCompact ? .title : .largeTitle)
+                                        .padding(isCompact ? 10 : 20)
+                                        .foregroundColor(CustomColor.secondaryColor)
+                                    VStack {
+                                        TextField("Review", text: self.$review, axis: .vertical)
+                                            .font(.system(size: isCompact ? 20 : 34))
+                                        Divider()
+                                            .background(CustomColor.secondaryColor)
+                                    }
+                                }
+                                
+                                Button {
+                                    addReview()
+                                    isAddingReview = false
+                                } label: {
+                                    Text("Add")
+                                        .fontWeight(.medium)
+                                        .font(.system(size: isCompact ? 20 : 34))
+                                        .frame(width: isCompact ? 80 : 120, height: isCompact ? 50 : 80, alignment: .center)
+                                        .background(CustomColor.secondaryColor)
+                                        .foregroundColor(CustomColor.lightDarkColor)
+                                        .cornerRadius(isCompact ? 10 : 20)
+                                        .shadow(color: .black, radius: isCompact ? 2 : 4)
+                                        .padding(isCompact ? 15 : 25)
+                                }
+                            }
+                            .padding(isCompact ? 20 : 30)
+                            .frame(width: isCompact ? 350 : 600, height: isCompact  ? 300 : 550)
+                            .background(CustomColor.lightDarkColor)
+                            .cornerRadius(isCompact ? 15 : 30)
+                        }
+                        .zIndex(4)
+                    }
                 }
                 .overlay (
                     // MARK: - DISMISS GAME DETAIL BUTTON
@@ -246,7 +341,7 @@ struct GameDetailView: View {
                         Image(systemName: "xmark.circle.fill")
                             .font(isCompact ? .title : .largeTitle)
                     }
-                        .foregroundColor(CustomColor.primaryColor)
+                        .foregroundColor(CustomColor.secondaryColor)
                         .padding([.top, .leading], isCompact ? 20 : 30), alignment: .topLeading
                 )
                 .overlay (
