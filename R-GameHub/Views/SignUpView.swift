@@ -120,7 +120,7 @@ struct SignUpView: View {
                                     .font(isCompact ? .title2 : .largeTitle)
                                     .padding(isCompact ? 10 : 20)
                                     .foregroundColor(CustomColor.secondaryColor)
-                                VStack{
+                                VStack {
                                     TextField("Phone number", text: Binding(
                                         get: { "\(phoneNumber)" },
                                         set: {
@@ -136,12 +136,12 @@ struct SignUpView: View {
                             }
                             
                             // Username
-                            HStack{
+                            HStack {
                                 Image(systemName: "person.fill")
                                     .font(isCompact ? .title2 : .largeTitle)
                                     .padding(isCompact ? 10 : 20)
                                     .foregroundColor(CustomColor.secondaryColor)
-                                VStack{
+                                VStack {
                                     TextField("Name", text: self.$name)
                                         .font(.system(size: isCompact ? 20 : 34))
                                     Divider()
@@ -188,6 +188,7 @@ struct SignUpView: View {
                                 signUp()
                             } label: {
                                 Text("Register")
+                                    .fontWeight(.medium)
                                     .font(.system(size: isCompact ? 28 : 50))
                                     .frame(width: isCompact ? 120 : 220, height: isCompact ? 60 : 100, alignment: .center)
                                     .background(CustomColor.secondaryColor)
@@ -219,6 +220,7 @@ struct SignUpView: View {
                                     isLogin = true
                                 } label: {
                                     Text("Back")
+                                        .fontWeight(.medium)
                                         .font(.system(size: isCompact ? 20 : 34))
                                         .frame(width: isCompact ? 80 : 120, height: isCompact ? 50 : 80, alignment: .center)
                                         .background(CustomColor.secondaryColor)

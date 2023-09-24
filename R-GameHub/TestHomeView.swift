@@ -37,7 +37,7 @@ struct TestHomeView: View {
     @State private var showGameDetailView = false
     @State var selectedGame: Game = Game(name: "", description: "", price: 0, platform: [""], genre: [""], developer: "", rating: [0], imageURL: "", userID: "")
     
-    func upload(){
+    func upload() {
         persistImageToStorage()
     }
     func getCart(item: Cart){
