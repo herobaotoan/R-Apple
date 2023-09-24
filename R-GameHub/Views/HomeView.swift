@@ -25,9 +25,11 @@ struct HomeView: View {
     @Binding var UID: String
     @State var isProfileView: Bool = false
     
-    @State var cart: [String] = [""]
-    func getCart(item: Cart){
-        cart = item.gameID
+    @State var cart: [String] = []
+    func getCart(item: Cart) {
+        if item.gameID.count >= cart.count {
+            cart = item.gameID
+        }
     }
     
     var filteredGame: [Game] {
@@ -65,7 +67,7 @@ struct HomeView: View {
                         CustomColor.primaryColor
                             .edgesIgnoringSafeArea(.all)
                         ForEach(cartViewModel.carts, id: \.id) {carts in
-                            Text(carts.gameID[0])
+                            Text("")
                                 .onAppear() {
                                     getCart(item: carts)
                                 }
@@ -96,7 +98,7 @@ struct HomeView: View {
                             .overlay(
                                 Text("R-GameHub")
                                     .foregroundColor(CustomColor.secondaryColor)
-                                    .font(.system(size: isCompact ? 24 : 40))
+                                    .font(.system(size: isCompact ? 28 : 48))
                                     .fontWeight(.bold)
                             )
                             //  Search bar
@@ -134,7 +136,7 @@ struct HomeView: View {
                                                     ForEach(gameViewModel.games, id: \.id) {game in
                                                         if game.genre.contains(genre) {
                                                             NavigationLink {
-                                                                GameDetailView(game: .constant(game), UID: UID, gameList: $cart)
+                                                                GameDetailView(game: .constant(game), UID: $UID, gameList: $cart)
                                                                     .navigationBarHidden(true)
                                                             }
                                                             label: {
@@ -158,7 +160,7 @@ struct HomeView: View {
                                                     GridItem(.flexible(), spacing: isCompact ? 15 : 30)]) {
                                     ForEach(filteredGame, id: \.id) {game in
                                         NavigationLink {
-                                            GameDetailView(game: .constant(game), UID: UID, gameList: $cart)
+                                            GameDetailView(game: .constant(game), UID: $UID, gameList: $cart)
                                                 .navigationBarHidden(true)
                                         }
                                         label: {

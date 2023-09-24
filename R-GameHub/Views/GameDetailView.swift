@@ -17,7 +17,7 @@ struct GameDetailView: View {
     
     @State var buy: Bool = false
     @Binding var game: Game
-    @State var UID: String
+    @Binding var UID: String
     @Binding var gameList: [String]
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var cartViewModel = CartViewModel()
@@ -38,7 +38,7 @@ struct GameDetailView: View {
     var body: some View {
         let rating = Double(game.rating.reduce(0, +)) / Double(game.rating.count)
         if buy {
-            CartView()
+            CartView(UID: $UID)
         } else {
             NavigationView {
                 ZStack(alignment: .top) {
@@ -88,7 +88,7 @@ struct GameDetailView: View {
                                     .frame(width: isCompact ? 80 : 120, height: isCompact ? 40 : 60, alignment: .center)
                                     .background(CustomColor.primaryColor)
                                     .foregroundColor(CustomColor.darkLightColor)
-                                    .cornerRadius(isCompact ? 10 : 20)
+                                    .cornerRadius(10)
                                     .padding(.trailing, isCompact ? 30 : 50)
                                 }
                             }
@@ -270,7 +270,7 @@ struct GameDetailView: View {
 
 struct GameDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        GameDetailView(game: .constant(Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456")), UID: "zhW4xMPXYya8nGiUSDNJ5AR1yiu2", gameList: .constant([
+        GameDetailView(game: .constant(Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456")), UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"), gameList: .constant([
             "lVPwTATDwI14LyfnHvDO"]))
     }
 }

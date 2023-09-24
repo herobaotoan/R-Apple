@@ -37,7 +37,7 @@ struct GameListCard: View {
                         .foregroundColor(CustomColor.heartColor)
                 }
                     .foregroundColor(CustomColor.primaryColor)
-                    .padding([.top, .trailing], isCompact ? 10 : 20), alignment: .topTrailing
+                    .padding([.top, .trailing], 10), alignment: .topTrailing
             )
             RatingsView(rating: rating, color: CustomColor.starColor, width: isCompact ? width - 75 : width - 100)
             // adding data from database

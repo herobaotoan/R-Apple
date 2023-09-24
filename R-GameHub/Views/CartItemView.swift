@@ -9,6 +9,9 @@ import SwiftUI
 import Firebase
 
 struct CartItemView: View {
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    var isCompact: Bool {horizontalSizeClass == .compact}
+    
     @AppStorage("isDarkMode") private var isDark = false
     
     @State var game: Game
@@ -16,21 +19,26 @@ struct CartItemView: View {
     var body: some View {
         ZStack {
             HStack(alignment: .top) {
-                AsyncImage(url: URL(string: game.imageURL))
-                    .scaledToFill()
-                    .frame(width: 100, height: 100)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .padding(.trailing, 15)
+                AsyncImage(url: URL(string: game.imageURL)) {image in
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                } placeholder: {
+                    CustomColor.secondaryColor.opacity(0.3)
+                }
+                .frame(width: isCompact ? 100 : 175, height: isCompact ? 100 : 175)
+                .clipShape(RoundedRectangle(cornerRadius: isCompact ? 15 : 25))
+                .padding(.trailing, isCompact ? 15 : 30)
                 VStack {
                     Text("\(game.name)")
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .font(.system(size: 20))
+                        .font(.system(size: isCompact ? 20 : 34))
                         .fontWeight(.medium)
-                        .padding(.bottom, 10)
+                        .padding(.bottom, isCompact ? 10 : 20)
                     Text("$\(game.price, specifier: "%.2f")")
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .italic()
-                        .font(.system(size: 16))
+                        .font(.system(size: isCompact ? 16 : 26))
                 }
                 .multilineTextAlignment(.leading)
             }
