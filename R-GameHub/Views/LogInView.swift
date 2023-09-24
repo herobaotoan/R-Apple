@@ -147,7 +147,7 @@ struct LogInView: View {
                             }
                         } // VStack of logging
                         .padding(isCompact ? 20 : 30)
-                        .frame(width: isCompact ? 350 : 650, height: isCompact ? 330 : 600)
+                        .frame(width: isCompact ? 350 : 650, height: isCompact ? 350 : 600)
                         .background(CustomColor.lightDarkColor)
                         .cornerRadius(isCompact ? 20 : 30)
                         .shadow(color: CustomColor.shadowColor, radius: isCompact ? 10 : 20)

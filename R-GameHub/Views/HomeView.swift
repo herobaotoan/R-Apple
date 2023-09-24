@@ -65,7 +65,7 @@ struct HomeView: View {
                         CustomColor.primaryColor
                             .edgesIgnoringSafeArea(.all)
                         ForEach(cartViewModel.carts, id: \.id) {carts in
-                            Text(carts.gameID[0])
+                            Text("")
                                 .onAppear() {
                                     getCart(item: carts)
                                 }
@@ -96,7 +96,7 @@ struct HomeView: View {
                             .overlay(
                                 Text("R-GameHub")
                                     .foregroundColor(CustomColor.secondaryColor)
-                                    .font(.system(size: isCompact ? 24 : 40))
+                                    .font(.system(size: isCompact ? 28 : 48))
                                     .fontWeight(.bold)
                             )
                             //  Search bar

@@ -42,11 +42,11 @@ struct CartView: View {
                         HStack {
                             // Game price
                             Text("$\(totalPrice, specifier: "%.2f")")
-                                .font(.system(size: 26))
+                                .font(.system(size: isCompact ? 26 : 44))
                                 .multilineTextAlignment(.leading)
                                 .italic()
                                 .foregroundColor(CustomColor.lightDarkColor)
-                                .padding(.leading, 30)
+                                .padding(.leading, isCompact ? 30 : 50)
                             
                             Spacer()
                             
@@ -55,20 +55,20 @@ struct CartView: View {
 
                             } label: {
                                 Text("Purchase")
-                                    .font(.system(size: 20))
+                                    .font(.system(size: isCompact ? 20 : 34))
                                     .fontWeight(.medium)
                             }
-                            .frame(width: 110, height: 40, alignment: .center)
+                            .frame(width: isCompact ? 110 : 160, height: isCompact ? 40 : 60, alignment: .center)
                             .background(CustomColor.primaryColor)
                             .foregroundColor(CustomColor.darkLightColor)
                             .cornerRadius(10)
-                            .padding(.trailing, 30)
+                            .padding(.trailing, isCompact ? 30 : 50)
                         }
                     }
-                    .padding(.bottom, 15)
+                    .padding(.bottom, isCompact ? 15 : 20)
                 }
-                .frame(height: 90)
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .frame(height: isCompact ? 90 : 120)
+                .clipShape(RoundedRectangle(cornerRadius: isCompact ? 20 : 30))
                 
             }
             .frame(maxHeight: .infinity, alignment: .bottom)
@@ -76,7 +76,7 @@ struct CartView: View {
             .zIndex(2)
             VStack {
                 Text("Cart")
-                    .font(.system(size: 28))
+                    .font(.system(size: isCompact ? 28 : 48))
                     .fontWeight(.bold)
                     .foregroundColor(CustomColor.primaryColor)
                 List {
@@ -100,7 +100,7 @@ struct CartView: View {
                         }
                     }
                 }
-                .padding(.bottom, 50)
+                .padding(.bottom, isCompact ? 40 : 90)
                 .background(CustomColor.primaryColor)
                 .scrollContentBackground(.hidden)
 //            ForEach(gameArray, id: \.self) { item in
@@ -112,12 +112,12 @@ struct CartView: View {
                 Button(action: {
                     dismiss()
                 }) {
-                    Image(systemName: "house.circle.fill")
+                    Image(systemName: "house.fill")
                         .font(isCompact ? .title : .largeTitle)
                 }
                     .foregroundColor(CustomColor.primaryColor)
                     .padding(.leading, isCompact ? 20 : 30)
-                    .padding(.top, 2)
+                    .padding(.top, isCompact ? 2 : 12)
                 , alignment: .topLeading
             )
         }
