@@ -31,10 +31,10 @@ struct ProfileViewUI: View {
                     // setting for the user
                     Menu{
                         
-                        Button{
+                        Button {
                             
                         }label: {
-                            Text("Edit profiler")
+                            Text("Edit profile")
                         }
                         
                         Button{
