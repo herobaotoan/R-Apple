@@ -10,49 +10,38 @@ import Firebase
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-@MainActor
 class UserViewModel: ObservableObject {
-    @Published var userSession: FirebaseAuth.User?
+//    @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
     @Published var user = [User]()
     
     private var db = Firestore.firestore()
-    
-    init(){
-        self.userSession = Auth.auth().currentUser
-        
-        Task {
-            await fetchUserData()
-        }
-    }
-    
-    func fetchUserData() async {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        guard let snapshot = try? await db.collection("users").document(uid).getDocument() else { return }
-        self.currentUser = try? snapshot.data(as: User.self)
-    }
-    
-    func signIn(withEmail email: String, password: String ) async throws {
-        do {
-            let result = try await Auth.auth().signIn(withEmail: email, password: password)
-            self.userSession = result.user
-            await fetchUserData()
-        } catch {
-            
-        }
-    }
-    
-    
-//    var UID: String
-    
-//    init() {
-//        getAllOrderData(UID: "")
+//    
+//    init(){
+//        self.userSession = Auth.auth().currentUser
+//        
+//        Task {
+//            await fetchUserData()
+//        }
 //    }
-//    init(UID: String) {
-//        self.UID = UID
-//        getUserData(UID: self.UID)
+    
+//    func fetchUserData() async {
+//        guard let uid = Auth.auth().currentUser?.uid else { return }
+//        
+//        guard let snapshot = try? await db.collection("users").document(uid).getDocument() else { return }
+//        self.currentUser = try? snapshot.data(as: User.self)
 //    }
+//    
+//    func signIn(withEmail email: String, password: String ) async throws {
+//        do {
+//            let result = try await Auth.auth().signIn(withEmail: email, password: password)
+//            self.userSession = result.user
+//            await fetchUserData()
+//        } catch {
+//            
+//        }
+//    }
+    
     func getUserData(UID: String) {
         db.collection("user").addSnapshotListener { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {

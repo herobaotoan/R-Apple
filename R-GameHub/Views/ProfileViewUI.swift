@@ -39,7 +39,7 @@ struct ProfileViewUI: View {
                         Button {
                             isHomeView = true
                         } label: {
-                            Image(systemName: "house.circle.fill")
+                            Image(systemName: "house.fill")
                                 .font(isCompact ? .title : .largeTitle)
                                 .foregroundColor(CustomColor.secondaryColor)
                         }
@@ -72,48 +72,25 @@ struct ProfileViewUI: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .clipShape(Circle())
-                            .frame(width: 170)
-                            .padding()
+                            .frame(width: 150)
                         
                         Text("User Name")   // adding data from databaase
                             .font(.system(size: 26))
                             .foregroundColor(CustomColor.darkLightColor)
-                        
-                        HStack{
-                            VStack{
-                                HStack{
-                                    Image(systemName: "star.fill")
-                                        .foregroundColor(.yellow)
-                                    Text("Current Ledge")
-                                        .foregroundColor(CustomColor.darkLightColor)
-                                }
-                                Text("Gold")    // Adding from database
-                                    .font(.system(size: 24))
-                                    .bold()
+                        VStack {
+                            HStack {
+                                Image(systemName: "dollarsign.circle.fill")
+                                    .foregroundColor(.yellow)
+                                Text("Total coins")
+                                    .foregroundColor(CustomColor.darkLightColor)
                             }
-                            .padding()
-                            .frame(width: 180)
-                            .border(CustomColor.secondaryColor)
-                            .cornerRadius(3)
-                            
-                            VStack{
-                                HStack{
-                                    Image(systemName: "dollarsign.circle.fill")
-                                        .foregroundColor(.yellow)
-                                    Text("Total coins")
-                                        .foregroundColor(CustomColor.darkLightColor)
-                                }
-                                Text("1.6 $")    // Adding from database
-                                    .font(.system(size: 24))
-                                    .bold()
-                            }
-                            .padding()
-                            .frame(width: 180)
-                            .border(CustomColor.secondaryColor)
-                            .cornerRadius(3)
-                            
-                        }.padding()
-                        
+                            Text("1.6 $")    // Adding from database
+                                .font(.system(size: 24))
+                                .bold()
+                        }
+                        .padding()
+                        .frame(width: 180)
+                        .cornerRadius(3)
                         HStack{
                             Text("Bought")
                                 .bold()

@@ -18,7 +18,7 @@ struct R_GameHubApp: App {
     var body: some Scene {
         WindowGroup {
             LogInView()
-                .environmentObject(userViewModel)
+//                .environmentObject(userViewModel)
         }
     }
 }
