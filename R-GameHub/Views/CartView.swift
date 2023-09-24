@@ -17,7 +17,7 @@ struct CartView: View {
     
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var cartViewModel = CartViewModel()
-    @State var uid = "zhW4xMPXYya8nGiUSDNJ5AR1yiu2"
+    @Binding var UID: String
     @State var gameArray = [""]
     @State var selectedGame: Game = Game(name: "", description: "", price: 0, platform: [""], genre: [""], developer: "", rating: [0], imageURL: "", userID: "")
     @State private var totalPrice: Double = 0
@@ -84,7 +84,7 @@ struct CartView: View {
                         ForEach(carts, id: \.id) {cart in
                             ForEach(cart.gameID, id: \.self) {item in
                                 if item == game.documentID {
-                                    CartItemView(game: game, UID: uid)
+                                    CartItemView(game: game, UID: UID)
                                         .swipeActions {
                                             Button {
                                                 gameArray = cart.gameID
@@ -122,7 +122,7 @@ struct CartView: View {
             )
         }
         .onAppear() {
-            cartViewModel.getUserCartData(uid: uid)
+            cartViewModel.getUserCartData(uid: UID)
         }
         .environment(\.colorScheme, isDark ? .dark : .light)
     }
@@ -130,6 +130,6 @@ struct CartView: View {
 
 struct CartView_Previews: PreviewProvider {
     static var previews: some View {
-        CartView()
+        CartView(UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"))
     }
 }

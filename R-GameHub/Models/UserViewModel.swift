@@ -6,12 +6,46 @@
 //
 
 import Foundation
+import Firebase
 import FirebaseFirestore
+import FirebaseFirestoreSwift
 
+@MainActor
 class UserViewModel: ObservableObject {
+    @Published var userSession: FirebaseAuth.User?
+    @Published var currentUser: User?
     @Published var user = [User]()
-//    var UID: String
+    
     private var db = Firestore.firestore()
+    
+    init(){
+        self.userSession = Auth.auth().currentUser
+        
+        Task {
+            await fetchUserData()
+        }
+    }
+    
+    func fetchUserData() async {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        guard let snapshot = try? await db.collection("users").document(uid).getDocument() else { return }
+        self.currentUser = try? snapshot.data(as: User.self)
+    }
+    
+    func signIn(withEmail email: String, password: String ) async throws {
+        do {
+            let result = try await Auth.auth().signIn(withEmail: email, password: password)
+            self.userSession = result.user
+            await fetchUserData()
+        } catch {
+            
+        }
+    }
+    
+    
+//    var UID: String
+    
 //    init() {
 //        getAllOrderData(UID: "")
 //    }

@@ -10,6 +10,7 @@ import Firebase
 
 @main
 struct R_GameHubApp: App {
+    @StateObject var userViewModel = UserViewModel()
     
     init() {
         FirebaseApp.configure()
@@ -17,6 +18,7 @@ struct R_GameHubApp: App {
     var body: some Scene {
         WindowGroup {
             LogInView()
+                .environmentObject(userViewModel)
         }
     }
 }
