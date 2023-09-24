@@ -16,7 +16,7 @@ struct SignUpView: View {
     
     @State var emailAddress = ""
     @State var phoneNumber: Int = 0
-    @State var username = ""
+    @State var name = ""
     @State var UID = ""
     @State private var password = ""
     
@@ -52,7 +52,7 @@ struct SignUpView: View {
                 UID = Auth.auth().currentUser!.uid
                 
                 //Add to collection
-                userViewModel.addNewUserData(id: UID, name: username, email: emailAddress, phone: String(phoneNumber), imageURL: "")
+                userViewModel.addNewUserData(id: UID, name: name, email: emailAddress, phone: String(phoneNumber), imageURL: "")
                 cartViewModel.addNewCartData(newCart: Cart(uid: UID, gameID: [""]))
             }
         }
@@ -142,7 +142,7 @@ struct SignUpView: View {
                                     .padding(isCompact ? 10 : 20)
                                     .foregroundColor(CustomColor.secondaryColor)
                                 VStack{
-                                    TextField("Username", text: self.$username)
+                                    TextField("Name", text: self.$name)
                                         .font(.system(size: isCompact ? 20 : 34))
                                     Divider()
                                         .background(CustomColor.secondaryColor)
