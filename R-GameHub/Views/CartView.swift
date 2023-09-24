@@ -51,9 +51,8 @@ struct CartView: View {
                             Spacer()
                             
                             // Purchase button
-                            NavigationLink {
-                                CartView()
-                                    .navigationBarBackButtonHidden(true)
+                            Button {
+
                             } label: {
                                 Text("Purchase")
                                     .font(.system(size: 20))

@@ -12,7 +12,7 @@ struct ProfileView: View {
     @StateObject var userViewModel = UserViewModel()
     @State var name = ""
     @State var email = ""
-    func show(){
+    func show() {
         self.userViewModel.getUserData(UID: UID)
     }
     var body: some View {
@@ -49,8 +49,8 @@ struct ProfileView: View {
     }
 }
 
-//struct ProfileView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ProfileView(UID: $iddd)
-//    }
-//}
+struct ProfileView_Previews: PreviewProvider {
+    static var previews: some View {
+        ProfileView(UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"))
+    }
+}
