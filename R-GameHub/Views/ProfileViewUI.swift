@@ -81,7 +81,7 @@ struct ProfileViewUI: View {
                                 .clipShape(Circle())
                                 .clipped()
                                 
-                                Text(user.name)   // adding data from databaase
+                                Text(user.name)
                                     .font(.system(size: isCompact ? 26 : 46))
                                     .fontWeight(.semibold)
                                     .foregroundColor(CustomColor.secondaryColor)
@@ -94,7 +94,7 @@ struct ProfileViewUI: View {
                                             .font(.system(size: isCompact ? 22 : 36))
                                             .foregroundColor(CustomColor.secondaryColor)
                                     }
-                                    Text("$9.99")    // Adding from database
+                                    Text("$\(user.money, specifier: "%.2f")")
                                         .font(.system(size: isCompact ? 24 : 40))
                                         .fontWeight(.medium)
                                         .foregroundColor(CustomColor.darkLightColor)
