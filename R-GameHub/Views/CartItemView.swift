@@ -29,7 +29,7 @@ struct CartItemView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                 } placeholder: {
-                    CustomColor.secondaryColor.opacity(0.3)
+                    Image("game-product")
                 }
                 .frame(width: isCompact ? 100 : 175, height: isCompact ? 100 : 175)
                 .clipShape(RoundedRectangle(cornerRadius: isCompact ? 15 : 25))
