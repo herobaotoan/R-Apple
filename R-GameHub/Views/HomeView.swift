@@ -123,8 +123,7 @@ struct HomeView: View {
     var body: some View {
         ZStack {
             if isProfileView {
-//                ProfileViewUI(UID: $UID)
-                ProfileView(UID: $UID)
+                ProfileViewUI(UID: $UID)
             } else if isCartView {
                 CartView(UID: $UID)
             } else {
