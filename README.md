@@ -4,5 +4,5 @@
 # Youtube link:
   https://youtu.be/ACEeqTYc22I
 # Test account:
-  email: new@gmail.com
+  email: New@gmail.com
   password: 123456
