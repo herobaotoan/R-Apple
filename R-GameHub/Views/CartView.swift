@@ -14,6 +14,7 @@ import SwiftUI
 import Firebase
 
 struct CartView: View {
+    // MARK: - DECLARE VARIABLES
     @Environment(\.dismiss) var dismiss
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     var isCompact: Bool {horizontalSizeClass == .compact}
@@ -28,11 +29,14 @@ struct CartView: View {
     @State var totalMoney: Double = 0.0
     @State var currentMoney: Double = 0.0
     
+    // MARK: - REMOVE GAME FROM CART
     func removeFromCart(documentID: String?, gameID: String) {
         let index = gameArray.firstIndex(of: gameID) ?? 0
         gameArray.remove(at: index)
         cartViewModel.updateCart(documentID: documentID ?? "", gamelist: gameArray)
     }
+    
+    // MARK: - CALCULATE TOTAL PRICE
     func getTotalPrice() -> Double {
         var totalPrice: Double = 0
         for cart in cartViewModel.carts {
@@ -46,6 +50,8 @@ struct CartView: View {
         }
         return totalPrice
     }
+    
+    // MARK: - GET USER MONEY
     func getUserMoney() -> Double {
         var money: Double = 0
         for user in userViewModel.user {
@@ -56,6 +62,7 @@ struct CartView: View {
         return money
     }
     
+    // MARK: - FUNCTION PAYMENT
     func purchase() {
         for cart in cartViewModel.carts {
             if cart.uid == UID {
@@ -69,6 +76,7 @@ struct CartView: View {
         }
     }
     
+    // MARK: - CART VIEW
     var body: some View {
         let games = gameViewModel.games
         let carts = cartViewModel.carts
@@ -174,6 +182,7 @@ struct CartView: View {
     }
 }
 
+// MARK: - PREVIEWS
 struct CartView_Previews: PreviewProvider {
     static var previews: some View {
         CartView(UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"))

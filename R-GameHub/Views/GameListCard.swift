@@ -15,6 +15,7 @@ import Firebase
 
 struct GameListCard: View {
     
+    // MARK: - DECLARE VARIABLES
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var wishlistViewModel = WishlistViewModel()
     @Binding var gameList: [String]
@@ -27,6 +28,7 @@ struct GameListCard: View {
     var width: CGFloat
     var height: CGFloat
     
+    // MARK: - FUNCTION CHECK IF USE CLICK LIKE OR UNLIKE THE GAME
     func checkIsFav() -> Bool{
         for wishlist in wishlistViewModel.wishlists {
             if wishlist.uid == UID {
@@ -40,6 +42,7 @@ struct GameListCard: View {
         return false
     }
     
+    // MARK: - ADD GAME WHICH USER CLICK LIKE INTO WISHLIST
     func addFavorite(id: String?) {
         let uid = Auth.auth().currentUser!.uid
         if !gameList.contains(id ?? ""){
@@ -48,6 +51,7 @@ struct GameListCard: View {
         wishlistViewModel.newFavorite(uid: uid, gamelist: gameList)
     }
     
+    // MARK: - REMOVE GAME WHICH USER CLICK UNLIKE FROM WISHLIST
     func removeFavorite(gameID: String) {
         for wishlist in wishlistViewModel.wishlists {
             if wishlist.uid == UID {
@@ -71,8 +75,10 @@ struct GameListCard: View {
     }
     
     var body: some View {
+        // MARK: - DECLARE VARIABLE RATING
         let rating = Double(game.rating.reduce(0, +)) / Double(game.rating.count)
         
+        // MARK: - GAME LIST VIEW
         VStack {
             AsyncImage(url: URL(string: game.imageURL)) {image in
                 image
@@ -89,7 +95,7 @@ struct GameListCard: View {
                     self.isFavorite.toggle()
                     checkIsFav() == false ? addFavorite(id: game.documentID) : removeFavorite(gameID: game.documentID ?? "")
                     }) {
-                            
+                     
                     Image(systemName: checkIsFav() == true ? "heart.fill" : "heart")
                         .font(isCompact ? .title : .largeTitle)
                         .foregroundColor(CustomColor.heartColor)
@@ -117,6 +123,7 @@ struct GameListCard: View {
     }
 }
 
+// MARK: - PREVIEWS
 struct GameListCard_Previews: PreviewProvider {
     static var previews: some View {
         GameListCard(gameList: .constant(["lVPwTATDwI14LyfnHvDO"]), UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"), isFavorite: false, game: Game(name: "Elden Ring", description: "Bruh.", price: 5.947 ,platform: ["PS4", "Xbox"], genre: ["Action", "RPG", "OpenWorld", "Soul-like"], developer: "FromSoftware", rating: [5,4,5,5,4,5], imageURL: "https://firebasestorage.googleapis.com/v0/b/ios-app-4da46.appspot.com/o/eldenring.jpg?alt=media&token=25132cbc-e9e2-432f-b072-5c04cf92183d", userID: "123456"), width: 300, height: 400)

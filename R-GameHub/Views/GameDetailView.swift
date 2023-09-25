@@ -14,6 +14,7 @@ import SwiftUI
 import Firebase
 
 struct GameDetailView: View {
+    // MARK: - DECLARE VARIABLES
     @Environment(\.dismiss) var dismiss
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     var isCompact: Bool {horizontalSizeClass == .compact}
@@ -35,6 +36,7 @@ struct GameDetailView: View {
     let unselected = Image(systemName: "star")
     let selected = Image(systemName: "star.fill")
     
+    // MARK: - FUNCTION SHOW RATING STARS
     func showStar(for number: Int) -> Image {
         if number > rating {
             return unselected
@@ -43,6 +45,7 @@ struct GameDetailView: View {
         }
     }
     
+    // MARK: - FUNCTION CHECK UID TO DELETE
     func checkUIDAndDelete() {
         let uid = Auth.auth().currentUser!.uid
         if game.userID == uid {
@@ -50,12 +53,14 @@ struct GameDetailView: View {
         }
     }
     
+    // MARK: - FUNCTION ADD GAME TO CART
     func addToCart(id: String?) {
         let uid = Auth.auth().currentUser!.uid
         gameList.append(id ?? "")
         cartViewModel.addToCart(uid: uid, gamelist: gameList)
     }
     
+    // MARK: - FUNCTION ADD GAME REVIEW
     func addReview() {
         let uid = Auth.auth().currentUser!.uid
         var ratingList = game.rating
@@ -64,13 +69,15 @@ struct GameDetailView: View {
         gameViewModel.updateGameRatinglist(documentID: game.documentID ?? "", ratingList: ratingList)
     }
     
+    
     var body: some View {
         let totalRating = Double(game.rating.reduce(0, +)) / Double(game.rating.count)
-        if buy {
+        if buy {  // MARK: - NAVIGATE TO CART VIEW
             CartView(UID: $UID)
-        } else if back {
+        } else if back {  // MARK: - NAVIGATE TO HOME VIEW
             HomeView(UID: $UID)
         } else {
+            // MARK: - GAME DETAIL VIEW
             NavigationView {
                 ZStack(alignment: .top) {
                     CustomColor.primaryColor
