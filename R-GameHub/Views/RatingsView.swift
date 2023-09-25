@@ -13,11 +13,13 @@
 import SwiftUI
 
 struct RatingsView: View {
+    // MARK: - PROPERTIES
     var rating: Double
     var color: Color
     var width: CGFloat
     
     var body: some View {
+        // MARK: - CREATE STARS
         let stars = HStack(spacing: 0) {
             ForEach(1...5/* 5 stars */, id: \.self) {_ in
                 Image(systemName: "star.fill")
@@ -42,6 +44,7 @@ struct RatingsView: View {
     }
 }
 
+// MARK: - PREVIEWS
 struct RatingsView_Previews: PreviewProvider {
     static var previews: some View {
         RatingsView(rating: 3.5, color: CustomColor.secondaryColor, width: 175)

@@ -14,6 +14,7 @@ import SwiftUI
 import Firebase
 
 struct LogInView: View {
+    // MARK: - DECLARE VARIABLES
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     var isCompact: Bool {horizontalSizeClass == .compact}
     
@@ -29,6 +30,7 @@ struct LogInView: View {
     @State var signing: Bool = false
     @State var logging: Bool = false
     
+    // MARK: - FUNCTION LOGIN
     func login() {
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
             if error != nil {
@@ -44,6 +46,7 @@ struct LogInView: View {
     
     var body: some View {
         ZStack {
+            // MARK: - IF LOGIN SUCCESSFUL
             if logging {
                 HomeView(UID: $UID)
 //                ProfileView(UID: $UID)
@@ -51,6 +54,8 @@ struct LogInView: View {
 //                CartView()
             } else {
                 ZStack {
+                    
+                    // MARK: - LOGIN FORM VIEW
                     CustomColor.primaryColor
                         .edgesIgnoringSafeArea(.all)
                     VStack {
@@ -75,6 +80,7 @@ struct LogInView: View {
                                             .foregroundColor(CustomColor.secondaryColor)
                                     }
                                 }
+                                
                                 
                                 Button {
                                     signing = true
@@ -164,6 +170,8 @@ struct LogInView: View {
                 .environment(\.colorScheme, isDark ? .dark : .light)
 
             }
+            
+            // MARK: - NAVIGATE TO SIGN UP VIEW
             if signing {
                 SignUpView()
             }
@@ -171,6 +179,7 @@ struct LogInView: View {
     }
 }
 
+// MARK: - PREVIEWS
 struct LogInView_Previews: PreviewProvider {
     static var previews: some View {
         LogInView()
