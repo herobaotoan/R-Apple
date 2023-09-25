@@ -132,7 +132,7 @@ struct HomeView: View {
         ZStack {
             // MARK: - NAVIGATE TO PROFILE VIEW
             if isProfileView {
-                ProfileViewUI(UID: $UID)
+                ProfileView(UID: $UID)
             } else if isCartView {
                 CartView(UID: $UID)
                 
