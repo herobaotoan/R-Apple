@@ -13,6 +13,7 @@
 import SwiftUI
 
 struct SelectionRatingView: View {
+    // MARK: - DECLARE. VARIABLES
     @State var rating: Int
     var size: CGFloat
     var color: Color
@@ -21,6 +22,7 @@ struct SelectionRatingView: View {
     
     var body: some View {
         HStack {
+            // MARK: - TAP STARS TO RATE GAME
             ForEach(1...5, id: \.self) {number in
                 showStar(for: number)
                     .foregroundColor(number <= rating ? color : color.opacity(0.3))
@@ -31,6 +33,8 @@ struct SelectionRatingView: View {
             .font(.system(size: size))
         }
     }
+    
+    // MARK: - FUNCTION SHOW STARS
     func showStar(for number: Int) -> Image {
         if number > rating {
             return unselected
@@ -40,6 +44,7 @@ struct SelectionRatingView: View {
     }
 }
 
+// MARK: - PREVIEWS
 struct SelectionRatingView_Previews: PreviewProvider {
     static var previews: some View {
         SelectionRatingView(rating: 4, size: 50, color: CustomColor.secondaryColor)

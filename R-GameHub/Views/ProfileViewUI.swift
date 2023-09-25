@@ -15,6 +15,7 @@ import Firebase
 import FirebaseStorage
 
 struct ProfileViewUI: View {
+    // MARK: - DECLARE VARIABLES
     @Environment(\.dismiss) var dismiss
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     var isCompact: Bool {horizontalSizeClass == .compact}
@@ -59,11 +60,13 @@ struct ProfileViewUI: View {
     }
     
     var body: some View {
+        // MARK: - NAVIGATE TO HOME VIEW
         if isHomeView {
             HomeView(UID: $UID)
-        } else if loggingOut {
+        } else if loggingOut {  // MARK: - NAVIGATE TO LOGIN VIEW
             LogInView()
         } else {
+            // MARK: - PROFILE VIEW
             ZStack {
                 CustomColor.primaryColor
                     .edgesIgnoringSafeArea(.all)
@@ -249,6 +252,7 @@ struct ProfileViewUI: View {
     }
 }
 
+// MARK: - PREVIEWS
 struct ProfileViewUI_Previews: PreviewProvider {
     static var previews: some View {
         ProfileViewUI(UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"))

@@ -15,6 +15,7 @@ import Firebase
 import FirebaseStorage
 
 struct HomeView: View {
+    // MARK: - DECLARE VARIABLES
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     var isCompact: Bool {horizontalSizeClass == .compact}
     
@@ -49,6 +50,7 @@ struct HomeView: View {
     @State var cart: [String] = []
     @State var wishlist: [String] = []
     
+    // MARK: - GET WISH LIST OF CURRENT USER
     func getFavoriteList() -> [Game] {
         var ownWishlist: [Game] = []
             for wishlist in wishlistViewModel.wishlists {
@@ -66,12 +68,14 @@ struct HomeView: View {
     }
     
     
+    // MARK: - GET CART OF CURRENT USER
     func getCart(item: Cart) {
         if item.gameID.count >= cart.count {
             cart = item.gameID
         }
     }
     
+    // MARK: - FILTER GAME
     var filteredGame: [Game] {
         if searchText.isEmpty {
             return gameViewModel.games
@@ -83,6 +87,7 @@ struct HomeView: View {
 //        self.userViewModel.getUserData(UID: UID)
 //    }
     
+    // MARK: - LOAD GENRE GAME
     func loadGenre() {
         for game in gameViewModel.games {
             for genre in game.genre {
@@ -92,10 +97,13 @@ struct HomeView: View {
             }
         }
     }
+    
+    // MARK: - UPLOAD IMAGE TO DATABASE
     func upload() {
         persistImageToStorage()
     }
     
+    // MARK: - STORE IMAGE TO DATABASE
     private func persistImageToStorage() {
         let uid = Auth.auth().currentUser!.uid
         let ref = storage.reference(withPath: uid).child("images/\(Int.random(in: 1..<999999))")
@@ -122,10 +130,13 @@ struct HomeView: View {
     // Function for searching
     var body: some View {
         ZStack {
+            // MARK: - NAVIGATE TO PROFILE VIEW
             if isProfileView {
                 ProfileViewUI(UID: $UID)
             } else if isCartView {
                 CartView(UID: $UID)
+                
+            // MARK: - HOME VIEW
             } else {
                 let _ =  DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     loadGenre()
@@ -142,6 +153,7 @@ struct HomeView: View {
                         }
                         VStack {
                             HStack {
+                                // MARK: - BUTTON ADD NEW GAME
                                 Button {
                                     isAddingGame = true
                                 } label: {
@@ -232,6 +244,8 @@ struct HomeView: View {
                                             }
                                         }
                                         .frame(maxWidth: .infinity)
+                                        
+                                        // MARK: - TURN TO WISHLIST TAB
                                     } else if selected == "Wishlist" {
 //                                        getFavoriteList()
                                         LazyVGrid(columns: [GridItem(.flexible(), spacing: isCompact ? 15 : 30),
@@ -254,6 +268,7 @@ struct HomeView: View {
                                     }
                                 }
                             } else {
+                                // MARK: - DISPLAY GAME CARD
                                 LazyVGrid(columns: [GridItem(.flexible(), spacing: isCompact ? 15 : 30),
                                                     GridItem(.flexible(), spacing: isCompact ? 15 : 30)]) {
                                     ForEach(filteredGame, id: \.id) {game in
@@ -271,6 +286,7 @@ struct HomeView: View {
                                 Spacer()
                             }
                         }
+                        // MARK: - ADDING GAME VIEW
                         if isAddingGame {
                             ZStack {
                                 CustomColor.shadowColor
@@ -458,6 +474,7 @@ struct HomeView: View {
     }
 }
 
+// MARK: - PREVIEWS
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView(UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"))
