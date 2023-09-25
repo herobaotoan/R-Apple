@@ -41,7 +41,7 @@ struct ProfileView: View {
             HStack {
                 TextField("Email: ", text: $email)
                 Button {
-                    userViewModel.updateUserEmail(UID: UID, email: email)
+//                    userViewModel.updateUserEmail(UID: UID, email: email)
                 } label: {
                     Text("Change")
                 }

@@ -19,6 +19,7 @@ struct User: Codable, Identifiable {
     var name: String
     var email: String
     var phone: String
+    var money: Double
     var imageURL: String
     @DocumentID var documentID: String?
 }

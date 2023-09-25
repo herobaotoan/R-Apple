@@ -58,10 +58,11 @@ class UserViewModel: ObservableObject {
                 let name = data["name"] as? String ?? ""
                 let email = data["email"] as? String ?? ""
                 let phone = data["phone"] as? String ?? ""
+                let money = data["money"] as? Double ?? 0
                 let imageURL = data["imageURL"] as? String ?? ""
                 let id = data["id"] as? String ?? ""
                  
-                 return User(id: id, name: name, email: email, phone: phone, imageURL: imageURL, documentID: queryDocumentSnapshot.documentID)
+                return User(id: id, name: name, email: email, phone: phone, money: money, imageURL: imageURL, documentID: queryDocumentSnapshot.documentID)
             }
         }
     }
@@ -95,12 +96,17 @@ class UserViewModel: ObservableObject {
     func updateUserName(UID: String, name: String) {
         db.collection("user").document(UID).updateData(["name" : name])
     }
-    func updateUserEmail(UID: String, email: String) {
-        db.collection("user").document(UID).updateData(["email" : email])
+    
+    func updateUserImage(UID: String, imageURL: String) {
+        db.collection("user").document(UID).updateData(["imageURL": imageURL])
     }
     
-    func addNewUserData(id: String, name: String, email: String, phone: String, imageURL: String) {
-        db.collection("user").addDocument(data: ["id": id, "name": name, "email": email, "phone": phone, "imageURL": imageURL])
+    func addNewUserData(id: String, name: String, email: String, phone: String, money: Double, imageURL: String) {
+        db.collection("user").addDocument(data: ["id": id, "name": name, "email": email, "phone": phone, "money": money, "imageURL": imageURL])
+    }
+    
+    func updateMoney(UID: String, money: Double) {
+        db.collection("user").document(UID).updateData(["money": money])
     }
     
     func removeOrderData(documentID: String) {
