@@ -14,7 +14,7 @@ import SwiftUI
 import Firebase
 import FirebaseStorage
 
-struct ProfileViewUI: View {
+struct ProfileView: View {
     // MARK: - DECLARE VARIABLES
     @Environment(\.dismiss) var dismiss
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -253,8 +253,8 @@ struct ProfileViewUI: View {
 }
 
 // MARK: - PREVIEWS
-struct ProfileViewUI_Previews: PreviewProvider {
+struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileViewUI(UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"))
+        ProfileView(UID: .constant("zhW4xMPXYya8nGiUSDNJ5AR1yiu2"))
     }
 }
