@@ -45,6 +45,7 @@ struct HomeView: View {
     @StateObject var wishlistViewModel = WishlistViewModel()
     @Binding var UID: String
     @State var isProfileView: Bool = false
+    @State var isCartView: Bool = false
     @State var cart: [String] = []
     @State var wishlist: [String] = []
     
@@ -124,6 +125,8 @@ struct HomeView: View {
             if isProfileView {
 //                ProfileViewUI(UID: $UID)
                 ProfileView(UID: $UID)
+            } else if isCartView {
+                CartView(UID: $UID)
             } else {
                 let _ =  DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                     loadGenre()

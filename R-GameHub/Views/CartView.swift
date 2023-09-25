@@ -123,8 +123,11 @@ struct CartView: View {
                     .fontWeight(.bold)
                     .foregroundColor(CustomColor.primaryColor)
                 
-                Text("$\(getUserMoney(), specifier: "%.2f")")
-                    .font(.system(size: isCompact ? 26 : 44))
+                Text("Money: $\(getUserMoney(), specifier: "%.2f")")
+                    .font(.system(size: isCompact ? 22 : 40))
+                    .fontWeight(.medium)
+                    .padding(.top, isCompact ? 1 : 2)
+                    .foregroundColor(CustomColor.lightDarkColor)
                 List {
                     ForEach(games, id: \.id) {game in
                         ForEach(carts, id: \.id) {cart in

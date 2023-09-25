@@ -85,17 +85,25 @@ struct ProfileViewUI: View {
                                     .font(.system(size: isCompact ? 26 : 46))
                                     .fontWeight(.semibold)
                                     .foregroundColor(CustomColor.secondaryColor)
+                                Text(user.email)
+                                    .font(.system(size: isCompact ? 22 : 36))
+                                    .foregroundColor(CustomColor.secondaryColor)
+                                Text(user.phone)
+                                    .font(.system(size: isCompact ? 22 : 36))
+                                    .foregroundColor(CustomColor.secondaryColor)
+                                    .padding(.bottom, isCompact ? 5 : 10)
                                 VStack {
-                                    HStack {
+                                    HStack(alignment: .center) {
                                         Image(systemName: "dollarsign.circle.fill")
                                             .foregroundColor(CustomColor.starColor)
-                                            .font(.title)
+                                            .font(isCompact ? .title2 : .largeTitle)
                                         Text("Total coins")
                                             .font(.system(size: isCompact ? 22 : 36))
+                                            .fontWeight(.medium)
                                             .foregroundColor(CustomColor.secondaryColor)
                                     }
                                     Text("$\(user.money, specifier: "%.2f")")
-                                        .font(.system(size: isCompact ? 24 : 40))
+                                        .font(.system(size: isCompact ? 22 : 36))
                                         .fontWeight(.medium)
                                         .foregroundColor(CustomColor.darkLightColor)
                                 }

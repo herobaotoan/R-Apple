@@ -135,29 +135,14 @@ struct GameDetailView: View {
                     ScrollView {
                         VStack {
                             // Game name
-                            HStack(alignment: .top) {
-                                Text(game.name)
-                                    .foregroundColor(CustomColor.secondaryColor)
-                                    .font(.system(size: isCompact ? 24 : 40))
-                                    .multilineTextAlignment(.leading)
-                                    .fontWeight(.heavy)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                Button {
-                                    isFavorite.toggle()
-                                } label: {
-                                    if isFavorite {
-                                        Image(systemName: "heart.fill")
-                                            .font(isCompact ? .title : .largeTitle)
-                                            .foregroundColor(CustomColor.heartColor)
-                                    } else {
-                                        Image(systemName: "heart")
-                                            .font(isCompact ? .title : .largeTitle)
-                                            .foregroundColor(CustomColor.heartColor)
-                                    }
-                                }
-                            }
-                            .padding(.top, isCompact ? 15 : 30)
-                            .padding(.bottom, isCompact ? 5 : 10)
+                            Text(game.name)
+                                .foregroundColor(CustomColor.secondaryColor)
+                                .font(.system(size: isCompact ? 24 : 40))
+                                .multilineTextAlignment(.leading)
+                                .fontWeight(.heavy)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.top, isCompact ? 15 : 30)
+                                .padding(.bottom, isCompact ? 5 : 10)
                             VStack {
                                 // Game description
                                 Text("Description")
