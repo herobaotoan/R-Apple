@@ -106,17 +106,13 @@ class UserViewModel: ObservableObject {
     }
     
     func updateMoney(UID: String, money: Double) {
-        db.collection("user").document(UID).updateData(["money": money])
-    }
-    
-    func removeOrderData(documentID: String) {
-        db.collection("order").document(documentID).delete { (error) in
-            if let error = error {
-                print("Error removing document: \(error)")
-            } else {
-                print("Document successfully removed!")
+        db.collection("user").whereField("id", isEqualTo: UID).getDocuments { (result, error) in
+            if error == nil {
+                for document in result!.documents {
+                    self.db.collection("user").document(document.documentID).updateData(["money": money])
+                }
             }
         }
     }
-
+    
 }
