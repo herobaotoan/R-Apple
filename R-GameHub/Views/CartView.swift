@@ -31,7 +31,7 @@ struct CartView: View {
     func removeFromCart(documentID: String?, gameID: String) {
         let index = gameArray.firstIndex(of: gameID) ?? 0
         gameArray.remove(at: index)
-        cartViewModel.updateGamelist(documentID: documentID ?? "", gamelist: gameArray)
+        cartViewModel.updateCart(documentID: documentID ?? "", gamelist: gameArray)
     }
     func getTotalPrice() -> Double {
         var totalPrice: Double = 0
@@ -59,7 +59,7 @@ struct CartView: View {
     func purchase() {
         for cart in cartViewModel.carts {
             if cart.uid == UID {
-                cartViewModel.updateGamelist(documentID: cart.documentID ?? "", gamelist: [""])
+                cartViewModel.updateCart(documentID: cart.documentID ?? "", gamelist: [""])
             }
         }
         for user in userViewModel.user {

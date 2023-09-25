@@ -154,7 +154,9 @@ struct HomeView: View {
                                         isProfileView = true
                                     } label: {
                                         ForEach(userViewModel.user, id: \.uid) { user in
-                                            Label("\(user.name)", systemImage: "person.circle")
+                                            if user.id == UID {
+                                                Label("\(user.name)", systemImage: "person.circle")
+                                            }
                                         }
                                     }
                                     
@@ -295,6 +297,9 @@ struct HomeView: View {
                                             }
                                             .padding(isCompact ? 5 : 10)
                                         }
+                                    }
+                                    
+                                    Group {
                                         HStack {
                                             Image(systemName: "dpad.up.filled")
                                                 .font(isCompact ? .title : .largeTitle)

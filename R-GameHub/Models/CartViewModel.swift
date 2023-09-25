@@ -58,7 +58,7 @@ import Firebase
      }
      
      // MARK: - UPDATE CART
-     func updateGCart(documentID: String, gamelist: [String]) {
+     func updateCart(documentID: String, gamelist: [String]) {
          db.collection("cart").document(documentID).updateData(["gameID" : gamelist])
      }
      
