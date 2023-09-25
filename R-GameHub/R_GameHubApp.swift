@@ -23,7 +23,6 @@ struct R_GameHubApp: App {
     var body: some Scene {
         WindowGroup {
             SplashView()
-//                .environmentObject(userViewModel)
         }
     }
 }

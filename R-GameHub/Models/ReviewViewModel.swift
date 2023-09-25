@@ -1,96 +1,56 @@
-//
-//  GameViewModel.swift
-//  R-GameHub
-//
-//  Created by Toan Tran Chi on 19/09/2023.
-//
+/*
+  RMIT University Vietnam
+  Course: COSC2659 iOS Development
+  Semester: 2023B
+  Assessment: Assignment 3
+  Author: R-Apple (Bui Nguyen Ngoc Tuan | Vo Tran Khanh Linh | Tran Chi Toan | Nguyen Thi Ha Giang | Nguyen Tuan Thang)
+  ID: s3877673 | s3878600 | s3891637 | s3914108 | s3877039
+  Created  date: 15/09/2023
+  Last modified: 25/09/2023
+  Acknowledgement: Previous assignments of members | Firebase lectures on Canvas | YouTube | Stackoverflow
+*/
 
 import Foundation
 import Firebase
 
- class ReviewViewModel: ObservableObject {
-     @Published var reviews = [Review]()
-     private var db = Firestore.firestore()
-     init() {
-         getAllCartData()
-     }
-     func getAllCartData() {
-         db.collection("review").addSnapshotListener { (querySnapshot, error) in
-             guard let documents = querySnapshot?.documents else {
-                 print("No documents")
-                 return
-             }
-             self.reviews = documents.map { (queryDocumentSnapshot) -> Review in
-                 let data = queryDocumentSnapshot.data()
-                 let description = data["description"] as? String ?? ""
-                   let rating = data["rating"] as? Int ?? 0
-                     let userID = data["userID"] as? String ?? ""
-                     let gameID = data["gameID"] as? String ?? ""
-                  
-                  return Review(description: description, rating: rating, userID: userID, gameID: gameID, documentID: queryDocumentSnapshot.documentID)
-             }
-         }
-     }
-     
-     //DO cartViewModel.getUserCartData(uid: //put uid in here)
-//     func getGameReviewData(uid: String) {
-//         db.collection("review").whereField("gameID", isEqualTo: uid).getDocuments { (result, error) in
-//             if error == nil {
-//                 for document in result!.documents {
-//                     self.db.collection("review").addSnapshotListener { (querySnapshot, error) in
-//                         guard let documents = querySnapshot?.documents else {
-//                             print("No documents")
-//                             return
-//                         }
-//                         self.reviews = documents.map { (queryDocumentSnapshot) -> Review in
-//                             var description = ""
-//                             var rating = 0
-//                             var userID = ""
-//                             var gameID = ""
-//                             if queryDocumentSnapshot.documentID == document.documentID {
-//                                 let data = queryDocumentSnapshot.data()
-//                                 description = data["description"] as? String ?? ""
-//                                 rating = data["rating"] as? Int ?? 0
-//                                 userID = data["userID"] as? String ?? ""
-//                                 gameID = data["gameID"] as? String ?? ""
-//                             }
-//                             return Review(description: description, rating: rating, userID: userID, gameID: gameID, documentID: document.documentID)
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//     }
-     
-     func addNewReviewData(newReview: Review) {
+class ReviewViewModel: ObservableObject {
+ 
+    // MARK: - PROPERTIES
+    @Published var reviews = [Review]()
+    private var db = Firestore.firestore()
+
+    init() {
+        getAllReviewData()
+    }
+ 
+    // MARK: - FUNCTIONS
+ 
+    // MARK: - GET ALL REVIEWS
+    func getAllReviewData() {
+    db.collection("review").addSnapshotListener { (querySnapshot, error) in
+        guard let documents = querySnapshot?.documents else {
+            print("No documents")
+            return
+        }
+            self.reviews = documents.map { (queryDocumentSnapshot) -> Review in
+                let data = queryDocumentSnapshot.data()
+                let description = data["description"] as? String ?? ""
+                let rating = data["rating"] as? Int ?? 0
+                let userID = data["userID"] as? String ?? ""
+                let gameID = data["gameID"] as? String ?? ""
+
+                return Review(description: description, rating: rating, userID: userID, gameID: gameID, documentID: queryDocumentSnapshot.documentID)
+            }
+        }
+    }
+ 
+     // MARK: - ADD NEW REVIEW
+    func addNewReviewData(newReview: Review) {
         do {
             let _ = try db.collection("review").addDocument(from: newReview)
         }
         catch {
             print(error)
         }
-     }
-     
-//     func updateGamelist(documentID: String, gamelist: [String]) {
-//         db.collection("cart").document(documentID).updateData(["gameID" : gamelist])
-//     }
-//
-//     func addToCart(uid: String, gamelist: [String]) {
-//         db.collection("cart").whereField("uid", isEqualTo: uid).getDocuments { (result, error) in
-//             if error == nil {
-//                 for document in result!.documents {
-//                     self.db.collection("cart").document(document.documentID).updateData(["gameID" : gamelist])
-//                 }
-//             }
-//         }
-//     }
-//     func removeGameData(documentID: String) {
-//         db.collection("game").document(documentID).delete { (error) in
-//             if let error = error {
-//                 print("Error removing document: \(error)")
-//             } else {
-//                 print("Document successfully removed!")
-//             }
-//         }
-//     }
- }
+    }
+}

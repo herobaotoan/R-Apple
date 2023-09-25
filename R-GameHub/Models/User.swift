@@ -14,6 +14,8 @@ import Foundation
 import FirebaseFirestoreSwift
 
 struct User: Codable, Identifiable {
+    
+    // MARK: - PROPERTIES
     var uid: String = UUID().uuidString
     var id: String
     var name: String

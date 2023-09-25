@@ -1,19 +1,31 @@
-//
-//  GameViewModel.swift
-//  R-GameHub
-//
-//  Created by Toan Tran Chi on 19/09/2023.
-//
+/*
+  RMIT University Vietnam
+  Course: COSC2659 iOS Development
+  Semester: 2023B
+  Assessment: Assignment 3
+  Author: R-Apple (Bui Nguyen Ngoc Tuan | Vo Tran Khanh Linh | Tran Chi Toan | Nguyen Thi Ha Giang | Nguyen Tuan Thang)
+  ID: s3877673 | s3878600 | s3891637 | s3914108 | s3877039
+  Created  date: 15/09/2023
+  Last modified: 25/09/2023
+  Acknowledgement: Previous assignments of members | Firebase lectures on Canvas | YouTube | Stackoverflow
+*/
 
 import Foundation
 import Firebase
 
 class GameViewModel: ObservableObject {
+    
+    // MARK: - PROPERTIES
     @Published var games = [Game]()
     private var db = Firestore.firestore()
+    
     init() {
         getAllGameData()
     }
+    
+    // MARK: - FUNCTIONS
+    
+    // MARK: - GET ALL GAMES
     func getAllGameData() {
         db.collection("game").addSnapshotListener { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {
@@ -35,7 +47,8 @@ class GameViewModel: ObservableObject {
             }
         }
     }
-//     func addNewGameData(name: String, platform: [String], genre: [String], developer: String, rating: [Int], imageURL: String, userID: String) {
+    
+    // MARK: - ADD ALL GAME
     func addNewGameData(newGame: Game) {
        do {
            let _ = try db.collection("game").addDocument(from: newGame)
@@ -44,10 +57,13 @@ class GameViewModel: ObservableObject {
            print(error)
        }
     }
+    
+    // MARK: - UPDATE GAME'S RATING LIST
     func updateGameRatinglist(documentID: String, ratingList: [Int]) {
         db.collection("game").document(documentID).updateData(["rating" : ratingList])
     }
-   
+    
+    // MARK: - REMOVE GAME
     func removeGameData(documentID: String) {
         db.collection("game").document(documentID).delete { (error) in
             if let error = error {
