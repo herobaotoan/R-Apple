@@ -24,6 +24,9 @@ class WishlistViewModel: ObservableObject {
         getWishlist()
     }
     
+    // MARK: - FUNCTIONS
+    
+    // MARK: - GET DATA IN WISHLIST
     func getWishlist() {
         db.collection("favorite").addSnapshotListener { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {
@@ -39,6 +42,7 @@ class WishlistViewModel: ObservableObject {
         }
     }
     
+    // MARK: - GET USER WISHLIST
     func getUserWishlist(uid: String) {
         db.collection("favorite").whereField("uid", isEqualTo: uid).getDocuments { (result, error) in
             if error == nil {
@@ -64,6 +68,7 @@ class WishlistViewModel: ObservableObject {
         }
     }
 
+    // MARK: - CREATE NEW WISHLIST
     func newWishlist(newWishlist: Wishlist) {
        do {
            let _ = try db.collection("favorite").addDocument(from: newWishlist)
@@ -73,10 +78,12 @@ class WishlistViewModel: ObservableObject {
        }
     }
 
+    // MARK: - UPDATE WISHLIST
     func updateWishlist(documentID: String, gamelist: [String]) {
         db.collection("favorite").document(documentID).updateData(["gameID" : gamelist])
     }
 
+    // MARK: - ADD NEW FAVORITE INTO WISHLIST
     func newFavorite(uid: String, gamelist: [String]) {
         db.collection("favorite").whereField("uid", isEqualTo: uid).getDocuments { (result, error) in
             if error == nil {

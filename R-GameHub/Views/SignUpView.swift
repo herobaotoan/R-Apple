@@ -14,6 +14,7 @@ import SwiftUI
 import Firebase
 
 struct SignUpView: View {
+    // MARK: - DECLARE VARIABLES
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     var isCompact: Bool {horizontalSizeClass == .compact}
     
@@ -35,6 +36,8 @@ struct SignUpView: View {
     @State var isLogin: Bool = false
     @State var isRegistered: Bool = false
     
+    
+    // MARK: - FUNCTION SIGN UP
     func signUp() {
         Auth.auth().createUser(withEmail: emailAddress, password: password) { authResult, error in
             if error != nil {
@@ -48,7 +51,7 @@ struct SignUpView: View {
         }
     }
     
-    
+    // MARK: - FUNCTION LOG IN
     func login() {
         Auth.auth().signIn(withEmail: emailAddress, password: password) { (result, error) in
             if error != nil {
@@ -67,10 +70,12 @@ struct SignUpView: View {
     
     var body: some View {
         ZStack{
+            // MARK: - NAVIGATE TO LOGIN VIEW
             if isLogin {
                 LogInView()
 //                ProfileView(UID: $UID)
             } else {
+                // MARK: - SIGN UP FORM VIEW
                 ZStack{
                     CustomColor.primaryColor
                         .edgesIgnoringSafeArea(.all)
@@ -214,6 +219,7 @@ struct SignUpView: View {
                         .shadow(color: CustomColor.shadowColor, radius: isCompact ? 10 : 20)
                         Text(errorMessage)
                     }
+                    // MARK: - IF ACCOUNT IS REGISTERED SUCCESSFULLY
                     if isRegistered {
                         ZStack {
                             CustomColor.shadowColor
@@ -250,6 +256,7 @@ struct SignUpView: View {
     }
 }
 
+// MARK: - PREVIEWS
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
         SignUpView(phoneNumber: 0245246565)

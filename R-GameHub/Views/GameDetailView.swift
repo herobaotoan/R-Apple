@@ -30,6 +30,7 @@ struct GameDetailView: View {
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var cartViewModel = CartViewModel()
     @StateObject var reviewViewModel = ReviewViewModel()
+    @StateObject var userViewModel = UserViewModel()
     @State private var isFavorite: Bool = false
     let unselected = Image(systemName: "star")
     let selected = Image(systemName: "star.fill")
@@ -246,30 +247,39 @@ struct GameDetailView: View {
                                 // Review
                                 ForEach(reviewViewModel.reviews, id:\.id) {review in
                                     if review.gameID == game.documentID {
-                                        VStack {
-                                            HStack {
-                                                Image("ava") // User ava
-                                                    .resizable()
-                                                    .aspectRatio(contentMode: .fit)
-                                                    .clipShape(Circle())
-                                                    .frame(width: isCompact ? 50 : 100)
-                                                    .padding(.trailing, isCompact ? 20 : 30)
+                                        ForEach(userViewModel.user, id: \.uid) {user in
+                                            if user.id == review.userID {
                                                 VStack {
-                                                    Text("Monokuma") // User name
-                                                        .fontWeight(.semibold)
-                                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                                    RatingsView(rating: Double(review.rating), color: CustomColor.secondaryColor, width: isCompact ? 125 : 175)
+                                                    HStack {
+                                                        AsyncImage(url: URL(string: user.imageURL)) {image in
+                                                            image
+                                                                .resizable()
+                                                                .aspectRatio(contentMode: .fill)
+                                                        } placeholder: {
+                                                            Image("ava")
+                                                        }
+                                                        .frame(width: isCompact ? 75 : 125, height: isCompact ? 75 : 125)
+                                                        .clipShape(Circle())
+                                                        .clipped()
+                                                        .padding(.trailing, isCompact ? 20 : 30)
+                                                        VStack {
+                                                            Text(user.name) // User name
+                                                                .fontWeight(.semibold)
+                                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                            RatingsView(rating: Double(review.rating), color: CustomColor.secondaryColor, width: isCompact ? 125 : 175)
+                                                                .frame(maxWidth: .infinity, alignment: .leading)
+                                                        }
+                                                    }
+                                                    .padding(.bottom, isCompact ? 10 : 20)
+                                                    Text(review.description)
                                                         .frame(maxWidth: .infinity, alignment: .leading)
                                                 }
+                                                .padding(isCompact ? 20 : 30)
+                                                .background(CustomColor.secondaryColor.opacity(isDark ? 0.3 : 0.2))
+                                                .clipShape(RoundedRectangle(cornerRadius: isCompact ? 10 : 20))
+                                                .padding(.bottom, isCompact ? 10 : 20)
                                             }
-                                            .padding(.bottom, isCompact ? 10 : 20)
-                                            Text(review.description)
-                                                .frame(maxWidth: .infinity, alignment: .leading)
                                         }
-                                        .padding(isCompact ? 20 : 30)
-                                        .background(CustomColor.secondaryColor.opacity(isDark ? 0.3 : 0.2))
-                                        .clipShape(RoundedRectangle(cornerRadius: isCompact ? 10 : 20))
-                                        .padding(.bottom, isCompact ? 10 : 20)
                                     }
                                 }
                             }
