@@ -37,9 +37,11 @@ struct HomeView: View {
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var userViewModel = UserViewModel()
     @StateObject var cartViewModel = CartViewModel()
+    @StateObject var wishlistViewModel = WishlistViewModel()
     @Binding var UID: String
     @State var isProfileView: Bool = false
     @State var cart: [String] = []
+    @State var wishlist: [String] = []
     
     func getCart(item: Cart) {
         if item.gameID.count >= cart.count {
@@ -54,9 +56,9 @@ struct HomeView: View {
             return gameViewModel.games.filter({$0.name.localizedCaseInsensitiveContains(searchText)})
         }
     }
-    func show() {
-        self.userViewModel.getUserData(UID: UID)
-    }
+//    func show() {
+//        self.userViewModel.getUserData(UID: UID)
+//    }
     
     func loadGenre() {
         for game in gameViewModel.games {
@@ -130,7 +132,7 @@ struct HomeView: View {
                                         isProfileView = true
                                     } label: {
                                         ForEach(userViewModel.user, id: \.uid) { user in
-                                            Label(user.name, systemImage: "person.circle")
+                                            Label("\(user.name)", systemImage: "person.circle")
                                         }
                                     }
                                     
@@ -193,7 +195,7 @@ struct HomeView: View {
                                                                     .navigationBarHidden(true)
                                                             }
                                                             label: {
-                                                                GameListCard(game: game, width: isCompact ? 200 : 300, height: isCompact ? 300 : 400)
+                                                                GameListCard(gameList: $wishlist, UID: $UID, isFavorite: false, game: game, width: isCompact ? 200 : 300, height: isCompact ? 300 : 400)
                                                             }
                                                             .background(CustomColor.secondaryColor)
                                                             .clipShape(RoundedRectangle(cornerRadius: isCompact ? 15 : 30))
@@ -205,6 +207,10 @@ struct HomeView: View {
                                         }
                                         .frame(maxWidth: .infinity)
                                     } else if selected == "Wishlist" {
+//                                        VStack {
+//                                            ForEach(gameViewModel.games, id: \.id) {game in
+//                                            }
+//                                        }
                                         Text("Hi")
                                     }
                                 }
@@ -217,7 +223,7 @@ struct HomeView: View {
                                                 .navigationBarHidden(true)
                                         }
                                         label: {
-                                            GameListCard(game: game, width: isCompact ? 175 : 325, height: isCompact ? 250 : 450)
+                                            GameListCard(gameList: $wishlist, UID: $UID, isFavorite: false, game: game, width: isCompact ? 175 : 325, height: isCompact ? 250 : 450)
                                         }
                                         .background(CustomColor.secondaryColor)
                                         .clipShape(RoundedRectangle(cornerRadius: isCompact ? 15 : 30))
@@ -231,151 +237,164 @@ struct HomeView: View {
                                 CustomColor.shadowColor
                                     .edgesIgnoringSafeArea(.all)
                                 VStack {
-                                    Text("Add Game")
-                                        .font(.system(size: isCompact ? 24 : 40))
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(CustomColor.secondaryColor)
-                                    Button {
-                                        shouldShowImagePicker.toggle()
-                                    } label: {
-                                        VStack {
-                                            if let image = self.image {
-                                                Image(uiImage: image)
-                                                    .resizable()
-                                                    .scaledToFill()
-                                                    .frame(width: isCompact ? 100 : 125, height: isCompact ? 100 : 125)
-                                                    .clipShape(RoundedRectangle(cornerRadius: isCompact ? 10 : 20))
-                                            } else {
-                                                Image(systemName: "photo.fill")
-                                                    .font(.system(size: isCompact ? 100 : 125))
+                                    Group {
+                                        Text("Add Game")
+                                            .font(.system(size: isCompact ? 24 : 40))
+                                            .fontWeight(.semibold)
+                                            .foregroundColor(CustomColor.secondaryColor)
+                                        Button {
+                                            shouldShowImagePicker.toggle()
+                                        } label: {
+                                            VStack {
+                                                if let image = self.image {
+                                                    Image(uiImage: image)
+                                                        .resizable()
+                                                        .scaledToFill()
+                                                        .frame(width: isCompact ? 100 : 125, height: isCompact ? 100 : 125)
+                                                        .clipShape(RoundedRectangle(cornerRadius: isCompact ? 10 : 20))
+                                                } else {
+                                                    Image(systemName: "photo.fill")
+                                                        .font(.system(size: isCompact ? 100 : 125))
+                                                        .foregroundColor(CustomColor.secondaryColor)
+                                                }
+                                            }
+                                            .padding(isCompact ? 5 : 10)
+                                        }
+                                        HStack {
+                                            Image(systemName: "dpad.up.filled")
+                                                .font(isCompact ? .title : .largeTitle)
+                                                .padding(isCompact ? 10 : 20)
+                                                .foregroundColor(CustomColor.secondaryColor)
+                                            VStack {
+                                                TextField("Name", text: $name)
+                                                    .font(.system(size: isCompact ? 20 : 34))
+                                                Divider()
+                                                    .background(CustomColor.secondaryColor)
+                                            }
+                                        }
+                                        HStack {
+                                            Image(systemName: "person.fill")
+                                                .font(isCompact ? .title : .largeTitle)
+                                                .padding(isCompact ? 10 : 20)
+                                                .foregroundColor(CustomColor.secondaryColor)
+                                            VStack {
+                                                TextField("Developer", text: $developer)
+                                                    .font(.system(size: isCompact ? 20 : 34))
+                                                Divider()
+                                                    .background(CustomColor.secondaryColor)
+                                            }
+                                        }
+                                        HStack {
+                                            Image(systemName: "pencil.line")
+                                                .font(isCompact ? .title : .largeTitle)
+                                                .padding(isCompact ? 10 : 20)
+                                                .foregroundColor(CustomColor.secondaryColor)
+                                            VStack {
+                                                TextField("Description", text: $description, axis: .vertical)
+                                                    .font(.system(size: isCompact ? 20 : 34))
+                                                Divider()
+                                                    .background(CustomColor.secondaryColor)
+                                            }
+                                        }
+                                        HStack {
+                                            Image(systemName: "dollarsign.circle.fill")
+                                                .font(isCompact ? .title : .largeTitle)
+                                                .padding(isCompact ? 10 : 20)
+                                                .foregroundColor(CustomColor.secondaryColor)
+                                            VStack {
+                                                TextField("Price", text: $priceString).keyboardType(.decimalPad)
+                                                    .font(.system(size: isCompact ? 20 : 34))
+                                                Divider()
+                                                    .background(CustomColor.secondaryColor)
+                                            }
+                                        }
+                                        HStack {
+                                            Image(systemName: "")
+                                                .font(isCompact ? .title : .largeTitle)
+                                                .padding(isCompact ? 10 : 20)
+                                                .foregroundColor(CustomColor.secondaryColor)
+                                            VStack {
+                                                TextField("Genre", text: $genreText, axis: .vertical)
+                                                    .font(.system(size: isCompact ? 20 : 34))
+                                                Divider()
+                                                    .background(CustomColor.secondaryColor)
+                                            }
+                                            Button {
+                                                genresToAdd.append(genreText)
+                                                genreText = ""
+                                                
+                                            } label : {
+                                                Image(systemName: "plus.circle.fill")
+                                                    .font(isCompact ? .title : .largeTitle)
+                                                    .padding(isCompact ? 10 : 20)
                                                     .foregroundColor(CustomColor.secondaryColor)
                                             }
                                         }
-                                        .padding(isCompact ? 5 : 10)
-                                    }
-                                    HStack {
-                                        Image(systemName: "dpad.up.filled")
-                                            .font(isCompact ? .title : .largeTitle)
-                                            .padding(isCompact ? 10 : 20)
-                                            .foregroundColor(CustomColor.secondaryColor)
-                                        VStack {
-                                            TextField("Name", text: $name)
-                                                .font(.system(size: isCompact ? 20 : 34))
-                                            Divider()
-                                                .background(CustomColor.secondaryColor)
-                                        }
-                                    }
-                                    HStack {
-                                        Image(systemName: "person.fill")
-                                            .font(isCompact ? .title : .largeTitle)
-                                            .padding(isCompact ? 10 : 20)
-                                            .foregroundColor(CustomColor.secondaryColor)
-                                        VStack {
-                                            TextField("Developer", text: $developer)
-                                                .font(.system(size: isCompact ? 20 : 34))
-                                            Divider()
-                                                .background(CustomColor.secondaryColor)
-                                        }
-                                    }
-                                    HStack {
-                                        Image(systemName: "pencil.line")
-                                            .font(isCompact ? .title : .largeTitle)
-                                            .padding(isCompact ? 10 : 20)
-                                            .foregroundColor(CustomColor.secondaryColor)
-                                        VStack {
-                                            TextField("Description", text: $description, axis: .vertical)
-                                                .font(.system(size: isCompact ? 20 : 34))
-                                            Divider()
-                                                .background(CustomColor.secondaryColor)
-                                        }
-                                    }
-                                    HStack {
-                                        Image(systemName: "dollarsign.circle.fill")
-                                            .font(isCompact ? .title : .largeTitle)
-                                            .padding(isCompact ? 10 : 20)
-                                            .foregroundColor(CustomColor.secondaryColor)
-                                        VStack {
-                                            TextField("Price", text: $priceString).keyboardType(.decimalPad)
-                                                .font(.system(size: isCompact ? 20 : 34))
-                                            Divider()
-                                                .background(CustomColor.secondaryColor)
-                                        }
-                                    }
-                                    HStack {
-                                        Image(systemName: "")
-                                            .font(isCompact ? .title : .largeTitle)
-                                            .padding(isCompact ? 10 : 20)
-                                            .foregroundColor(CustomColor.secondaryColor)
-                                        VStack {
-                                            TextField("Genre", text: $genreText, axis: .vertical)
-                                                .font(.system(size: isCompact ? 20 : 34))
-                                            Divider()
-                                                .background(CustomColor.secondaryColor)
-                                        }
-                                        Button {
-                                            genresToAdd.append(genreText)
-                                            genreText = ""
-                                            
-                                        } label : {
-                                            Image(systemName: "plus.circle.fill")
-                                                .font(isCompact ? .title : .largeTitle)
-                                                .padding(isCompact ? 10 : 20)
-                                                .foregroundColor(CustomColor.secondaryColor)
-                                        }
-                                    }
-                                    Text("Genre: \(genresToAdd.joined(separator: ", "))")
-                                        .padding(.leading, 10)
-                                        .font(.system(size: isCompact ? 20 : 34))
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    HStack {
-                                        Image(systemName: "rectangle.on.rectangle.circle.fill")
-                                            .font(isCompact ? .title : .largeTitle)
-                                            .padding(isCompact ? 10 : 20)
-                                            .foregroundColor(CustomColor.secondaryColor)
-                                        VStack {
-                                            TextField("Platform", text: $platformText)
-                                                .font(.system(size: isCompact ? 20 : 34))
-                                            Divider()
-                                                .background(CustomColor.secondaryColor)
-                                        }
-                                        Button {
-                                            platforms.append(platformText)
-                                            platformText = ""
-                                            
-                                        } label : {
-                                            Image(systemName: "plus.circle.fill")
-                                                .font(isCompact ? .title : .largeTitle)
-                                                .padding(isCompact ? 10 : 20)
-                                                .foregroundColor(CustomColor.secondaryColor)
-                                        }
-                                    }
-                                    Text("Platform: \(platforms.joined(separator: ", "))")
-                                        .padding(.leading, 10)
-                                        .font(.system(size: isCompact ? 20 : 34))
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                    Text(loginStatusMessage)
-                                        .multilineTextAlignment(.center)
-                                    Button {
-                                        upload()
-                                        if loginStatusMessage != "" {
-                                            isAddingGame = false
-                                        }
-                                    } label: {
-                                        Text("Add")
-                                            .fontWeight(.medium)
+                                        Text("Genre: \(genresToAdd.joined(separator: ", "))")
+                                            .padding(.leading, 10)
                                             .font(.system(size: isCompact ? 20 : 34))
-                                            .frame(width: isCompact ? 80 : 120, height: isCompact ? 50 : 80, alignment: .center)
-                                            .background(CustomColor.secondaryColor)
-                                            .foregroundColor(CustomColor.lightDarkColor)
-                                            .cornerRadius(isCompact ? 10 : 20)
-                                            .shadow(color: .black, radius: isCompact ? 2 : 4)
-                                            .padding(isCompact ? 15 : 25)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        HStack {
+                                            Image(systemName: "rectangle.on.rectangle.circle.fill")
+                                                .font(isCompact ? .title : .largeTitle)
+                                                .padding(isCompact ? 10 : 20)
+                                                .foregroundColor(CustomColor.secondaryColor)
+                                            VStack {
+                                                TextField("Platform", text: $platformText)
+                                                    .font(.system(size: isCompact ? 20 : 34))
+                                                Divider()
+                                                    .background(CustomColor.secondaryColor)
+                                            }
+                                            Button {
+                                                platforms.append(platformText)
+                                                platformText = ""
+                                                
+                                            } label : {
+                                                Image(systemName: "plus.circle.fill")
+                                                    .font(isCompact ? .title : .largeTitle)
+                                                    .padding(isCompact ? 10 : 20)
+                                                    .foregroundColor(CustomColor.secondaryColor)
+                                            }
+                                        }
+                                        Text("Platform: \(platforms.joined(separator: ", "))")
+                                            .padding(.leading, 10)
+                                            .font(.system(size: isCompact ? 20 : 34))
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        Text(loginStatusMessage)
+                                            .multilineTextAlignment(.center)
+                                        Button {
+                                            upload()
+                                            if loginStatusMessage != "" {
+                                                isAddingGame = false
+                                            }
+                                        } label: {
+                                            Text("Add")
+                                                .fontWeight(.medium)
+                                                .font(.system(size: isCompact ? 20 : 34))
+                                                .frame(width: isCompact ? 80 : 120, height: isCompact ? 50 : 80, alignment: .center)
+                                                .background(CustomColor.secondaryColor)
+                                                .foregroundColor(CustomColor.lightDarkColor)
+                                                .cornerRadius(isCompact ? 10 : 20)
+                                                .shadow(color: .black, radius: isCompact ? 2 : 4)
+                                                .padding(isCompact ? 15 : 25)
+                                        }
                                     }
                                 }
                                 .padding(isCompact ? 20 : 30)
                                 .frame(width: isCompact ? 350 : 600, height: isCompact  ? 725 : 1050)
                                 .background(CustomColor.lightDarkColor)
                                 .cornerRadius(isCompact ? 15 : 30)
+                                .overlay (
+                                    // MARK: - DISMISS ADD GAME POPUP
+                                    Button(action: {
+                                        isAddingGame = false
+                                    }) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .font(isCompact ? .title : .largeTitle)
+                                    }
+                                        .foregroundColor(CustomColor.secondaryColor)
+                                        .padding([.top, .leading], isCompact ? 20 : 30), alignment: .topLeading
+                                )
                             }
                         }
                     }
@@ -385,7 +404,7 @@ struct HomeView: View {
             }
         }
         .onAppear {
-            show()
+//            show()
             cartViewModel.getUserCartData(uid: UID)
         }
         .fullScreenCover(isPresented: $shouldShowImagePicker, onDismiss: nil) {

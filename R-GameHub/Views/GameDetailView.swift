@@ -73,11 +73,11 @@ struct GameDetailView: View {
                     AsyncImage(url: URL(string: game.imageURL)) {image in
                         image
                             .resizable()
-                            .scaledToFill()
+                            .aspectRatio(contentMode: .fill)
                     } placeholder: {
-                        CustomColor.secondaryColor.opacity(0.3)
+                        Image("game-product")
                     }
-                    .frame(maxWidth: UIScreen.main.bounds.width, maxHeight: isCompact ? 300 : 450, alignment: .top)
+                    .frame(width: UIScreen.main.bounds.width, height: isCompact ? 300 : 450, alignment: .top)
                     .clipped()
                     .overlay(
                         RatingsView(rating: totalRating, color: CustomColor.starColor, width: isCompact ? 200 : 300)
@@ -329,6 +329,17 @@ struct GameDetailView: View {
                             .frame(width: isCompact ? 350 : 600, height: isCompact  ? 300 : 550)
                             .background(CustomColor.lightDarkColor)
                             .cornerRadius(isCompact ? 15 : 30)
+                            .overlay (
+                                // MARK: - DISMISS ADD REVIEW POPUP
+                                Button(action: {
+                                    isAddingReview = false
+                                }) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .font(isCompact ? .title : .largeTitle)
+                                }
+                                    .foregroundColor(CustomColor.secondaryColor)
+                                    .padding([.top, .leading], isCompact ? 20 : 30), alignment: .topLeading
+                            )
                         }
                         .zIndex(4)
                     }

@@ -24,6 +24,7 @@ struct SignUpView: View {
     
     @StateObject private var userViewModel = UserViewModel()
     @StateObject private var cartViewModel = CartViewModel()
+    @StateObject private var wishlistViewModel = WishlistViewModel()
     
     @State var isHiddenText: Bool = true
     @State var isLogin: Bool = false
@@ -54,6 +55,7 @@ struct SignUpView: View {
                 //Add to collection
                 userViewModel.addNewUserData(id: UID, name: name, email: emailAddress, phone: String(phoneNumber), imageURL: "")
                 cartViewModel.addNewCartData(newCart: Cart(uid: UID, gameID: [""]))
+                wishlistViewModel.newWishlist(newWishlist: Wishlist(uid: UID, gameID: [""]))
             }
         }
     }
