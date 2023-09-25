@@ -172,15 +172,15 @@
 			isa = PBXGroup;
 			children = (
 				EAE0E2502AB97DF700371C7B /* User.swift */,
-				EAE0E2522AB97E4D00371C7B /* UserViewModel.swift */,
 				EAE0E2562AB9970100371C7B /* Game.swift */,
-				EAE0E25A2AB999EE00371C7B /* GameViewModel.swift */,
 				EAE0E2582AB9975500371C7B /* Review.swift */,
-				28F04D0F2AC04F55007D9CB4 /* ReviewViewModel.swift */,
 				EAC946BA2ABAD88E00DE2BE3 /* Cart.swift */,
+				9C8EBAB32AC12AFC00C4A403 /* Wishlist.swift */,
+				EAE0E2522AB97E4D00371C7B /* UserViewModel.swift */,
+				EAE0E25A2AB999EE00371C7B /* GameViewModel.swift */,
+				28F04D0F2AC04F55007D9CB4 /* ReviewViewModel.swift */,
 				EAC946BC2ABAD90200DE2BE3 /* CartViewModel.swift */,
 				9C8EBAB12AC12AC200C4A403 /* WishlistViewModel.swift */,
-				9C8EBAB32AC12AFC00C4A403 /* Wishlist.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";

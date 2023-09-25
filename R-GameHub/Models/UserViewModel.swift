@@ -1,9 +1,14 @@
-//
-//  UserViewModel.swift
-//  Cafe
-//
-//  Created by Toan Tran Chi on 13/09/2023.
-//
+/*
+  RMIT University Vietnam
+  Course: COSC2659 iOS Development
+  Semester: 2023B
+  Assessment: Assignment 3
+  Author: R-Apple (Bui Nguyen Ngoc Tuan | Vo Tran Khanh Linh | Tran Chi Toan | Nguyen Thi Ha Giang | Nguyen Tuan Thang)
+  ID: s3877673 | s3878600 | s3891637 | s3914108 | s3877039
+  Created  date: 15/09/2023
+  Last modified: 25/09/2023
+  Acknowledgement: Previous assignments of members | Firebase lectures on Canvas | YouTube | Stackoverflow
+*/
 
 import Foundation
 import Firebase
@@ -11,42 +16,19 @@ import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 class UserViewModel: ObservableObject {
-//    @Published var userSession: FirebaseAuth.User?
+    
+    // MARK: - PROPERTIES
     @Published var currentUser: User?
     @Published var user = [User]()
-    
     private var db = Firestore.firestore()
-//
     
     init() {
         getUserData()
     }
     
-//    init(){
-//        self.userSession = Auth.auth().currentUser
-//        
-//        Task {
-//            await fetchUserData()
-//        }
-//    }
+    // MARK: - FUNCTIONS
     
-//    func fetchUserData() async {
-//        guard let uid = Auth.auth().currentUser?.uid else { return }
-//        
-//        guard let snapshot = try? await db.collection("users").document(uid).getDocument() else { return }
-//        self.currentUser = try? snapshot.data(as: User.self)
-//    }
-//    
-//    func signIn(withEmail email: String, password: String ) async throws {
-//        do {
-//            let result = try await Auth.auth().signIn(withEmail: email, password: password)
-//            self.userSession = result.user
-//            await fetchUserData()
-//        } catch {
-//            
-//        }
-//    }
-    
+    // MARK: - GET ALL USERS
     func getUserData() {
         db.collection("user").addSnapshotListener { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {
@@ -67,56 +49,23 @@ class UserViewModel: ObservableObject {
         }
     }
     
-//    func getUserData(UID: String) {
-//        db.collection("user").addSnapshotListener { (querySnapshot, error) in
-//            guard let documents = querySnapshot?.documents else {
-//                print("No documents")
-//                return
-//            }
-//            self.user = documents.map { (queryDocumentSnapshot) -> User in
-////                if queryDocumentSnapshot.documentID == UID {
-//                var name = ""
-//                var email = ""
-//                var phone = ""
-//                var imageURL = ""
-//                var id = ""
-//                let data = queryDocumentSnapshot.data()
-//                if data["id"] as? String ?? "" == UID
-//                {
-//                    id = data["id"] as? String ?? ""
-//                    name = data["name"] as? String ?? ""
-//                    email = data["email"] as? String ?? ""
-//                    phone = data["phone"] as? String ?? ""
-//                    imageURL = data["imageURL"] as? String ?? ""
-//                }
-//                return User(id: id, name: name, email: email, phone: phone, imageURL: imageURL, documentID: queryDocumentSnapshot.documentID)
-//            }
-//        }
-//    }
+    // MARK: - UPDATE USER NAME
     func updateUserName(UID: String, name: String) {
         db.collection("user").document(UID).updateData(["name" : name])
     }
     
+    // MARK: - UPDATE USER IMAGE
     func updateUserImage(UID: String, imageURL: String) {
         db.collection("user").document(UID).updateData(["imageURL": imageURL])
     }
     
+    // MARK: - ADD NEW USER
     func addNewUserData(id: String, name: String, email: String, phone: String, money: Double, imageURL: String) {
         db.collection("user").addDocument(data: ["id": id, "name": name, "email": email, "phone": phone, "money": money, "imageURL": imageURL])
     }
     
+    // MARK: - UPDATE USER MONEY
     func updateMoney(UID: String, money: Double) {
         db.collection("user").document(UID).updateData(["money": money])
     }
-    
-    func removeOrderData(documentID: String) {
-        db.collection("order").document(documentID).delete { (error) in
-            if let error = error {
-                print("Error removing document: \(error)")
-            } else {
-                print("Document successfully removed!")
-            }
-        }
-    }
-
 }
