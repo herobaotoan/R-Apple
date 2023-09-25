@@ -329,6 +329,17 @@ struct GameDetailView: View {
                             .frame(width: isCompact ? 350 : 600, height: isCompact  ? 300 : 550)
                             .background(CustomColor.lightDarkColor)
                             .cornerRadius(isCompact ? 15 : 30)
+                            .overlay (
+                                // MARK: - DISMISS ADD REVIEW POPUP
+                                Button(action: {
+                                    isAddingReview = false
+                                }) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .font(isCompact ? .title : .largeTitle)
+                                }
+                                    .foregroundColor(CustomColor.secondaryColor)
+                                    .padding([.top, .leading], isCompact ? 20 : 30), alignment: .topLeading
+                            )
                         }
                         .zIndex(4)
                     }
