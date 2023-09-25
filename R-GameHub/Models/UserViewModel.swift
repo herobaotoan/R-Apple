@@ -16,7 +16,12 @@ class UserViewModel: ObservableObject {
     @Published var user = [User]()
     
     private var db = Firestore.firestore()
-//    
+//
+    
+    init() {
+        getUserData()
+    }
+    
 //    init(){
 //        self.userSession = Auth.auth().currentUser
 //        
@@ -42,32 +47,52 @@ class UserViewModel: ObservableObject {
 //        }
 //    }
     
-    func getUserData(UID: String) {
+    func getUserData() {
         db.collection("user").addSnapshotListener { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {
                 print("No documents")
                 return
             }
             self.user = documents.map { (queryDocumentSnapshot) -> User in
-//                if queryDocumentSnapshot.documentID == UID {
-                var name = ""
-                var email = ""
-                var phone = ""
-                var imageURL = ""
-                var id = ""
                 let data = queryDocumentSnapshot.data()
-                if data["id"] as? String ?? "" == UID
-                {
-                    id = data["id"] as? String ?? ""
-                    name = data["name"] as? String ?? ""
-                    email = data["email"] as? String ?? ""
-                    phone = data["phone"] as? String ?? ""
-                    imageURL = data["imageURL"] as? String ?? ""
-                }
-                return User(id: id, name: name, email: email, phone: phone, imageURL: imageURL, documentID: queryDocumentSnapshot.documentID)
+                let name = data["name"] as? String ?? ""
+                let rating = data["rating"] as? Int ?? 0
+                let email = data["email"] as? String ?? ""
+                let phone = data["phone"] as? String ?? ""
+                let imageURL = data["imageURL"] as? String ?? ""
+                let id = data["id"] as? String ?? ""
+                 
+                 return User(id: id, name: name, email: email, phone: phone, imageURL: imageURL, documentID: queryDocumentSnapshot.documentID)
             }
         }
     }
+    
+//    func getUserData(UID: String) {
+//        db.collection("user").addSnapshotListener { (querySnapshot, error) in
+//            guard let documents = querySnapshot?.documents else {
+//                print("No documents")
+//                return
+//            }
+//            self.user = documents.map { (queryDocumentSnapshot) -> User in
+////                if queryDocumentSnapshot.documentID == UID {
+//                var name = ""
+//                var email = ""
+//                var phone = ""
+//                var imageURL = ""
+//                var id = ""
+//                let data = queryDocumentSnapshot.data()
+//                if data["id"] as? String ?? "" == UID
+//                {
+//                    id = data["id"] as? String ?? ""
+//                    name = data["name"] as? String ?? ""
+//                    email = data["email"] as? String ?? ""
+//                    phone = data["phone"] as? String ?? ""
+//                    imageURL = data["imageURL"] as? String ?? ""
+//                }
+//                return User(id: id, name: name, email: email, phone: phone, imageURL: imageURL, documentID: queryDocumentSnapshot.documentID)
+//            }
+//        }
+//    }
     func updateUserName(UID: String, name: String) {
         db.collection("user").document(UID).updateData(["name" : name])
     }
