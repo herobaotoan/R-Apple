@@ -383,6 +383,17 @@ struct HomeView: View {
                                 .frame(width: isCompact ? 350 : 600, height: isCompact  ? 725 : 1050)
                                 .background(CustomColor.lightDarkColor)
                                 .cornerRadius(isCompact ? 15 : 30)
+                                .overlay (
+                                    // MARK: - DISMISS ADD GAME POPUP
+                                    Button(action: {
+                                        isAddingGame = false
+                                    }) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .font(isCompact ? .title : .largeTitle)
+                                    }
+                                        .foregroundColor(CustomColor.secondaryColor)
+                                        .padding([.top, .leading], isCompact ? 20 : 30), alignment: .topLeading
+                                )
                             }
                         }
                     }
