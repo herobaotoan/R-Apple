@@ -53,7 +53,7 @@ struct SignUpView: View {
                 UID = Auth.auth().currentUser!.uid
                 
                 //Add to collection
-                userViewModel.addNewUserData(id: UID, name: name, email: emailAddress, phone: String(phoneNumber), imageURL: "")
+                userViewModel.addNewUserData(id: UID, name: name, email: emailAddress, phone: String(phoneNumber), money: 200.0, imageURL: "")
                 cartViewModel.addNewCartData(newCart: Cart(uid: UID, gameID: [""]))
                 wishlistViewModel.newWishlist(newWishlist: Wishlist(uid: UID, gameID: [""]))
             }

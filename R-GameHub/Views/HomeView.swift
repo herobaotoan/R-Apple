@@ -43,6 +43,23 @@ struct HomeView: View {
     @State var cart: [String] = []
     @State var wishlist: [String] = []
     
+    func getFavoriteList() -> [Game] {
+        var ownWishlist: [Game] = []
+            for wishlist in wishlistViewModel.wishlists {
+                if wishlist.uid == UID {
+                    for favorite in wishlist.gameID{
+                        for game in gameViewModel.games {
+                            if game.documentID ?? "" == favorite {
+                                ownWishlist.append(game)
+                            }
+                        }
+                    }
+                }
+            }
+            return ownWishlist
+    }
+    
+    
     func getCart(item: Cart) {
         if item.gameID.count >= cart.count {
             cart = item.gameID
@@ -207,11 +224,24 @@ struct HomeView: View {
                                         }
                                         .frame(maxWidth: .infinity)
                                     } else if selected == "Wishlist" {
-//                                        VStack {
-//                                            ForEach(gameViewModel.games, id: \.id) {game in
-//                                            }
-//                                        }
-                                        Text("Hi")
+//                                        getFavoriteList()
+                                        LazyVGrid(columns: [GridItem(.flexible(), spacing: isCompact ? 15 : 30),
+                                                            GridItem(.flexible(), spacing: isCompact ? 15 : 30)]) {
+                                            
+                                            ForEach(getFavoriteList(), id: \.id) { game in
+                                                NavigationLink {
+                                                    GameDetailView(game: .constant(game), UID: $UID, gameList: $wishlist)
+                                                        .navigationBarHidden(true)
+                                                }
+                                                label: {
+                                                GameListCard(gameList: $wishlist, UID: $UID, isFavorite: false, game: game, width: isCompact ? 175 : 325, height: isCompact ? 250 : 450)
+                                                }
+                                                .background(CustomColor.secondaryColor)
+                                                .clipShape(RoundedRectangle(cornerRadius: isCompact ? 15 : 30))
+                                            }
+                                            
+                                        }
+                                        Spacer()
                                     }
                                 }
                             } else {
@@ -360,6 +390,9 @@ struct HomeView: View {
                                             .padding(.leading, 10)
                                             .font(.system(size: isCompact ? 20 : 34))
                                             .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                    
+                                    Group {
                                         Text(loginStatusMessage)
                                             .multilineTextAlignment(.center)
                                         Button {
