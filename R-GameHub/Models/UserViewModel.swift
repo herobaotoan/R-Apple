@@ -56,7 +56,13 @@ class UserViewModel: ObservableObject {
     
     // MARK: - UPDATE USER IMAGE
     func updateUserImage(UID: String, imageURL: String) {
-        db.collection("user").document(UID).updateData(["imageURL": imageURL])
+        db.collection("user").whereField("id", isEqualTo: UID).getDocuments { (result, error) in
+            if error == nil {
+                for document in result!.documents {
+                    self.db.collection("user").document(document.documentID).updateData(["imageURL": imageURL])
+                }
+            }
+        }
     }
     
     // MARK: - ADD NEW USER
