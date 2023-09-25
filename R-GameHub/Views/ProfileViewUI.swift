@@ -20,9 +20,9 @@ struct ProfileViewUI: View {
     @State var isHomeView: Bool = false
     @State var loggingOut: Bool = false
     
-    func show() {
-        self.userViewModel.getUserData(UID: UID)
-    }
+//    func show() {
+//        self.userViewModel.getUserData(UID: UID)
+//    }
     var body: some View {
         if isHomeView {
             HomeView(UID: $UID)
@@ -30,87 +30,96 @@ struct ProfileViewUI: View {
             LogInView()
         } else {
             ZStack {
-                let _ =  DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                    show()
-                }
+//                let _ =  DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+//                    show()
+//                }
                 CustomColor.primaryColor
                     .edgesIgnoringSafeArea(.all)
-                VStack {
-                    HStack {
-                        Button {
-                            isHomeView = true
-                        } label: {
-                            Image(systemName: "house.fill")
-                                .font(isCompact ? .title : .largeTitle)
-                                .foregroundColor(CustomColor.secondaryColor)
-                        }
-                        
-                        Spacer()
-                        
-                        // setting for the user
-                        Menu {
-                            Button {
-                                
-                            } label: {
-                                Label("Edit profile", systemImage: "person.fill")
-                            }
-
-                            Button(role: .destructive) {
-                                loggingOut = true
-                            } label: {
-                                Label("Log out", systemImage: "minus.circle")
-                            }
-                        } label: {
-                            Image(systemName: "gearshape.fill")
-                                .font(isCompact ? .title : .largeTitle)
-                                .foregroundColor(CustomColor.secondaryColor)
-                        }
-                    }
-                    .padding()
-                    
-                    ScrollView {
-                        Image("ava")    // adding data from databaase
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .clipShape(Circle())
-                            .frame(width: isCompact ? 150 : 200)
-                        
-                        Text("User Name")   // adding data from databaase
-                            .font(.system(size: isCompact ? 26 : 46))
-                            .fontWeight(.semibold)
-                            .foregroundColor(CustomColor.secondaryColor)
+                ForEach(userViewModel.user, id: \.uid) {user in
+                    if user.id == UID {
                         VStack {
                             HStack {
-                                Image(systemName: "dollarsign.circle.fill")
-                                    .foregroundColor(CustomColor.starColor)
-                                    .font(.title)
-                                Text("Total coins")
-                                    .font(.system(size: isCompact ? 22 : 36))
-                                    .foregroundColor(CustomColor.secondaryColor)
+                                Button {
+                                    isHomeView = true
+                                } label: {
+                                    Image(systemName: "house.fill")
+                                        .font(isCompact ? .title : .largeTitle)
+                                        .foregroundColor(CustomColor.secondaryColor)
+                                }
+                                
+                                Spacer()
+                                
+                                // setting for the user
+                                Menu {
+                                    Button {
+                                        
+                                    } label: {
+                                        Label("Edit profile", systemImage: "person.fill")
+                                    }
+                                    
+                                    Button(role: .destructive) {
+                                        loggingOut = true
+                                    } label: {
+                                        Label("Log out", systemImage: "minus.circle")
+                                    }
+                                } label: {
+                                    Image(systemName: "gearshape.fill")
+                                        .font(isCompact ? .title : .largeTitle)
+                                        .foregroundColor(CustomColor.secondaryColor)
+                                }
                             }
-                            Text("$9.99")    // Adding from database
-                                .font(.system(size: isCompact ? 24 : 40))
-                                .fontWeight(.medium)
-                                .foregroundColor(CustomColor.darkLightColor)
-                        }
-                        .padding(.bottom, isCompact ? 15 : 30)
-                        
-                        HStack {
-                            Text("Games Bought")
-                                .fontWeight(.medium)
-                                .font(.system(size: isCompact ? 26 : 46))
-                                .foregroundColor(CustomColor.secondaryColor)
-                            Spacer()
-                        }
-                        
-                        Divider()
-                            .background(CustomColor.secondaryColor)
-                        
-                        VStack{
+                            .padding()
                             
+                            ScrollView {
+                                AsyncImage(url: URL(string: user.imageURL)) {image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                } placeholder: {
+                                    Image("ava")
+                                }
+                                .frame(width: isCompact ? 150 : 200,  height: isCompact ? 150 : 200)
+                                .clipShape(Circle())
+                                .clipped()
+                                
+                                Text(user.name)   // adding data from databaase
+                                    .font(.system(size: isCompact ? 26 : 46))
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(CustomColor.secondaryColor)
+                                VStack {
+                                    HStack {
+                                        Image(systemName: "dollarsign.circle.fill")
+                                            .foregroundColor(CustomColor.starColor)
+                                            .font(.title)
+                                        Text("Total coins")
+                                            .font(.system(size: isCompact ? 22 : 36))
+                                            .foregroundColor(CustomColor.secondaryColor)
+                                    }
+                                    Text("$9.99")    // Adding from database
+                                        .font(.system(size: isCompact ? 24 : 40))
+                                        .fontWeight(.medium)
+                                        .foregroundColor(CustomColor.darkLightColor)
+                                }
+                                .padding(.bottom, isCompact ? 15 : 30)
+                                
+                                HStack {
+                                    Text("Games Bought")
+                                        .fontWeight(.medium)
+                                        .font(.system(size: isCompact ? 26 : 46))
+                                        .foregroundColor(CustomColor.secondaryColor)
+                                    Spacer()
+                                }
+                                
+                                Divider()
+                                    .background(CustomColor.secondaryColor)
+                                
+                                VStack {
+                                    
+                                }
+                            }
+                            .padding(isCompact ? 20 : 30)
                         }
                     }
-                    .padding(isCompact ? 20 : 30)
                 }
             }
             .environment(\.colorScheme, isDark ? .dark : .light)

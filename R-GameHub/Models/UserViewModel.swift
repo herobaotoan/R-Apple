@@ -16,7 +16,12 @@ class UserViewModel: ObservableObject {
     @Published var user = [User]()
     
     private var db = Firestore.firestore()
-//    
+//
+    
+    init() {
+        getUserData()
+    }
+    
 //    init(){
 //        self.userSession = Auth.auth().currentUser
 //        
@@ -42,41 +47,66 @@ class UserViewModel: ObservableObject {
 //        }
 //    }
     
-    func getUserData(UID: String) {
+    func getUserData() {
         db.collection("user").addSnapshotListener { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {
                 print("No documents")
                 return
             }
             self.user = documents.map { (queryDocumentSnapshot) -> User in
-//                if queryDocumentSnapshot.documentID == UID {
-                var name = ""
-                var email = ""
-                var phone = ""
-                var imageURL = ""
-                var id = ""
                 let data = queryDocumentSnapshot.data()
-                if data["id"] as? String ?? "" == UID
-                {
-                    id = data["id"] as? String ?? ""
-                    name = data["name"] as? String ?? ""
-                    email = data["email"] as? String ?? ""
-                    phone = data["phone"] as? String ?? ""
-                    imageURL = data["imageURL"] as? String ?? ""
-                }
-                return User(id: id, name: name, email: email, phone: phone, imageURL: imageURL, documentID: queryDocumentSnapshot.documentID)
+                let name = data["name"] as? String ?? ""
+                let email = data["email"] as? String ?? ""
+                let phone = data["phone"] as? String ?? ""
+                let money = data["money"] as? Double ?? 0
+                let imageURL = data["imageURL"] as? String ?? ""
+                let id = data["id"] as? String ?? ""
+                 
+                return User(id: id, name: name, email: email, phone: phone, money: money, imageURL: imageURL, documentID: queryDocumentSnapshot.documentID)
             }
         }
     }
+    
+//    func getUserData(UID: String) {
+//        db.collection("user").addSnapshotListener { (querySnapshot, error) in
+//            guard let documents = querySnapshot?.documents else {
+//                print("No documents")
+//                return
+//            }
+//            self.user = documents.map { (queryDocumentSnapshot) -> User in
+////                if queryDocumentSnapshot.documentID == UID {
+//                var name = ""
+//                var email = ""
+//                var phone = ""
+//                var imageURL = ""
+//                var id = ""
+//                let data = queryDocumentSnapshot.data()
+//                if data["id"] as? String ?? "" == UID
+//                {
+//                    id = data["id"] as? String ?? ""
+//                    name = data["name"] as? String ?? ""
+//                    email = data["email"] as? String ?? ""
+//                    phone = data["phone"] as? String ?? ""
+//                    imageURL = data["imageURL"] as? String ?? ""
+//                }
+//                return User(id: id, name: name, email: email, phone: phone, imageURL: imageURL, documentID: queryDocumentSnapshot.documentID)
+//            }
+//        }
+//    }
     func updateUserName(UID: String, name: String) {
         db.collection("user").document(UID).updateData(["name" : name])
     }
-    func updateUserEmail(UID: String, email: String) {
-        db.collection("user").document(UID).updateData(["email" : email])
+    
+    func updateUserImage(UID: String, imageURL: String) {
+        db.collection("user").document(UID).updateData(["imageURL": imageURL])
     }
     
-    func addNewUserData(id: String, name: String, email: String, phone: String, imageURL: String) {
-        db.collection("user").addDocument(data: ["id": id, "name": name, "email": email, "phone": phone, "imageURL": imageURL])
+    func addNewUserData(id: String, name: String, email: String, phone: String, money: Double, imageURL: String) {
+        db.collection("user").addDocument(data: ["id": id, "name": name, "email": email, "phone": phone, "money": money, "imageURL": imageURL])
+    }
+    
+    func updateMoney(UID: String, money: Double) {
+        db.collection("user").document(UID).updateData(["money": money])
     }
     
     func removeOrderData(documentID: String) {
