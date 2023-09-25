@@ -56,7 +56,6 @@ class UserViewModel: ObservableObject {
             self.user = documents.map { (queryDocumentSnapshot) -> User in
                 let data = queryDocumentSnapshot.data()
                 let name = data["name"] as? String ?? ""
-                let rating = data["rating"] as? Int ?? 0
                 let email = data["email"] as? String ?? ""
                 let phone = data["phone"] as? String ?? ""
                 let imageURL = data["imageURL"] as? String ?? ""

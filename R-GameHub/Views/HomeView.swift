@@ -56,9 +56,9 @@ struct HomeView: View {
             return gameViewModel.games.filter({$0.name.localizedCaseInsensitiveContains(searchText)})
         }
     }
-    func show() {
-        self.userViewModel.getUserData(UID: UID)
-    }
+//    func show() {
+//        self.userViewModel.getUserData(UID: UID)
+//    }
     
     func loadGenre() {
         for game in gameViewModel.games {
@@ -194,7 +194,7 @@ struct HomeView: View {
                                                                     .navigationBarHidden(true)
                                                             }
                                                             label: {
-                                                                GameListCard(game: game, width: isCompact ? 200 : 300, height: isCompact ? 300 : 400)
+                                                                GameListCard(gameList: $wishlist, UID: $UID, isFavorite: false, game: game, width: isCompact ? 200 : 300, height: isCompact ? 300 : 400)
                                                             }
                                                             .background(CustomColor.secondaryColor)
                                                             .clipShape(RoundedRectangle(cornerRadius: isCompact ? 15 : 30))
@@ -222,7 +222,7 @@ struct HomeView: View {
                                                 .navigationBarHidden(true)
                                         }
                                         label: {
-                                            GameListCard(game: game, width: isCompact ? 175 : 325, height: isCompact ? 250 : 450)
+                                            GameListCard(gameList: $wishlist, UID: $UID, isFavorite: false, game: game, width: isCompact ? 175 : 325, height: isCompact ? 250 : 450)
                                         }
                                         .background(CustomColor.secondaryColor)
                                         .clipShape(RoundedRectangle(cornerRadius: isCompact ? 15 : 30))
@@ -403,7 +403,7 @@ struct HomeView: View {
             }
         }
         .onAppear {
-            show()
+//            show()
             cartViewModel.getUserCartData(uid: UID)
         }
         .fullScreenCover(isPresented: $shouldShowImagePicker, onDismiss: nil) {
