@@ -17,15 +17,51 @@ struct CartView: View {
     
     @StateObject var gameViewModel = GameViewModel()
     @StateObject var cartViewModel = CartViewModel()
+    @StateObject var userViewModel = UserViewModel()
     @Binding var UID: String
     @State var gameArray = [""]
-    @State var selectedGame: Game = Game(name: "", description: "", price: 0, platform: [""], genre: [""], developer: "", rating: [0], imageURL: "", userID: "")
-    @State private var totalPrice: Double = 0
+    @State var totalMoney: Double = 0.0
+    @State var currentMoney: Double = 0.0
     
     func removeFromCart(documentID: String?, gameID: String) {
         let index = gameArray.firstIndex(of: gameID) ?? 0
         gameArray.remove(at: index)
         cartViewModel.updateGamelist(documentID: documentID ?? "", gamelist: gameArray)
+    }
+    func getTotalPrice() -> Double {
+        var totalPrice: Double = 0
+        for cart in cartViewModel.carts {
+            for id in cart.gameID {
+                for game in gameViewModel.games {
+                    if id == game.documentID ?? "" {
+                        totalPrice += game.price
+                    }
+                }
+            }
+        }
+        return totalPrice
+    }
+    func getUserMoney() -> Double {
+        var money: Double = 0
+        for user in userViewModel.user {
+            if UID == user.id {
+                money += user.money
+            }
+        }
+        return money
+    }
+    
+    func purchase() {
+        for cart in cartViewModel.carts {
+            if cart.uid == UID {
+                cartViewModel.updateGamelist(documentID: cart.documentID ?? "", gamelist: [""])
+            }
+        }
+        for user in userViewModel.user {
+            if user.id == UID {
+                userViewModel.updateMoney(UID: UID, money: getUserMoney() - getTotalPrice())
+            }
+        }
     }
     
     var body: some View {
@@ -41,7 +77,7 @@ struct CartView: View {
                     VStack {
                         HStack {
                             // Game price
-                            Text("$\(totalPrice, specifier: "%.2f")")
+                            Text("$\(getTotalPrice(), specifier: "%.2f")")
                                 .font(.system(size: isCompact ? 26 : 44))
                                 .multilineTextAlignment(.leading)
                                 .italic()
@@ -52,7 +88,9 @@ struct CartView: View {
                             
                             // Purchase button
                             Button {
-
+                                if currentMoney >= totalMoney {
+                                    purchase()
+                                }
                             } label: {
                                 Text("Purchase")
                                     .font(.system(size: isCompact ? 20 : 34))
@@ -79,6 +117,9 @@ struct CartView: View {
                     .font(.system(size: isCompact ? 28 : 48))
                     .fontWeight(.bold)
                     .foregroundColor(CustomColor.primaryColor)
+                
+                Text("$\(getUserMoney(), specifier: "%.2f")")
+                    .font(.system(size: isCompact ? 26 : 44))
                 List {
                     ForEach(games, id: \.id) {game in
                         ForEach(carts, id: \.id) {cart in
